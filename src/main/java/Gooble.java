@@ -57,6 +57,20 @@ public class Gooble {
                 } catch (NumberFormatException e) {
                     System.out.println("Please provide a valid task number.");
                 }
+            } else if (command.startsWith("unmark ")) {
+                String taskNumber = command.substring("unmark ".length()).trim();
+                try {
+                    int taskIndex = Integer.parseInt(taskNumber) - 1;
+                    if (taskIndex < 0 || taskIndex >= taskCount) {
+                        System.out.println("That task number does not exist.");
+                    } else {
+                        completed[taskIndex] = false;
+                        System.out.println("OK, I've marked this task as not done yet:");
+                        System.out.println("  [ ] " + tasks[taskIndex]);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please provide a valid task number.");
+                }
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
