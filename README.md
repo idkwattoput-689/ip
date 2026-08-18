@@ -60,7 +60,7 @@ ____________________________________________________________
 ```
 ### Exiting the chatbot
 
-Users can enter 'bye' and Gobble will say bye to the users and end.
+Users can enter 'bye' and Gooble will say bye to the users and end.
 
 Example:
 
@@ -68,6 +68,46 @@ Example:
 bye
 ____________________________________________________________
 Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+### Marking objects in the list
+
+Users can enter 'mark [i]' and Gooble will mark the ith object in the list.
+
+Example:
+
+```
+mark 2
+____________________________________________________________
+Nice! I've marked this task as done:
+  [X] tea
+____________________________________________________________
+list
+____________________________________________________________
+Here are the tasks in your list:
+1.[ ] books
+2.[X] tea
+____________________________________________________________
+```
+
+### Unmark object in the list
+
+Users can enter 'unmark [i]' and Gooble will unmark the ith object in the list.
+
+Example:
+
+```
+unmark 2
+____________________________________________________________
+OK, I've marked this task as not done yet:
+  [ ] tea
+____________________________________________________________
+list
+____________________________________________________________
+Here are the tasks in your list:
+1.[ ] books
+2.[ ] tea
 ____________________________________________________________
 ```
 
