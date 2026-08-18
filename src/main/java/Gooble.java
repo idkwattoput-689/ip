@@ -4,6 +4,9 @@ import java.util.Scanner;
  * Starts Gooble, responds to entered commands, and exits when requested.
  */
 public class Gooble {
+    /** Maximum number of tasks the application needs to hold. */
+    private static final int MAX_TASKS = 100;
+
     public static void main(String[] args) {
         String divider = "_".repeat(60);
         String banner = "  ____            _     _      \n"
@@ -19,6 +22,9 @@ public class Gooble {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int taskCount = 0;
+
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(divider);
@@ -29,7 +35,15 @@ public class Gooble {
                 break;
             }
 
-            System.out.println(command);
+            if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+            } else {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println("added: " + command);
+            }
             System.out.println(divider);
         }
     }
