@@ -125,10 +125,13 @@ public class Gooble {
                     System.out.println("  " + tasks[taskCount - 1]);
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
                 }
-            } else {
-                tasks[taskCount] = new Task(command);
-                taskCount++;
-                System.out.println("added: " + command);
+            } else if (command.equals("add") || command.startsWith("add ")){
+                    String content = command.substring("add".length()).trim();
+                    tasks[taskCount] = new Task(command);
+                    taskCount++;
+                    System.out.println("added: " + content);
+                } else {
+                    throw new GoobleException("Invalid command smhmh");
                 }
             } catch (GoobleException e) {
                 System.out.println(e.getMessage());
