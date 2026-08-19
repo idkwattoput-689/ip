@@ -92,6 +92,27 @@ public class Gooble {
                     System.out.println("  " + tasks[taskCount - 1]);
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
                 }
+            } else if (command.startsWith("event ")) {
+                String eventDetails = command.substring("event ".length()).trim();
+                String startMarker = " /from ";
+                String endMarker = " /to ";
+                int startMarkerIndex = eventDetails.indexOf(startMarker);
+                int endMarkerIndex = eventDetails.indexOf(endMarker);
+
+                if (startMarkerIndex == -1 || endMarkerIndex == -1
+                        || endMarkerIndex < startMarkerIndex) {
+                    System.out.println("Please specify an event time using /from and /to.");
+                } else {
+                    String description = eventDetails.substring(0, startMarkerIndex).trim();
+                    String startDate = eventDetails.substring(startMarkerIndex + startMarker.length(),
+                            endMarkerIndex).trim();
+                    String endDate = eventDetails.substring(endMarkerIndex + endMarker.length()).trim();
+                    tasks[taskCount] = new Event(description, startDate, endDate);
+                    taskCount++;
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  " + tasks[taskCount - 1]);
+                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                }
             } else {
                 tasks[taskCount] = new Task(command);
                 taskCount++;
