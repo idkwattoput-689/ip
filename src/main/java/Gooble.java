@@ -4,9 +4,6 @@ import java.util.Scanner;
  * Starts Gooble, responds to entered commands, and exits when requested.
  */
 public class Gooble {
-    /** Maximum number of tasks the application needs to hold. */
-    private static final int MAX_TASKS = 100;
-
     public static void main(String[] args) {
         String divider = "_".repeat(60);
         String banner = "  ____            _     _      \n"
@@ -22,8 +19,7 @@ public class Gooble {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        TaskList tasks = new TaskList();
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -37,98 +33,109 @@ public class Gooble {
 
             try {
                 if (command.equals("list")) {
-                System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + "." + tasks[i]);
-                }
-            } else if (command.startsWith("mark ")) {
-                String taskNumber = command.substring("mark ".length()).trim();
-                try {
-                    int taskIndex = Integer.parseInt(taskNumber) - 1;
-                    if (taskIndex < 0 || taskIndex >= taskCount) {
-                        System.out.println("That task number does not exist.");
-                    } else {
-                        tasks[taskIndex].markAsDone();
-                        System.out.println("Nice! I've marked this task as done:");
-                        System.out.println("  " + tasks[taskIndex]);
+                    System.out.println("Here are the tasks in your list:");
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println((i + 1) + "." + tasks.get(i));
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("Please provide a valid task number.");
-                }
-            } else if (command.startsWith("unmark ")) {
-                String taskNumber = command.substring("unmark ".length()).trim();
-                try {
-                    int taskIndex = Integer.parseInt(taskNumber) - 1;
-                    if (taskIndex < 0 || taskIndex >= taskCount) {
-                        System.out.println("That task number does not exist.");
-                    } else {
-                        tasks[taskIndex].markAsNotDone();
-                        System.out.println("OK, I've marked this task as not done yet:");
-                        System.out.println("  " + tasks[taskIndex]);
+                } else if (command.startsWith("mark ")) {
+                    String taskNumber = command.substring("mark ".length()).trim();
+                    try {
+                        int taskIndex = Integer.parseInt(taskNumber) - 1;
+                        if (!tasks.isValidIndex(taskIndex)) {
+                            System.out.println("That task number does not exist.");
+                        } else {
+                            tasks.get(taskIndex).markAsDone();
+                            System.out.println("Nice! I've marked this task as done:");
+                            System.out.println("  " + tasks.get(taskIndex));
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please provide a valid task number.");
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("Please provide a valid task number.");
-                }
-            } else if (command.equals("todo") || command.startsWith("todo ")) {
-                String description = command.substring("todo".length()).trim();
-                validateDescription(description);
-                tasks[taskCount] = new Todo(description);
-                taskCount++;
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                String deadlineDetails = command.substring("deadline".length()).trim();
-                validateDescription(deadlineDetails);
-                String deadlineMarker = " /by ";
-                int deadlineMarkerIndex = deadlineDetails.indexOf(deadlineMarker);
-
-                if (deadlineMarkerIndex == -1) {
-                    throw new GoobleException("Please specify a deadline using /by.");
-                } else {
-                    String description = deadlineDetails.substring(0, deadlineMarkerIndex).trim();
-                    String deadline = deadlineDetails
-                            .substring(deadlineMarkerIndex + deadlineMarker.length()).trim();
+                } else if (command.startsWith("unmark ")) {
+                    String taskNumber = command.substring("unmark ".length()).trim();
+                    try {
+                        int taskIndex = Integer.parseInt(taskNumber) - 1;
+                        if (!tasks.isValidIndex(taskIndex)) {
+                            System.out.println("That task number does not exist.");
+                        } else {
+                            tasks.get(taskIndex).markAsNotDone();
+                            System.out.println("OK, I've marked this task as not done yet:");
+                            System.out.println("  " + tasks.get(taskIndex));
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please provide a valid task number.");
+                    }
+                } else if (command.startsWith("delete ")) {
+                    String taskNumber = command.substring("delete ".length()).trim();
+                    try {
+                        int taskIndex = Integer.parseInt(taskNumber) - 1;
+                        if (!tasks.isValidIndex(taskIndex)) {
+                            System.out.println("That task number does not exist.");
+                        } else {
+                            Task removedTask = tasks.remove(taskIndex);
+                            System.out.println("Noted. I've removed this task:");
+                            System.out.println("  " + removedTask);
+                            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please provide a valid task number.");
+                    }
+                } else if (command.equals("todo") || command.startsWith("todo ")) {
+                    String description = command.substring("todo".length()).trim();
                     validateDescription(description);
-                    if (deadline.isEmpty()) {
+                    tasks.add(new Todo(description));
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  " + tasks.get(tasks.size() - 1));
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                    String deadlineDetails = command.substring("deadline".length()).trim();
+                    validateDescription(deadlineDetails);
+                    String deadlineMarker = " /by ";
+                    int deadlineMarkerIndex = deadlineDetails.indexOf(deadlineMarker);
+
+                    if (deadlineMarkerIndex == -1) {
                         throw new GoobleException("Please specify a deadline using /by.");
+                    } else {
+                        String description = deadlineDetails.substring(0, deadlineMarkerIndex).trim();
+                        String deadline = deadlineDetails
+                                .substring(deadlineMarkerIndex + deadlineMarker.length()).trim();
+                        validateDescription(description);
+                        if (deadline.isEmpty()) {
+                            throw new GoobleException("Please specify a deadline using /by.");
+                        }
+                        tasks.add(new Deadline(description, deadline));
+                        System.out.println("Got it. I've added this task:");
+                        System.out.println("  " + tasks.get(tasks.size() - 1));
+                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     }
-                    tasks[taskCount] = new Deadline(description, deadline);
-                    taskCount++;
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + tasks[taskCount - 1]);
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
-                }
-            } else if (command.equals("event") || command.startsWith("event ")) {
-                String eventDetails = command.substring("event".length()).trim();
-                validateDescription(eventDetails);
-                String startMarker = " /from ";
-                String endMarker = " /to ";
-                int startMarkerIndex = eventDetails.indexOf(startMarker);
-                int endMarkerIndex = eventDetails.indexOf(endMarker);
+                } else if (command.equals("event") || command.startsWith("event ")) {
+                    String eventDetails = command.substring("event".length()).trim();
+                    validateDescription(eventDetails);
+                    String startMarker = " /from ";
+                    String endMarker = " /to ";
+                    int startMarkerIndex = eventDetails.indexOf(startMarker);
+                    int endMarkerIndex = eventDetails.indexOf(endMarker);
 
-                if (startMarkerIndex == -1 || endMarkerIndex == -1
-                        || endMarkerIndex < startMarkerIndex) {
-                    throw new GoobleException("Please specify an event time using /from and /to.");
-                } else {
-                    String description = eventDetails.substring(0, startMarkerIndex).trim();
-                    String startDate = eventDetails.substring(startMarkerIndex + startMarker.length(),
-                            endMarkerIndex).trim();
-                    String endDate = eventDetails.substring(endMarkerIndex + endMarker.length()).trim();
-                    validateDescription(description);
-                    if (startDate.isEmpty() || endDate.isEmpty()) {
+                    if (startMarkerIndex == -1 || endMarkerIndex == -1
+                            || endMarkerIndex < startMarkerIndex) {
                         throw new GoobleException("Please specify an event time using /from and /to.");
+                    } else {
+                        String description = eventDetails.substring(0, startMarkerIndex).trim();
+                        String startDate = eventDetails.substring(startMarkerIndex + startMarker.length(),
+                                endMarkerIndex).trim();
+                        String endDate = eventDetails.substring(endMarkerIndex + endMarker.length()).trim();
+                        validateDescription(description);
+                        if (startDate.isEmpty() || endDate.isEmpty()) {
+                            throw new GoobleException("Please specify an event time using /from and /to.");
+                        }
+                        tasks.add(new Event(description, startDate, endDate));
+                        System.out.println("Got it. I've added this task:");
+                        System.out.println("  " + tasks.get(tasks.size() - 1));
+                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     }
-                    tasks[taskCount] = new Event(description, startDate, endDate);
-                    taskCount++;
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + tasks[taskCount - 1]);
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
-                }
-            } else if (command.equals("add") || command.startsWith("add ")){
+                } else if (command.equals("add") || command.startsWith("add ")) {
                     String content = command.substring("add".length()).trim();
-                    tasks[taskCount] = new Task(content);
-                    taskCount++;
+                    tasks.add(new Task(content));
                     System.out.println("added: " + content);
                 } else {
                     throw new GoobleException("Invalid command smhmh");
