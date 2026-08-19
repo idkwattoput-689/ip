@@ -35,7 +35,7 @@ public class Gooble {
                 break;
             }
 
-            if (command.eqbookuals("list")) {
+            if (command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println((i + 1) + "." + tasks[i]);
@@ -75,6 +75,23 @@ public class Gooble {
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks[taskCount - 1]);
                 System.out.println("Now you have " + taskCount + " tasks in the list.");
+            } else if (command.startsWith("deadline ")) {
+                String deadlineDetails = command.substring("deadline ".length()).trim();
+                String deadlineMarker = " /by ";
+                int deadlineMarkerIndex = deadlineDetails.indexOf(deadlineMarker);
+
+                if (deadlineMarkerIndex == -1) {
+                    System.out.println("Please specify a deadline using /by.");
+                } else {
+                    String description = deadlineDetails.substring(0, deadlineMarkerIndex).trim();
+                    String deadline = deadlineDetails
+                            .substring(deadlineMarkerIndex + deadlineMarker.length()).trim();
+                    tasks[taskCount] = new Deadline(description, deadline);
+                    taskCount++;
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  " + tasks[taskCount - 1]);
+                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                }
             } else {
                 tasks[taskCount] = new Task(command);
                 taskCount++;
