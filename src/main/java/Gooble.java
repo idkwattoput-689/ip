@@ -35,11 +35,10 @@ public class Gooble {
                 break;
             }
 
-            if (command.equals("list")) {
+            if (command.eqbookuals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] "
-                            + tasks[i].getDescription());
+                    System.out.println((i + 1) + "." + tasks[i]);
                 }
             } else if (command.startsWith("mark ")) {
                 String taskNumber = command.substring("mark ".length()).trim();
@@ -50,7 +49,7 @@ public class Gooble {
                     } else {
                         tasks[taskIndex].markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println("  [X] " + tasks[taskIndex].getDescription());
+                        System.out.println("  " + tasks[taskIndex]);
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Please provide a valid task number.");
@@ -64,11 +63,18 @@ public class Gooble {
                     } else {
                         tasks[taskIndex].markAsNotDone();
                         System.out.println("OK, I've marked this task as not done yet:");
-                        System.out.println("  [ ] " + tasks[taskIndex].getDescription());
+                        System.out.println("  " + tasks[taskIndex]);
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Please provide a valid task number.");
                 }
+            } else if (command.startsWith("todo ")) {
+                String description = command.substring("todo ".length()).trim();
+                tasks[taskCount] = new Todo(description);
+                taskCount++;
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
             } else {
                 tasks[taskCount] = new Task(command);
                 taskCount++;
