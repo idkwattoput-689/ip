@@ -36,7 +36,7 @@ Aim: Verify that entering ordinary text adds a task to the list.
 ### Inputs
 
 ```text
-read book
+add read book
 bye
 ```
 
@@ -67,7 +67,7 @@ Aim: Verify that list shows an added task with its completion status.
 ### Inputs
 
 ```text
-read book
+add read book
 list
 bye
 ```
@@ -103,7 +103,7 @@ Aim: Verify that mark changes a task's completion status to done.
 ### Inputs
 
 ```text
-read book
+add read book
 mark 1
 bye
 ```
@@ -139,7 +139,7 @@ Aim: Verify that unmark changes a completed task back to incomplete.
 ### Inputs
 
 ```text
-read book
+add read book
 mark 1
 unmark 1
 bye
@@ -299,13 +299,55 @@ Hello! I'm Gooble.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-You need add in some description for that lmao
+You need to add in some description for that lmao
 ____________________________________________________________
 ____________________________________________________________
-You need add in some description for that lmao
+You need to add in some description for that lmao
 ____________________________________________________________
 ____________________________________________________________
-You need add in some description for that lmao
+You need to add in some description for that lmao
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+## Test case: Reject invalid task commands
+
+Aim: Verify that input without command show errors and do not add tasks.
+
+### Inputs
+
+```text
+book
+tea
+hi
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Invalid command smhmh
+____________________________________________________________
+____________________________________________________________
+Invalid command smhmh
+____________________________________________________________
+____________________________________________________________
+Invalid command smhmh
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
