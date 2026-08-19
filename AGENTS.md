@@ -33,3 +33,7 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+
+## UI testing
+
+After every code update that can affect Gooble's console behavior, review `test/ui-test-plan.md` and update it when the expected UI behavior changes or a new command is added. Then invoke the project-local `test-ui` skill and run its complete test plan before reporting the change as complete. Keep regression cases for the greeting and exit flow, adding and listing tasks, marking and unmarking tasks, and every supported task type.
