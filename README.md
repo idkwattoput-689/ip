@@ -112,7 +112,51 @@ Here are the tasks in your list:
 2.[ ] tea
 ____________________________________________________________
 ```
+### Adding to-do tasks
 
+Users can add a to-do task without a date or deadline using `todo [description]`.
+
+Example:
+
+```
+todo borrow book
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] borrow book
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
+
+### Adding deadline tasks
+
+Users can add a task with a deadline using `deadline [description] /by [deadline]`.
+
+Example:
+
+```
+deadline return book /by Sunday
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
+
+### Adding events
+
+Users can add an event with a start and end date or time using
+`event [description] /from [start] /to [end]`.
+
+Example:
+
+```
+event project meeting /from Mon 2pm /to 4pm
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
 ## AI declaration
 
 Level: AI-5.
