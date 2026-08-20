@@ -135,6 +135,7 @@ public class Gooble {
                     }
                 } else if (command.equals("add") || command.startsWith("add ")) {
                     String content = command.substring("add".length()).trim();
+                    validateDescription(content);
                     tasks.add(new Task(content));
                     System.out.println("added: " + content);
                 } else {
