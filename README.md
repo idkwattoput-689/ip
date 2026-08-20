@@ -75,7 +75,7 @@ ____________________________________________________________
 
 ### Marking objects in the list
 
-Users can enter 'mark [i]' and Gooble will mark the ith object in the list.
+Users can enter 'mark [i]' and Gooble will mark the ith task in the list.
 
 Example:
 
@@ -95,7 +95,7 @@ ____________________________________________________________
 
 ### Unmark object in the list
 
-Users can enter 'unmark [i]' and Gooble will unmark the ith object in the list.
+Users can enter 'unmark [i]' and Gooble will unmark the ith task in the list.
 
 Example:
 
@@ -157,6 +157,70 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ```
+
+### Deleting events
+
+Users can delete a task from the list using 'delete i', and Gooble will remove the ith task in the list
+
+Example:
+
+```
+delete 2
+____________________________________________________________
+Noted. I've removed this task:
+  [ ] chuyue
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
+
+## Error Handling
+
+Gooble currently handles the following error:
+
+### Empty description
+
+When there is no description after keying in a command, Gooble will deem it as invalid and reject it.
+
+Example:
+
+```
+add
+____________________________________________________________
+You need to add in some description for that lmao
+____________________________________________________________
+```
+
+### Invalid command
+
+When the user keys in any invalid command(Any words that are not add, todo, deadline or event), Gooble will deem it as invalid and reject it
+
+Example:
+
+```
+dfs
+____________________________________________________________
+Invalid command smhmh
+____________________________________________________________
+
+```
+
+### Invalid time and date for Deadline and Event command
+
+When the user fails the key in the date and time for a Deadline or Event command, Gooble will deem it as invalid and reject it. Gooble will provide the right format to follow in his reply.
+
+Example:
+
+```
+event burger 
+____________________________________________________________
+Please specify an event time using /from and /to.
+____________________________________________________________
+deadline burger
+____________________________________________________________
+Please specify a deadline using /by.
+____________________________________________________________
+```
+
 ## AI declaration
 
 Level: AI-5.
