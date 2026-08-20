@@ -25,19 +25,22 @@ public class Gooble {
             String command = scanner.nextLine();
             System.out.println(divider);
 
-            if (command.equals("bye")) {
+            String commandWord = command.split(" ", 2)[0];
+            CommandType type = CommandType.fromString(commandWord);
+
+            if (type == CommandType.BYE) {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(divider);
                 break;
             }
 
             try {
-                if (command.equals("list")) {
+                if (type == CommandType.LIST) {
                     System.out.println("Here are the tasks in your list:");
                     for (int i = 0; i < tasks.size(); i++) {
                         System.out.println((i + 1) + "." + tasks.get(i));
                     }
-                } else if (command.startsWith("mark ")) {
+                } else if (type == CommandType.MARK) {
                     String taskNumber = command.substring("mark ".length()).trim();
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
@@ -51,7 +54,7 @@ public class Gooble {
                     } catch (NumberFormatException e) {
                         System.out.println("Please provide a valid task number.");
                     }
-                } else if (command.startsWith("unmark ")) {
+                } else if (type == CommandType.UNMARK) {
                     String taskNumber = command.substring("unmark ".length()).trim();
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
@@ -65,7 +68,7 @@ public class Gooble {
                     } catch (NumberFormatException e) {
                         System.out.println("Please provide a valid task number.");
                     }
-                } else if (command.startsWith("delete ")) {
+                } else if (type == CommandType.DELETE) {
                     String taskNumber = command.substring("delete ".length()).trim();
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
@@ -80,14 +83,14 @@ public class Gooble {
                     } catch (NumberFormatException e) {
                         System.out.println("Please provide a valid task number.");
                     }
-                } else if (command.equals("todo") || command.startsWith("todo ")) {
+                } else if (type == CommandType.TODO) {
                     String description = command.substring("todo".length()).trim();
                     validateDescription(description);
                     tasks.add(new Todo(description));
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  " + tasks.get(tasks.size() - 1));
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                } else if (type == CommandType.DEADLINE) {
                     String deadlineDetails = command.substring("deadline".length()).trim();
                     validateDescription(deadlineDetails);
                     String deadlineMarker = " /by ";
@@ -108,7 +111,7 @@ public class Gooble {
                         System.out.println("  " + tasks.get(tasks.size() - 1));
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     }
-                } else if (command.equals("event") || command.startsWith("event ")) {
+                } else if (type == CommandType.EVENT) {
                     String eventDetails = command.substring("event".length()).trim();
                     validateDescription(eventDetails);
                     String startMarker = " /from ";
@@ -133,7 +136,7 @@ public class Gooble {
                         System.out.println("  " + tasks.get(tasks.size() - 1));
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     }
-                } else if (command.equals("add") || command.startsWith("add ")) {
+                } else if (type == CommandType.ADD) {
                     String content = command.substring("add".length()).trim();
                     validateDescription(content);
                     tasks.add(new Task(content));
