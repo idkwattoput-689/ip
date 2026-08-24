@@ -361,6 +361,49 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: Reject commands without task numbers
+
+Aim: Verify that mark, unmark, and delete without a task number report an error instead of crashing.
+
+### Inputs
+
+```text
+mark
+unmark
+delete
+
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Please provide a valid task number.
+____________________________________________________________
+____________________________________________________________
+Please provide a valid task number.
+____________________________________________________________
+____________________________________________________________
+Please provide a valid task number.
+____________________________________________________________
+____________________________________________________________
+Invalid command smhmh
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: Delete task commands
 
 Aim: Verify that the delete command removes the task from the list

@@ -13,7 +13,19 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String deadline) {
         super(description);
+        if (deadline == null || deadline.isBlank()) {
+            throw new IllegalArgumentException("Deadline cannot be empty.");
+        }
         this.deadline = deadline;
+    }
+
+    /**
+     * Returns the deadline text.
+     *
+     * @return the deadline
+     */
+    public String getDeadline() {
+        return deadline;
     }
 
     /**
