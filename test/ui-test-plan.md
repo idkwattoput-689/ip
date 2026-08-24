@@ -31,7 +31,7 @@ ____________________________________________________________
 
 ## Test case: Add a general task
 
-Aim: Verify that entering ordinary text adds a task to the list.
+Aim: Verify that entering ordinary text adds a task to the list and writes the current list to disk.
 
 ### Inputs
 
