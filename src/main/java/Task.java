@@ -14,6 +14,9 @@ public class Task {
      * @param description the text describing the task
      */
     public Task(String description) {
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Task description cannot be empty.");
+        }
         this.description = description;
         this.isDone = false;
     }

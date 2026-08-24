@@ -22,10 +22,10 @@ public class Gooble {
         TaskList tasks = new TaskList();
 
         while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim();
             System.out.println(divider);
 
-            String commandWord = command.split(" ", 2)[0];
+            String commandWord = command.split("\\s+", 2)[0];
             CommandType type = CommandType.fromString(commandWord);
 
             if (type == CommandType.BYE) {
@@ -41,13 +41,13 @@ public class Gooble {
                         System.out.println((i + 1) + "." + tasks.get(i));
                     }
                 } else if (type == CommandType.MARK) {
-                    String taskNumber = command.substring("mark ".length()).trim();
+                    String taskNumber = argumentAfter(command, "mark");
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (!tasks.isValidIndex(taskIndex)) {
                             System.out.println("That task number does not exist.");
                         } else {
-                            tasks.get(taskIndex).markAsDone();
+                            tasks.markAsDone(taskIndex);
                             System.out.println("Nice! I've marked this task as done:");
                             System.out.println("  " + tasks.get(taskIndex));
                         }
@@ -55,13 +55,13 @@ public class Gooble {
                         System.out.println("Please provide a valid task number.");
                     }
                 } else if (type == CommandType.UNMARK) {
-                    String taskNumber = command.substring("unmark ".length()).trim();
+                    String taskNumber = argumentAfter(command, "unmark");
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (!tasks.isValidIndex(taskIndex)) {
                             System.out.println("That task number does not exist.");
                         } else {
-                            tasks.get(taskIndex).markAsNotDone();
+                            tasks.markAsNotDone(taskIndex);
                             System.out.println("OK, I've marked this task as not done yet:");
                             System.out.println("  " + tasks.get(taskIndex));
                         }
@@ -69,7 +69,7 @@ public class Gooble {
                         System.out.println("Please provide a valid task number.");
                     }
                 } else if (type == CommandType.DELETE) {
-                    String taskNumber = command.substring("delete ".length()).trim();
+                    String taskNumber = argumentAfter(command, "delete");
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (!tasks.isValidIndex(taskIndex)) {
@@ -161,5 +161,20 @@ public class Gooble {
         if (description.isEmpty()) {
             throw new GoobleException("You need to add in some description for that lmao");
         }
+    }
+
+    /**
+     * Returns the argument after a command, including an empty string when it
+     * was omitted.
+     *
+     * @param command complete user command
+     * @param commandWord command whose argument should be extracted
+     * @return trimmed command argument
+     */
+    private static String argumentAfter(String command, String commandWord) {
+        if (command.length() <= commandWord.length()) {
+            return "";
+        }
+        return command.substring(commandWord.length()).trim();
     }
 }

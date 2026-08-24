@@ -17,8 +17,29 @@ public class Event extends Task {
      */
     public Event(String description, String startDate, String endDate) {
         super(description);
+        if (startDate == null || startDate.isBlank() || endDate == null || endDate.isBlank()) {
+            throw new IllegalArgumentException("Event times cannot be empty.");
+        }
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    /**
+     * Returns the event's start text.
+     *
+     * @return the start date or time
+     */
+    public String getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * Returns the event's end text.
+     *
+     * @return the end date or time
+     */
+    public String getEndDate() {
+        return endDate;
     }
 
     /**
