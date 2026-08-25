@@ -64,4 +64,14 @@ public class Ui {
     public void showTaskCount(int totalCount) {
         System.out.println("Now you have " + totalCount + " tasks in the list.");
     }
+
+    /** Prints the application's exit message. */
+    public void showBye() {
+        System.out.println("Bye. Hope to see you again soon!");
+    }
+
+    /** Reports the legacy add command's confirmation. */
+    public void showAddedGeneral(String description) {
+        System.out.println("added: " + description);
+    }
 }

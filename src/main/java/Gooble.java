@@ -28,7 +28,7 @@ public class Gooble {
             CommandType type = parser.parseType(command);
 
             if (type == CommandType.BYE) {
-                System.out.println("Bye. Hope to see you again soon!");
+                ui.showBye();
                 ui.showDivider();
                 break;
             }
@@ -117,7 +117,7 @@ public class Gooble {
                     String content = command.substring("add".length()).trim();
                     parser.validateDescription(content);
                     tasks.add(new Task(content));
-                    System.out.println("added: " + content);
+                    ui.showAddedGeneral(content);
                 } else {
                     throw new GoobleException("Invalid command smhmh");
                 }
