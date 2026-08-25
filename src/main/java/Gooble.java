@@ -48,8 +48,7 @@ public class Gooble {
                             System.out.println("That task number does not exist.");
                         } else {
                             tasks.markAsDone(taskIndex);
-                            System.out.println("Nice! I've marked this task as done:");
-                            System.out.println("  " + tasks.get(taskIndex));
+                            ui.showMarkedDone(tasks.get(taskIndex));
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Please provide a valid task number.");
@@ -62,8 +61,7 @@ public class Gooble {
                             System.out.println("That task number does not exist.");
                         } else {
                             tasks.markAsNotDone(taskIndex);
-                            System.out.println("OK, I've marked this task as not done yet:");
-                            System.out.println("  " + tasks.get(taskIndex));
+                            ui.showMarkedNotDone(tasks.get(taskIndex));
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Please provide a valid task number.");
@@ -76,9 +74,7 @@ public class Gooble {
                             System.out.println("That task number does not exist.");
                         } else {
                             Task removedTask = tasks.remove(taskIndex);
-                            System.out.println("Noted. I've removed this task:");
-                            System.out.println("  " + removedTask);
-                            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                            ui.showDeleted(removedTask, tasks.size());
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Please provide a valid task number.");

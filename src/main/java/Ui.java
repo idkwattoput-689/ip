@@ -34,4 +34,23 @@ public class Ui {
             System.out.println((i + 1) + "." + tasks.get(i));
         }
     }
+
+    /** Reports that a task was marked complete. */
+    public void showMarkedDone(Task task) {
+        System.out.println("Nice! I've marked this task as done:");
+        System.out.println("  " + task);
+    }
+
+    /** Reports that a task was marked incomplete. */
+    public void showMarkedNotDone(Task task) {
+        System.out.println("OK, I've marked this task as not done yet:");
+        System.out.println("  " + task);
+    }
+
+    /** Reports a removed task and the remaining task count. */
+    public void showDeleted(Task task, int remainingCount) {
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + remainingCount + " tasks in the list.");
+    }
 }
