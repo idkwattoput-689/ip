@@ -53,4 +53,15 @@ public class Ui {
         System.out.println("  " + task);
         System.out.println("Now you have " + remainingCount + " tasks in the list.");
     }
+
+    /** Reports a newly added task using Gooble's standard confirmation. */
+    public void showAdded(Task task) {
+        System.out.println("Got it. I've added this task:");
+        System.out.println("  " + task);
+    }
+
+    /** Reports the number of tasks currently in the list. */
+    public void showTaskCount(int totalCount) {
+        System.out.println("Now you have " + totalCount + " tasks in the list.");
+    }
 }

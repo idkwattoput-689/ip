@@ -83,9 +83,8 @@ public class Gooble {
                     String description = command.substring("todo".length()).trim();
                     validateDescription(description);
                     tasks.add(new Todo(description));
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + tasks.get(tasks.size() - 1));
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showAdded(tasks.get(tasks.size() - 1));
+                    ui.showTaskCount(tasks.size());
                 } else if (type == CommandType.DEADLINE) {
                     String deadlineDetails = command.substring("deadline".length()).trim();
                     validateDescription(deadlineDetails);
@@ -104,15 +103,14 @@ public class Gooble {
                         }
                         DeadlineDateParser.DeadlineDate parsedDeadline = DeadlineDateParser.parse(deadline);
                         tasks.add(new Deadline(description, parsedDeadline));
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println("  " + tasks.get(tasks.size() - 1));
+                        ui.showAdded(tasks.get(tasks.size() - 1));
                         if (DeadlineDateParser.isValentinesDay(parsedDeadline)) {
                             System.out.println("Love is in the air~");
                         }
                         if (DeadlineDateParser.isChineseNewYear(parsedDeadline)) {
                             System.out.println("\u606d\u559c\u53d1\u8d22\uff01\uff01");
                         }
-                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                        ui.showTaskCount(tasks.size());
                     }
                 } else if (type == CommandType.EVENT) {
                     String eventDetails = command.substring("event".length()).trim();
@@ -135,9 +133,8 @@ public class Gooble {
                             throw new GoobleException("Please specify an event time using /from and /to.");
                         }
                         tasks.add(new Event(description, startDate, endDate));
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println("  " + tasks.get(tasks.size() - 1));
-                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                        ui.showAdded(tasks.get(tasks.size() - 1));
+                        ui.showTaskCount(tasks.size());
                     }
                 } else if (type == CommandType.ADD) {
                     String content = command.substring("add".length()).trim();
