@@ -13,6 +13,22 @@ public enum CommandType {
     BYE,
     UNKNOWN;
 
+    /** Returns the handler for commands migrated to the handler architecture. */
+    public Command handler(String input) {
+        return switch (this) {
+        case LIST -> new ListCommand(input);
+        case MARK -> new MarkCommand(input);
+        case UNMARK -> new UnmarkCommand(input);
+        case DELETE -> new DeleteCommand(input);
+        case TODO -> new TodoCommand(input);
+        case ADD -> new AddCommand(input);
+        case DEADLINE -> new DeadlineCommand(input);
+        case EVENT -> new EventCommand(input);
+        case BYE -> new ByeCommand(input);
+        default -> null;
+        };
+    }
+
     /**
      * Returns the CommandType matching the given command word.
      *
