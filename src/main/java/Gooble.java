@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Gooble {
     public static void main(String[] args) {
         Ui ui = new Ui();
+        Parser parser = new Parser();
         String banner = "  ____            _     _      \n"
                 + " / ___| ___   ___ | |__ | | ___ \n"
                 + "| |  _ / _ \\ / _ \\| '_ \\| |/ _ \\\n"
@@ -22,8 +23,7 @@ public class Gooble {
             String command = scanner.nextLine().trim();
             ui.showDivider();
 
-            String commandWord = command.split("\\s+", 2)[0];
-            CommandType type = CommandType.fromString(commandWord);
+            CommandType type = parser.parseType(command);
 
             if (type == CommandType.BYE) {
                 System.out.println("Bye. Hope to see you again soon!");
@@ -41,7 +41,7 @@ public class Gooble {
                         throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
                     }
                 } else if (type == CommandType.MARK) {
-                    String taskNumber = argumentAfter(command, "mark");
+                    String taskNumber = parser.argumentAfter(command, "mark");
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (!tasks.isValidIndex(taskIndex)) {
@@ -54,7 +54,7 @@ public class Gooble {
                         System.out.println("Please provide a valid task number.");
                     }
                 } else if (type == CommandType.UNMARK) {
-                    String taskNumber = argumentAfter(command, "unmark");
+                    String taskNumber = parser.argumentAfter(command, "unmark");
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (!tasks.isValidIndex(taskIndex)) {
@@ -67,7 +67,7 @@ public class Gooble {
                         System.out.println("Please provide a valid task number.");
                     }
                 } else if (type == CommandType.DELETE) {
-                    String taskNumber = argumentAfter(command, "delete");
+                    String taskNumber = parser.argumentAfter(command, "delete");
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (!tasks.isValidIndex(taskIndex)) {
@@ -161,21 +161,6 @@ public class Gooble {
         if (description.isEmpty()) {
             throw new GoobleException("You need to add in some description for that lmao");
         }
-    }
-
-    /**
-     * Returns the argument after a command, including an empty string when it
-     * was omitted.
-     *
-     * @param command complete user command
-     * @param commandWord command whose argument should be extracted
-     * @return trimmed command argument
-     */
-    private static String argumentAfter(String command, String commandWord) {
-        if (command.length() <= commandWord.length()) {
-            return "";
-        }
-        return command.substring(commandWord.length()).trim();
     }
 
     /** Prints events fully contained within a validated date-time range. */
