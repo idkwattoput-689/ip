@@ -13,6 +13,11 @@ public enum CommandType {
     BYE,
     UNKNOWN;
 
+    /** Returns the handler for commands migrated to the handler architecture. */
+    public CommandHandler handler() {
+        return this == LIST ? new ListCommand() : null;
+    }
+
     /**
      * Returns the CommandType matching the given command word.
      *

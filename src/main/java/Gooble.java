@@ -34,6 +34,7 @@ public class Gooble {
         ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
+        CommandContext commandContext = new CommandContext(tasks, ui, parser);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
@@ -49,8 +50,8 @@ public class Gooble {
 
             try {
                 if (type == CommandType.LIST) {
-                    if (command.equals("list")) {
-                        ui.showTasks(tasks);
+                    if (type.handler() != null && command.equals("list")) {
+                        type.handler().execute(command, commandContext);
                     } else if (command.startsWith("list from ")) {
                         printEventsInRange(command, tasks, parser);
                     } else {
