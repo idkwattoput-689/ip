@@ -10,6 +10,7 @@ public class Gooble {
     private final TaskList tasks;
     private final Ui ui;
     private final Parser parser;
+    private final CommandContext commandContext;
 
     /**
      * Creates a Gooble application backed by the supplied task file.
@@ -21,6 +22,7 @@ public class Gooble {
         parser = new Parser();
         storage = new Storage(Path.of(filePath));
         tasks = new TaskList(storage);
+        commandContext = new CommandContext(tasks, ui, parser);
     }
 
     /** Runs the interactive command loop. */
@@ -34,8 +36,6 @@ public class Gooble {
         ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
-        CommandContext commandContext = new CommandContext(tasks, ui, parser);
-
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
             ui.showDivider();
