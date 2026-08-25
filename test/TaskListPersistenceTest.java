@@ -13,14 +13,14 @@ public class TaskListPersistenceTest {
      *
      * @param args ignored command-line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GoobleException {
         verifyFirstRunWithoutStorage();
         writeMalformedAndLegacyRecords();
         clearStorage();
 
         TaskList savedTasks = new TaskList();
         savedTasks.add(new Todo("read | book ) [special]"));
-        savedTasks.add(new Deadline("return book", "Sunday | 6pm"));
+        savedTasks.add(new Deadline("return book", DeadlineDateParser.parse("2/12/2019 1800")));
         savedTasks.add(new Event("project meeting", "Mon (2pm)", "4pm | room 1"));
         savedTasks.markAsDone(0);
 
@@ -29,7 +29,7 @@ public class TaskListPersistenceTest {
         assertTask(restoredTasks.size() == 3, "all saved tasks should be restored");
         assertTask(restoredTasks.get(0).toString().equals("[T][X] read | book ) [special]"),
                 "to-do status should be restored");
-        assertTask(restoredTasks.get(1).toString().equals("[D][ ] return book (by: Sunday | 6pm)"),
+        assertTask(restoredTasks.get(1).toString().equals("[D][ ] return book (by: Dec 02 2019, 6:00 PM)"),
                 "deadline details should be restored");
         assertTask(restoredTasks.get(2).toString().equals("[E][ ] project meeting (from: Mon (2pm) to: 4pm | room 1)"),
                 "event details should be restored");

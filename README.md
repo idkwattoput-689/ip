@@ -60,6 +60,17 @@ Here are the tasks in your list:
 1.[ ] Textbook
 ____________________________________________________________
 ```
+
+### Automatic task persistence
+
+Gooble automatically saves the task list to `data/Gooble.txt` whenever it changes.
+This includes adding, deleting, marking, and unmarking tasks. When Gooble starts,
+it loads the saved tasks from the same file, so tasks remain available between
+sessions.
+
+If the storage file does not exist, Gooble starts with an empty task list and
+creates the storage folder when the first task is saved.
+
 ### Exiting the chatbot
 
 Users can enter 'bye' and Gooble will say bye to the users and end.
@@ -70,6 +81,22 @@ Example:
 bye
 ____________________________________________________________
 Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+### Filtering events by date and time
+
+Users can show only events fully contained within a date-time range using
+`list from [start] to [end]`. Both boundaries must use `yyyy-MM-dd HHmm`,
+and the end must not be earlier than the start.
+
+Example:
+
+```
+list from 2026-03-09 0000 to 2026-03-11 2359
+____________________________________________________________
+Here are the events in your list for that period:
+1.[E][ ] in range (from: 2026-03-10 0900 to: 2026-03-10 1000)
 ____________________________________________________________
 ```
 
@@ -129,18 +156,36 @@ ____________________________________________________________
 
 ### Adding deadline tasks
 
-Users can add a task with a deadline using `deadline [description] /by [deadline]`.
+Users can add a task with a deadline using `deadline [description] /by [deadline]`. Deadline dates
+must use `yyyy-MM-dd` (optionally followed by a 24-hour time such as `1800`) or `d/M/yyyy HHmm`.
 
 Example:
 
 ```
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 02 2019, 6:00 PM)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ```
+
+### Special deadline dates
+
+When a deadline falls on Valentine's Day (February 14), Gooble adds:
+
+```
+Love is in the air~
+```
+
+When a deadline falls on a recognized Chinese New Year date, Gooble adds:
+
+```
+恭喜发财！！
+```
+
+These comments are shown when the deadline is added and are not included in
+the task text when using `list`.
 
 ### Adding events
 
@@ -158,7 +203,7 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ```
 
-### Deleting events
+### Deleting tasks
 
 Users can delete a task from the list using 'delete i', and Gooble will remove the ith task in the list
 
@@ -204,9 +249,12 @@ ____________________________________________________________
 
 ```
 
-### Invalid time and date for Deadline and Event command
+### Invalid date and time input
 
-When the user fails the key in the date and time for a Deadline or Event command, Gooble will deem it as invalid and reject it. Gooble will provide the right format to follow in his reply.
+When a deadline uses an unsupported date format, or a filtered event list uses
+an invalid date-time range, Gooble rejects the command and provides guidance.
+For event filtering, the `to` date and time must not be earlier than the `from`
+date and time.
 
 Example:
 
@@ -218,6 +266,10 @@ ____________________________________________________________
 deadline burger
 ____________________________________________________________
 Please specify a deadline using /by.
+____________________________________________________________
+list from 2026-03-12 1000 to 2026-03-10 0900
+____________________________________________________________
+Please ensure the 'to' date and time is not before the 'from' date and time.
 ____________________________________________________________
 ```
 

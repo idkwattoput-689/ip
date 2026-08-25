@@ -213,7 +213,7 @@ Aim: Verify that a deadline task keeps its by-date in the task display.
 ### Inputs
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 bye
 ```
 
@@ -231,7 +231,106 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 02 2019, 6:00 PM)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Reject an invalid deadline date
+
+Aim: Verify that unsupported deadline date formats show a helpful example.
+
+### Inputs
+
+```text
+deadline return book /by Sunday
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Please use a proper date format. Examples: 2019-12-02 or 2/12/2019 1800
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Add a Valentine's Day deadline
+
+Aim: Verify that a deadline on February 14 displays the Valentine's Day message.
+
+### Inputs
+
+```text
+deadline buy chocolates /by 2026-02-14 1800
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] buy chocolates (by: Feb 14 2026, 6:00 PM)
+Love is in the air~
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Add a Chinese New Year deadline
+
+Aim: Verify that a deadline on Chinese New Year displays the prosperity greeting.
+
+### Inputs
+
+```text
+deadline collect red packets /by 2026-02-17 1800
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] collect red packets (by: Feb 17 2026, 6:00 PM)
+恭喜发财！！
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -266,6 +365,81 @@ ____________________________________________________________
 Got it. I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Filter events by date and time
+
+Aim: Verify that list from/to shows only events fully within the requested period.
+
+### Inputs
+
+```text
+event in range /from 2026-03-10 0900 /to 2026-03-10 1000
+event outside range /from 2026-03-12 0900 /to 2026-03-12 1000
+list from 2026-03-09 0000 to 2026-03-11 2359
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] in range (from: 2026-03-10 0900 to: 2026-03-10 1000)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] outside range (from: 2026-03-12 0900 to: 2026-03-12 1000)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the events in your list for that period:
+1.[E][ ] in range (from: 2026-03-10 0900 to: 2026-03-10 1000)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Reject an invalid event list range
+
+Aim: Verify that a reversed list date-time range is rejected.
+
+### Inputs
+
+```text
+list from 2026-03-12 1000 to 2026-03-10 0900
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Please ensure the 'to' date and time is not before the 'from' date and time.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
