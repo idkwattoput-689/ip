@@ -22,6 +22,8 @@ public enum CommandType {
         case DELETE -> new DeleteCommand();
         case TODO -> new TodoCommand();
         case ADD -> new AddCommand();
+        case DEADLINE -> new DeadlineCommand();
+        case EVENT -> new EventCommand();
         case BYE -> new ByeCommand();
         default -> null;
         };

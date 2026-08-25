@@ -54,7 +54,9 @@ public class Gooble {
 
             try {
                 CommandHandler handler = type.handler();
-                if (handler != null && !(type == CommandType.LIST && command.startsWith("list from "))) {
+                if (type == CommandType.LIST && command.startsWith("list from ")) {
+                    new ListFromCommand().execute(command, commandContext);
+                } else if (handler != null) {
                     handler.execute(command, commandContext);
                 } else if (type == CommandType.LIST) {
                     if (type.handler() != null && command.equals("list")) {
