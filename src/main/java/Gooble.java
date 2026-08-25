@@ -106,9 +106,13 @@ public class Gooble {
                         if (deadline.isEmpty()) {
                             throw new GoobleException("Please specify a deadline using /by.");
                         }
-                        tasks.add(new Deadline(description, DeadlineDateParser.parse(deadline)));
+                        DeadlineDateParser.DeadlineDate parsedDeadline = DeadlineDateParser.parse(deadline);
+                        tasks.add(new Deadline(description, parsedDeadline));
                         System.out.println("Got it. I've added this task:");
                         System.out.println("  " + tasks.get(tasks.size() - 1));
+                        if (DeadlineDateParser.isValentinesDay(parsedDeadline)) {
+                            System.out.println("Love is in the air~");
+                        }
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     }
                 } else if (type == CommandType.EVENT) {

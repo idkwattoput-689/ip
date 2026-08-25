@@ -270,6 +270,40 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: Add a Valentine's Day deadline
+
+Aim: Verify that a deadline on February 14 displays the Valentine's Day message.
+
+### Inputs
+
+```text
+deadline buy chocolates /by 2026-02-14 1800
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] buy chocolates (by: Feb 14 2026, 6:00 PM)
+Love is in the air~
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: Add an event
 
 Aim: Verify that an event includes its start and end dates in the display.

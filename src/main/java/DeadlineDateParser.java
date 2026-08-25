@@ -1,6 +1,7 @@
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
@@ -55,6 +56,11 @@ public final class DeadlineDateParser {
         String formattedDate = deadline.date().format(DISPLAY_DATE);
         return deadline.time() == null ? formattedDate
                 : formattedDate + ", " + deadline.time().format(DISPLAY_TIME);
+    }
+
+    /** Returns whether the supplied deadline falls on Valentine's Day. */
+    public static boolean isValentinesDay(DeadlineDate deadline) {
+        return deadline.date().getMonth() == Month.FEBRUARY && deadline.date().getDayOfMonth() == 14;
     }
 
     private static LocalDate parseDate(String text) {
