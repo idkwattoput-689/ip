@@ -1,3 +1,5 @@
+package gooble;
+
 /**
  * Shared application services available to command handlers.
  */

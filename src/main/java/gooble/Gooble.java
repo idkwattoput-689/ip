@@ -1,3 +1,5 @@
+package gooble;
+
 import java.nio.file.Path;
 import java.util.Scanner;
 

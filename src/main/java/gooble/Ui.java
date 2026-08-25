@@ -1,3 +1,5 @@
+package gooble;
+
 /**
  * Handles Gooble's console presentation.
  */

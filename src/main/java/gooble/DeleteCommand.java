@@ -1,3 +1,5 @@
+package gooble;
+
 /** Handles deleting a task. */
 public class DeleteCommand extends Command {
     public DeleteCommand(String input) { super(input); }

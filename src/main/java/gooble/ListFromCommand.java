@@ -1,3 +1,5 @@
+package gooble;
+
 import java.time.LocalDateTime;
 
 /** Handles filtering events by an inclusive date-time range. */

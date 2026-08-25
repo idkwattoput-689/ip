@@ -1,3 +1,5 @@
+package gooble;
+
 /**
  * Interprets the command word and arguments entered by the user.
  */

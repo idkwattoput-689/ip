@@ -1,3 +1,5 @@
+package gooble;
+
 /** Handles adding an event task. */
 public class EventCommand extends Command {
     public EventCommand(String input) { super(input); }

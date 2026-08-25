@@ -1,3 +1,5 @@
+package gooble;
+
 /** Handles adding a deadline task. */
 public class DeadlineCommand extends Command {
     public DeadlineCommand(String input) { super(input); }

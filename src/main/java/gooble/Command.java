@@ -1,3 +1,5 @@
+package gooble;
+
 /**
  * Base class for commands that can be executed by Gooble.
  */

@@ -1,3 +1,5 @@
+package gooble;
+
 /** Handles adding a general task. */
 public class AddCommand extends Command {
     public AddCommand(String input) { super(input); }

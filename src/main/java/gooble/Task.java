@@ -1,3 +1,5 @@
+package gooble;
+
 /**
  * Represents a task in Gooble's task list.
  */
