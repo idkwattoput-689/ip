@@ -77,4 +77,23 @@ public class Parser {
         }
         return new String[] { description, start, end };
     }
+
+    /** Parses and validates a list command's inclusive date-time range. */
+    public DeadlineDateParser.DeadlineDate[] parseDateRange(String command) throws GoobleException {
+        String range = command.substring("list from ".length()).trim();
+        int separator = range.indexOf(" to ");
+        if (separator <= 0 || separator + 4 >= range.length()) {
+            throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
+        }
+        DeadlineDateParser.DeadlineDate from = DeadlineDateParser.parse(range.substring(0, separator).trim());
+        DeadlineDateParser.DeadlineDate to = DeadlineDateParser.parse(range.substring(separator + 4).trim());
+        if (from.time() == null || to.time() == null) {
+            throw new GoobleException("Please include both dates and times, e.g. 2026-02-01 0900");
+        }
+        if (java.time.LocalDateTime.of(to.date(), to.time())
+                .isBefore(java.time.LocalDateTime.of(from.date(), from.time()))) {
+            throw new GoobleException("Please ensure the 'to' date and time is not before the 'from' date and time.");
+        }
+        return new DeadlineDateParser.DeadlineDate[] { from, to };
+    }
 }

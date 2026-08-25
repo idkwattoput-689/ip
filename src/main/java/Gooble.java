@@ -38,7 +38,7 @@ public class Gooble {
                     if (command.equals("list")) {
                         ui.showTasks(tasks);
                     } else if (command.startsWith("list from ")) {
-                        printEventsInRange(command, tasks);
+                        printEventsInRange(command, tasks, parser);
                     } else {
                         throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
                     }
@@ -129,24 +129,13 @@ public class Gooble {
     }
 
     /** Prints events fully contained within a validated date-time range. */
-    private static void printEventsInRange(String command, TaskList tasks) throws GoobleException {
-        String range = command.substring("list from ".length()).trim();
-        int separator = range.indexOf(" to ");
-        if (separator <= 0 || separator + 4 >= range.length()) {
-            throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
-        }
-
-        DeadlineDateParser.DeadlineDate from = DeadlineDateParser.parse(range.substring(0, separator).trim());
-        DeadlineDateParser.DeadlineDate to = DeadlineDateParser.parse(range.substring(separator + 4).trim());
-        if (from.time() == null || to.time() == null) {
-            throw new GoobleException("Please include both dates and times, e.g. 2026-02-01 0900");
-        }
+    private static void printEventsInRange(String command, TaskList tasks, Parser parser) throws GoobleException {
+        DeadlineDateParser.DeadlineDate[] range = parser.parseDateRange(command);
+        DeadlineDateParser.DeadlineDate from = range[0];
+        DeadlineDateParser.DeadlineDate to = range[1];
 
         LocalDateTime fromDateTime = LocalDateTime.of(from.date(), from.time());
         LocalDateTime toDateTime = LocalDateTime.of(to.date(), to.time());
-        if (toDateTime.isBefore(fromDateTime)) {
-            throw new GoobleException("Please ensure the 'to' date and time is not before the 'from' date and time.");
-        }
 
         System.out.println("Here are the events in your list for that period:");
         int matchingEventNumber = 1;
