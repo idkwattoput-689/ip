@@ -1,5 +1,14 @@
+package gooble;
+
 import java.nio.file.Path;
 import java.util.Scanner;
+
+import gooble.command.Command;
+import gooble.command.CommandContext;
+import gooble.command.Parser;
+import gooble.storage.Storage;
+import gooble.task.TaskList;
+import gooble.ui.Ui;
 
 /**
  * Composes Gooble's application services and runs the command loop.

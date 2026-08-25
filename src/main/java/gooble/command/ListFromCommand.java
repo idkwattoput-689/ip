@@ -1,3 +1,9 @@
+package gooble.command;
+
+import gooble.GoobleException;
+import gooble.task.DeadlineDateParser;
+import gooble.task.Event;
+
 import java.time.LocalDateTime;
 
 /** Handles filtering events by an inclusive date-time range. */

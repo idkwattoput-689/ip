@@ -1,3 +1,5 @@
+package gooble.command;
+
 /** Handles marking a task complete or incomplete. */
 public class MarkCommand extends Command {
     public MarkCommand(String input) { super(input); }

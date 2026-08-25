@@ -15,6 +15,7 @@ bin/
 
 # Temp files
 _temp/
+.package-classes/
 /data/
 
 /text-ui-test/ACTUAL.TXT

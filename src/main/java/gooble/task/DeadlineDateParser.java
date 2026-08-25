@@ -1,3 +1,7 @@
+package gooble.task;
+
+import gooble.GoobleException;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;

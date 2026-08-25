@@ -1,3 +1,5 @@
+package gooble.command;
+
 /** Handles exiting the application. */
 public class ByeCommand extends Command {
     public ByeCommand(String input) { super(input); }
