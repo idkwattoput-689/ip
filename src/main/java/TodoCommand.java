@@ -1,5 +1,5 @@
 /** Handles adding a to-do task. */
-public class TodoCommand implements CommandHandler {
+public class TodoCommand extends Command {
     public void execute(String input, CommandContext context) throws GoobleException {
         String description = input.substring("todo".length()).trim();
         context.parser().validateDescription(description);

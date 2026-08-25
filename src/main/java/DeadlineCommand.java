@@ -1,5 +1,5 @@
 /** Handles adding a deadline task. */
-public class DeadlineCommand implements CommandHandler {
+public class DeadlineCommand extends Command {
     public void execute(String input, CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseDeadline(input);
         DeadlineDateParser.DeadlineDate date = DeadlineDateParser.parse(parts[1]);

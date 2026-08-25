@@ -14,7 +14,7 @@ public enum CommandType {
     UNKNOWN;
 
     /** Returns the handler for commands migrated to the handler architecture. */
-    public CommandHandler handler() {
+    public Command handler() {
         return switch (this) {
         case LIST -> new ListCommand();
         case MARK -> new MarkCommand();

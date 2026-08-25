@@ -1,5 +1,5 @@
 /** Handles deleting a task. */
-public class DeleteCommand implements CommandHandler {
+public class DeleteCommand extends Command {
     public void execute(String input, CommandContext context) {
         String number = context.parser().argumentAfter(input, "delete");
         try {

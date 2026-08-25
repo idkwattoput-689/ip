@@ -1,7 +1,7 @@
 /**
  * Handles the basic list command.
  */
-public class ListCommand implements CommandHandler {
+public class ListCommand extends Command {
     @Override
     public void execute(String input, CommandContext context) throws GoobleException {
         if (!input.equals("list")) {

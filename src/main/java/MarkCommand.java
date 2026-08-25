@@ -1,5 +1,5 @@
 /** Handles marking a task complete or incomplete. */
-public class MarkCommand implements CommandHandler {
+public class MarkCommand extends Command {
     public void execute(String input, CommandContext context) {
         execute(input, context, true);
     }

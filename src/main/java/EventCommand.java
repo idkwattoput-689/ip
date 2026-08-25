@@ -1,5 +1,5 @@
 /** Handles adding an event task. */
-public class EventCommand implements CommandHandler {
+public class EventCommand extends Command {
     public void execute(String input, CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseEvent(input);
         context.tasks().add(new Event(parts[0], parts[1], parts[2]));
