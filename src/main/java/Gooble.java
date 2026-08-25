@@ -6,32 +6,28 @@ import java.util.Scanner;
  */
 public class Gooble {
     public static void main(String[] args) {
-        String divider = "_".repeat(60);
+        Ui ui = new Ui();
         String banner = "  ____            _     _      \n"
                 + " / ___| ___   ___ | |__ | | ___ \n"
                 + "| |  _ / _ \\ / _ \\| '_ \\| |/ _ \\\n"
                 + "| |_| | (_) | (_) | |_) | |  __/\n"
                 + " \\____|\\___/ \\___/|_.__/|_|\\___|\n";
 
-        System.out.println(divider);
-        System.out.print(banner);
-        System.out.println("Hello! I'm Gooble.");
-        System.out.println("What can I do for you?");
-        System.out.println(divider);
+        ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
         TaskList tasks = new TaskList();
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
-            System.out.println(divider);
+            ui.showDivider();
 
             String commandWord = command.split("\\s+", 2)[0];
             CommandType type = CommandType.fromString(commandWord);
 
             if (type == CommandType.BYE) {
                 System.out.println("Bye. Hope to see you again soon!");
-                System.out.println(divider);
+                ui.showDivider();
                 break;
             }
 
@@ -158,7 +154,7 @@ public class Gooble {
             } catch (GoobleException e) {
                 System.out.println(e.getMessage());
             }
-            System.out.println(divider);
+            ui.showDivider();
         }
     }
 
