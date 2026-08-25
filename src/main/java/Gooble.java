@@ -6,9 +6,25 @@ import java.util.Scanner;
  * Starts Gooble, responds to entered commands, and exits when requested.
  */
 public class Gooble {
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        Parser parser = new Parser();
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
+    private final Parser parser;
+
+    /**
+     * Creates a Gooble application backed by the supplied task file.
+     *
+     * @param filePath path to the task storage file
+     */
+    public Gooble(String filePath) {
+        ui = new Ui();
+        parser = new Parser();
+        storage = new Storage(Path.of(filePath));
+        tasks = new TaskList(storage);
+    }
+
+    /** Runs the interactive command loop. */
+    public void run() {
         String banner = "  ____            _     _      \n"
                 + " / ___| ___   ___ | |__ | | ___ \n"
                 + "| |  _ / _ \\ / _ \\| '_ \\| |/ _ \\\n"
@@ -18,8 +34,6 @@ public class Gooble {
         ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
-        Storage storage = new Storage(Path.of("data", "Gooble.txt"));
-        TaskList tasks = new TaskList(storage);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
@@ -126,6 +140,11 @@ public class Gooble {
             }
             ui.showDivider();
         }
+    }
+
+    /** Starts Gooble with its default storage file. */
+    public static void main(String[] args) {
+        new Gooble("data/Gooble.txt").run();
     }
 
     /** Prints events fully contained within a validated date-time range. */
