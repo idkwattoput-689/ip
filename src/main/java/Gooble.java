@@ -83,13 +83,13 @@ public class Gooble {
                     }
                 } else if (type == CommandType.TODO) {
                     String description = command.substring("todo".length()).trim();
-                    validateDescription(description);
+                    parser.validateDescription(description);
                     tasks.add(new Todo(description));
                     ui.showAdded(tasks.get(tasks.size() - 1));
                     ui.showTaskCount(tasks.size());
                 } else if (type == CommandType.DEADLINE) {
                     String deadlineDetails = command.substring("deadline".length()).trim();
-                    validateDescription(deadlineDetails);
+                    parser.validateDescription(deadlineDetails);
                     String deadlineMarker = " /by ";
                     int deadlineMarkerIndex = deadlineDetails.indexOf(deadlineMarker);
 
@@ -99,7 +99,7 @@ public class Gooble {
                         String description = deadlineDetails.substring(0, deadlineMarkerIndex).trim();
                         String deadline = deadlineDetails
                                 .substring(deadlineMarkerIndex + deadlineMarker.length()).trim();
-                        validateDescription(description);
+                        parser.validateDescription(description);
                         if (deadline.isEmpty()) {
                             throw new GoobleException("Please specify a deadline using /by.");
                         }
@@ -116,7 +116,7 @@ public class Gooble {
                     }
                 } else if (type == CommandType.EVENT) {
                     String eventDetails = command.substring("event".length()).trim();
-                    validateDescription(eventDetails);
+                    parser.validateDescription(eventDetails);
                     String startMarker = " /from ";
                     String endMarker = " /to ";
                     int startMarkerIndex = eventDetails.indexOf(startMarker);
@@ -130,7 +130,7 @@ public class Gooble {
                         String startDate = eventDetails.substring(startMarkerIndex + startMarker.length(),
                                 endMarkerIndex).trim();
                         String endDate = eventDetails.substring(endMarkerIndex + endMarker.length()).trim();
-                        validateDescription(description);
+                        parser.validateDescription(description);
                         if (startDate.isEmpty() || endDate.isEmpty()) {
                             throw new GoobleException("Please specify an event time using /from and /to.");
                         }
@@ -140,7 +140,7 @@ public class Gooble {
                     }
                 } else if (type == CommandType.ADD) {
                     String content = command.substring("add".length()).trim();
-                    validateDescription(content);
+                    parser.validateDescription(content);
                     tasks.add(new Task(content));
                     System.out.println("added: " + content);
                 } else {
@@ -150,18 +150,6 @@ public class Gooble {
                 System.out.println(e.getMessage());
             }
             ui.showDivider();
-        }
-    }
-
-    /**
-     * Ensures that a task command includes a non-empty description.
-     *
-     * @param description description extracted from the command
-     * @throws GoobleException if the description is empty
-     */
-    private static void validateDescription(String description) throws GoobleException {
-        if (description.isEmpty()) {
-            throw new GoobleException("You need to add in some description for that lmao");
         }
     }
 

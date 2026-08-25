@@ -26,4 +26,16 @@ public class Parser {
         }
         return command.substring(commandWord.length()).trim();
     }
+
+    /**
+     * Ensures that a command contains a non-empty description.
+     *
+     * @param description description extracted from a command
+     * @throws GoobleException when the description is empty
+     */
+    public void validateDescription(String description) throws GoobleException {
+        if (description.isEmpty()) {
+            throw new GoobleException("You need to add in some description for that lmao");
+        }
+    }
 }
