@@ -43,14 +43,18 @@ public class Gooble {
             CommandType type = parser.parseType(command);
 
             if (type == CommandType.BYE) {
-                ui.showBye();
+                try {
+                    type.handler().execute(command, commandContext);
+                } catch (GoobleException e) {
+                    System.out.println(e.getMessage());
+                }
                 ui.showDivider();
                 break;
             }
 
             try {
                 CommandHandler handler = type.handler();
-                if (handler != null) {
+                if (handler != null && !(type == CommandType.LIST && command.startsWith("list from "))) {
                     handler.execute(command, commandContext);
                 } else if (type == CommandType.LIST) {
                     if (type.handler() != null && command.equals("list")) {

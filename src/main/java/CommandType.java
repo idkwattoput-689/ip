@@ -22,6 +22,7 @@ public enum CommandType {
         case DELETE -> new DeleteCommand();
         case TODO -> new TodoCommand();
         case ADD -> new AddCommand();
+        case BYE -> new ByeCommand();
         default -> null;
         };
     }
