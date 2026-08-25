@@ -1,12 +1,8 @@
 import java.util.ArrayList;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Base64;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.AtomicMoveNotSupportedException;
 
 /**
  * Manage the list of task in Gooble's task list
@@ -17,12 +13,14 @@ public class TaskList {
     private static final Path STORAGE_PATH = Path.of("data", "Gooble.txt");
 
     private final ArrayList<Task> tasks;
+    private final Storage storage;
 
     /*
     Create an empty TaskList
      */
     public TaskList() {
         this.tasks = new ArrayList<>();
+        this.storage = new Storage(STORAGE_PATH);
         load();
     }
 
@@ -110,27 +108,7 @@ public class TaskList {
             savedTasks.add(serialize(task));
         }
 
-        Path temporaryPath = null;
-        try {
-            Files.createDirectories(STORAGE_PATH.getParent());
-            temporaryPath = STORAGE_PATH.resolveSibling(STORAGE_PATH.getFileName() + ".tmp");
-            Files.write(temporaryPath, savedTasks, StandardCharsets.UTF_8);
-            try {
-                Files.move(temporaryPath, STORAGE_PATH, StandardCopyOption.ATOMIC_MOVE,
-                        StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporaryPath, STORAGE_PATH, StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (IOException | SecurityException e) {
-            if (temporaryPath != null) {
-                try {
-                    Files.deleteIfExists(temporaryPath);
-                } catch (IOException | SecurityException ignored) {
-                    // The original save error is more useful to the caller.
-                }
-            }
-            reportStorageWarning("Unable to save tasks to disk.", e);
-        }
+        storage.save(savedTasks);
     }
 
     /**
@@ -180,18 +158,11 @@ public class TaskList {
      * Restores tasks from the storage file when it is available.
      */
     private void load() {
-        try {
-            if (!Files.isRegularFile(STORAGE_PATH)) {
-                return;
+        for (String savedTask : storage.load()) {
+            Task task = parseSavedTask(savedTask);
+            if (task != null) {
+                tasks.add(task);
             }
-            for (String savedTask : Files.readAllLines(STORAGE_PATH, StandardCharsets.UTF_8)) {
-                Task task = parseSavedTask(savedTask);
-                if (task != null) {
-                    tasks.add(task);
-                }
-            }
-        } catch (IOException | SecurityException e) {
-            reportStorageWarning("Unable to load tasks from disk.", e);
         }
     }
 
@@ -301,11 +272,6 @@ public class TaskList {
     /** Returns whether a legacy record contains a supported status marker. */
     private boolean validStatus(char status) {
         return status == ' ' || status == 'X';
-    }
-
-    /** Reports storage failures without preventing the chatbot from running. */
-    private void reportStorageWarning(String message, Exception cause) {
-        System.err.println("Warning: " + message);
     }
 
     /**
