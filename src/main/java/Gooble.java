@@ -36,28 +36,21 @@ public class Gooble {
         ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
+        boolean isExit = false;
+        while (scanner.hasNextLine() && !isExit) {
             String command = scanner.nextLine().trim();
             ui.showDivider();
 
             CommandType type = parser.parseType(command);
 
-            if (type == CommandType.BYE) {
-                try {
-                    type.handler().execute(command, commandContext);
-                } catch (GoobleException e) {
-                    System.out.println(e.getMessage());
-                }
-                ui.showDivider();
-                break;
-            }
-
             try {
                 Command handler = type.handler();
                 if (type == CommandType.LIST && command.startsWith("list from ")) {
-                    new ListFromCommand().execute(command, commandContext);
+                    Command rangeCommand = new ListFromCommand();
+                    rangeCommand.execute(command, commandContext);
                 } else if (handler != null) {
                     handler.execute(command, commandContext);
+                    isExit = handler.isExit();
                 } else if (type == CommandType.LIST) {
                     if (type.handler() != null && command.equals("list")) {
                         type.handler().execute(command, commandContext);
