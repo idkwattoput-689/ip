@@ -1,4 +1,8 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
+import gooble.task.Deadline;
+import gooble.task.DeadlineDateParser;
 
 /** Handles adding a deadline task. */
 public class DeadlineCommand extends Command {

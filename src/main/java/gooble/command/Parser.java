@@ -1,4 +1,7 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
+import gooble.task.DeadlineDateParser;
 
 /**
  * Interprets the command word and arguments entered by the user.

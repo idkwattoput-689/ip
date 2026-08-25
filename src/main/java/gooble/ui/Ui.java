@@ -1,4 +1,7 @@
-package gooble;
+package gooble.ui;
+
+import gooble.task.Task;
+import gooble.task.TaskList;
 
 /**
  * Handles Gooble's console presentation.

@@ -1,4 +1,6 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
 
 /**
  * Base class for commands that can be executed by Gooble.

@@ -1,4 +1,6 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
 
 /** Handles unrecognized commands. */
 public class UnknownCommand extends Command {

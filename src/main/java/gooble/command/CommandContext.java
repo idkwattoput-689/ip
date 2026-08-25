@@ -1,4 +1,8 @@
-package gooble;
+package gooble.command;
+
+import gooble.command.Parser;
+import gooble.task.TaskList;
+import gooble.ui.Ui;
 
 /**
  * Shared application services available to command handlers.

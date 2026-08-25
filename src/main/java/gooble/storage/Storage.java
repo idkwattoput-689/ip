@@ -1,4 +1,4 @@
-package gooble;
+package gooble.storage;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

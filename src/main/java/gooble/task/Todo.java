@@ -1,4 +1,4 @@
-package gooble;
+package gooble.task;
 
 /**
  * Represents a task without an associated date, time, or deadline.

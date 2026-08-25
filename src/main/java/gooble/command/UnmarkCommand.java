@@ -1,4 +1,4 @@
-package gooble;
+package gooble.command;
 
 /** Handles marking a task incomplete. */
 public class UnmarkCommand extends Command {

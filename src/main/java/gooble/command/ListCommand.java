@@ -1,4 +1,6 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
 
 /**
  * Handles the basic list command.

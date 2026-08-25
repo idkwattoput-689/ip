@@ -1,4 +1,4 @@
-package gooble;
+package gooble.command;
 
 /** Handles exiting the application. */
 public class ByeCommand extends Command {

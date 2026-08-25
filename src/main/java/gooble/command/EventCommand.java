@@ -1,4 +1,7 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
+import gooble.task.Event;
 
 /** Handles adding an event task. */
 public class EventCommand extends Command {

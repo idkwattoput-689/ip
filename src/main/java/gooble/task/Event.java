@@ -1,4 +1,4 @@
-package gooble;
+package gooble.task;
 
 /**
  * Represents a task scheduled between a start and end date or time.

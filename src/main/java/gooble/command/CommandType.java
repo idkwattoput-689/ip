@@ -1,4 +1,4 @@
-package gooble;
+package gooble.command;
 
 /**
  * Represents the type of command a user can enter in Gooble.

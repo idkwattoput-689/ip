@@ -1,4 +1,7 @@
-package gooble;
+package gooble.task;
+
+import gooble.storage.Storage;
+import gooble.GoobleException;
 
 import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;

@@ -1,4 +1,9 @@
-package gooble;
+package gooble.command;
+
+import gooble.GoobleException;
+import gooble.task.Task;
+import gooble.task.TaskList;
+import gooble.task.Todo;
 
 /** Handles adding a general task. */
 public class AddCommand extends Command {
