@@ -129,15 +129,16 @@ ____________________________________________________________
 
 ### Adding deadline tasks
 
-Users can add a task with a deadline using `deadline [description] /by [deadline]`.
+Users can add a task with a deadline using `deadline [description] /by [deadline]`. Deadline dates
+must use `yyyy-MM-dd` (optionally followed by a 24-hour time such as `1800`) or `d/M/yyyy HHmm`.
 
 Example:
 
 ```
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 02 2019, 6:00 PM)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ```

@@ -1,9 +1,12 @@
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents a task that must be completed by a specified deadline.
  */
 public class Deadline extends Task {
-    /** The deadline associated with this task. */
-    private final String deadline;
+    private static final DateTimeFormatter STORAGE_TIME = DateTimeFormatter.ofPattern("HHmm");
+    /** The typed deadline date and optional time associated with this task. */
+    private final DeadlineDateParser.DeadlineDate deadline;
 
     /**
      * Creates an incomplete deadline task with a description and deadline.
@@ -11,10 +14,10 @@ public class Deadline extends Task {
      * @param description the text describing the task
      * @param deadline the date or time by which the task should be completed
      */
-    public Deadline(String description, String deadline) {
+    public Deadline(String description, DeadlineDateParser.DeadlineDate deadline) {
         super(description);
-        if (deadline == null || deadline.isBlank()) {
-            throw new IllegalArgumentException("Deadline cannot be empty.");
+        if (deadline == null) {
+            throw new IllegalArgumentException("Deadline cannot be null.");
         }
         this.deadline = deadline;
     }
@@ -25,7 +28,13 @@ public class Deadline extends Task {
      * @return the deadline
      */
     public String getDeadline() {
-        return deadline;
+        return DeadlineDateParser.format(deadline);
+    }
+
+    /** Returns the ISO-style value used when saving this deadline. */
+    public String getStoredDeadline() {
+        return deadline.time() == null ? deadline.date().toString()
+                : deadline.date() + " " + deadline.time().format(STORAGE_TIME);
     }
 
     /**
@@ -35,6 +44,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D][" + getStatusIcon() + "] " + description + " (by: " + deadline + ")";
+        return "[D][" + getStatusIcon() + "] " + description + " (by: " + getDeadline() + ")";
     }
 }

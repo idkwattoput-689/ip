@@ -147,7 +147,7 @@ public class TaskList {
             type = "T";
         } else if (task instanceof Deadline deadline) {
             type = "D";
-            fields.add(deadline.getDeadline());
+            fields.add(deadline.getStoredDeadline());
         } else if (task instanceof Event event) {
             type = "E";
             fields.add(event.getStartDate());
@@ -231,23 +231,27 @@ public class TaskList {
         }
 
         Task task;
-        switch (fields[0]) {
-        case "G":
-            task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
-            break;
-        case "T":
-            task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
-            break;
-        case "D":
-            task = decodedFields.size() == 2
-                    ? new Deadline(decodedFields.get(0), decodedFields.get(1)) : null;
-            break;
-        case "E":
-            task = decodedFields.size() == 3
-                    ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
-            break;
-        default:
-            task = null;
+        try {
+            switch (fields[0]) {
+            case "G":
+                task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
+                break;
+            case "T":
+                task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
+                break;
+            case "D":
+                task = decodedFields.size() == 2
+                        ? new Deadline(decodedFields.get(0), DeadlineDateParser.parse(decodedFields.get(1))) : null;
+                break;
+            case "E":
+                task = decodedFields.size() == 3
+                        ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
+                break;
+            default:
+                task = null;
+            }
+        } catch (GoobleException | IllegalArgumentException e) {
+            return null;
         }
         return task == null ? null : restoreStatus(task, fields[1].charAt(0) == '1' ? 'X' : ' ');
     }
@@ -264,8 +268,13 @@ public class TaskList {
             if (validStatus(savedTask.charAt(4)) && deadlineMarker > 7 && savedTask.endsWith(")")) {
                 String description = savedTask.substring(7, deadlineMarker);
                 String deadline = savedTask.substring(deadlineMarker + 6, savedTask.length() - 1);
-                return !description.isBlank() && !deadline.isBlank()
-                        ? restoreStatus(new Deadline(description, deadline), savedTask.charAt(4)) : null;
+                try {
+                    return !description.isBlank() && !deadline.isBlank()
+                            ? restoreStatus(new Deadline(description, DeadlineDateParser.parse(deadline)), savedTask.charAt(4))
+                            : null;
+                } catch (GoobleException e) {
+                    return null;
+                }
             }
         }
         if (savedTask.startsWith("[E][") && savedTask.length() >= 7) {

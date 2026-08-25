@@ -213,7 +213,7 @@ Aim: Verify that a deadline task keeps its by-date in the task display.
 ### Inputs
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 bye
 ```
 
@@ -231,8 +231,39 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 02 2019, 6:00 PM)
 Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Reject an invalid deadline date
+
+Aim: Verify that unsupported deadline date formats show a helpful example.
+
+### Inputs
+
+```text
+deadline return book /by Sunday
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Please use a proper date format. Examples: 2019-12-02 or 2/12/2019 1800
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

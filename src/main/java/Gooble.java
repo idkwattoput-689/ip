@@ -106,7 +106,7 @@ public class Gooble {
                         if (deadline.isEmpty()) {
                             throw new GoobleException("Please specify a deadline using /by.");
                         }
-                        tasks.add(new Deadline(description, deadline));
+                        tasks.add(new Deadline(description, DeadlineDateParser.parse(deadline)));
                         System.out.println("Got it. I've added this task:");
                         System.out.println("  " + tasks.get(tasks.size() - 1));
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
