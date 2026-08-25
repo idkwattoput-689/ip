@@ -34,7 +34,7 @@ public class Gooble {
             try {
                 if (type == CommandType.LIST) {
                     if (command.equals("list")) {
-                        printAllTasks(tasks);
+                        ui.showTasks(tasks);
                     } else if (command.startsWith("list from ")) {
                         printEventsInRange(command, tasks);
                     } else {
@@ -183,14 +183,6 @@ public class Gooble {
             return "";
         }
         return command.substring(commandWord.length()).trim();
-    }
-
-    /** Prints every task, preserving the original list command behavior. */
-    private static void printAllTasks(TaskList tasks) {
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
-        }
     }
 
     /** Prints events fully contained within a validated date-time range. */
