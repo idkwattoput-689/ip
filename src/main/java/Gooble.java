@@ -113,6 +113,9 @@ public class Gooble {
                         if (DeadlineDateParser.isValentinesDay(parsedDeadline)) {
                             System.out.println("Love is in the air~");
                         }
+                        if (DeadlineDateParser.isChineseNewYear(parsedDeadline)) {
+                            System.out.println("\u606d\u559c\u53d1\u8d22\uff01\uff01");
+                        }
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     }
                 } else if (type == CommandType.EVENT) {

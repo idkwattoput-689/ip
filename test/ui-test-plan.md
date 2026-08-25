@@ -304,6 +304,40 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: Add a Chinese New Year deadline
+
+Aim: Verify that a deadline on Chinese New Year displays the prosperity greeting.
+
+### Inputs
+
+```text
+deadline collect red packets /by 2026-02-17 1800
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] collect red packets (by: Feb 17 2026, 6:00 PM)
+恭喜发财！！
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: Add an event
 
 Aim: Verify that an event includes its start and end dates in the display.
