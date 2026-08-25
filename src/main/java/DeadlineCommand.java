@@ -1,6 +1,7 @@
 /** Handles adding a deadline task. */
 public class DeadlineCommand extends Command {
-    public void execute(String input, CommandContext context) throws GoobleException {
+    public DeadlineCommand(String input) { super(input); }
+    public void execute(CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseDeadline(input);
         DeadlineDateParser.DeadlineDate date = DeadlineDateParser.parse(parts[1]);
         context.tasks().add(new Deadline(parts[0], date));

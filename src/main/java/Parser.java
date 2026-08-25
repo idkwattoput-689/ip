@@ -2,6 +2,16 @@
  * Interprets the command word and arguments entered by the user.
  */
 public class Parser {
+    /** Creates the command object corresponding to complete user input. */
+    public Command parse(String command) {
+        CommandType type = parseType(command);
+        if (type == CommandType.LIST && command.startsWith("list from ")) {
+            return new ListFromCommand(command);
+        }
+        Command parsed = type.handler(command);
+        return parsed == null ? new UnknownCommand(command) : parsed;
+    }
+
     /**
      * Determines the command type from a complete input line.
      *

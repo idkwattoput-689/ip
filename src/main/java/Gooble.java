@@ -41,6 +41,16 @@ public class Gooble {
             String command = scanner.nextLine().trim();
             ui.showDivider();
 
+            Command parsedCommand = parser.parse(command);
+            try {
+                parsedCommand.execute(commandContext);
+                isExit = parsedCommand.isExit();
+            } catch (GoobleException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                ui.showDivider();
+            }
+            /*
             CommandType type = parser.parseType(command);
 
             try {
@@ -141,7 +151,7 @@ public class Gooble {
             } catch (GoobleException e) {
                 System.out.println(e.getMessage());
             }
-            ui.showDivider();
+            ui.showDivider(); */
         }
     }
 

@@ -1,6 +1,7 @@
 /** Handles exiting the application. */
 public class ByeCommand extends Command {
-    public void execute(String input, CommandContext context) {
+    public ByeCommand(String input) { super(input); }
+    public void execute(CommandContext context) {
         context.ui().showBye();
     }
 

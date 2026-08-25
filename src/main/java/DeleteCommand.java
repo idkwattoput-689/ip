@@ -1,6 +1,7 @@
 /** Handles deleting a task. */
 public class DeleteCommand extends Command {
-    public void execute(String input, CommandContext context) {
+    public DeleteCommand(String input) { super(input); }
+    public void execute(CommandContext context) {
         String number = context.parser().argumentAfter(input, "delete");
         try {
             int index = Integer.parseInt(number) - 1;

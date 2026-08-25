@@ -1,6 +1,7 @@
 /** Handles marking a task complete or incomplete. */
 public class MarkCommand extends Command {
-    public void execute(String input, CommandContext context) {
+    public MarkCommand(String input) { super(input); }
+    public void execute(CommandContext context) {
         execute(input, context, true);
     }
 

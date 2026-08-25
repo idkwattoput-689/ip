@@ -2,7 +2,8 @@ import java.time.LocalDateTime;
 
 /** Handles filtering events by an inclusive date-time range. */
 public class ListFromCommand extends Command {
-    public void execute(String input, CommandContext context) throws GoobleException {
+    public ListFromCommand(String input) { super(input); }
+    public void execute(CommandContext context) throws GoobleException {
         DeadlineDateParser.DeadlineDate[] range = context.parser().parseDateRange(input);
         LocalDateTime from = LocalDateTime.of(range[0].date(), range[0].time());
         LocalDateTime to = LocalDateTime.of(range[1].date(), range[1].time());
