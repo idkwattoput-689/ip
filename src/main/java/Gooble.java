@@ -88,21 +88,10 @@ public class Gooble {
                     ui.showAdded(tasks.get(tasks.size() - 1));
                     ui.showTaskCount(tasks.size());
                 } else if (type == CommandType.DEADLINE) {
-                    String deadlineDetails = command.substring("deadline".length()).trim();
-                    parser.validateDescription(deadlineDetails);
-                    String deadlineMarker = " /by ";
-                    int deadlineMarkerIndex = deadlineDetails.indexOf(deadlineMarker);
-
-                    if (deadlineMarkerIndex == -1) {
-                        throw new GoobleException("Please specify a deadline using /by.");
-                    } else {
-                        String description = deadlineDetails.substring(0, deadlineMarkerIndex).trim();
-                        String deadline = deadlineDetails
-                                .substring(deadlineMarkerIndex + deadlineMarker.length()).trim();
-                        parser.validateDescription(description);
-                        if (deadline.isEmpty()) {
-                            throw new GoobleException("Please specify a deadline using /by.");
-                        }
+                    String[] deadlineParts = parser.parseDeadline(command);
+                    {
+                        String description = deadlineParts[0];
+                        String deadline = deadlineParts[1];
                         DeadlineDateParser.DeadlineDate parsedDeadline = DeadlineDateParser.parse(deadline);
                         tasks.add(new Deadline(description, parsedDeadline));
                         ui.showAdded(tasks.get(tasks.size() - 1));
@@ -115,25 +104,11 @@ public class Gooble {
                         ui.showTaskCount(tasks.size());
                     }
                 } else if (type == CommandType.EVENT) {
-                    String eventDetails = command.substring("event".length()).trim();
-                    parser.validateDescription(eventDetails);
-                    String startMarker = " /from ";
-                    String endMarker = " /to ";
-                    int startMarkerIndex = eventDetails.indexOf(startMarker);
-                    int endMarkerIndex = eventDetails.indexOf(endMarker);
-
-                    if (startMarkerIndex == -1 || endMarkerIndex == -1
-                            || endMarkerIndex < startMarkerIndex) {
-                        throw new GoobleException("Please specify an event time using /from and /to.");
-                    } else {
-                        String description = eventDetails.substring(0, startMarkerIndex).trim();
-                        String startDate = eventDetails.substring(startMarkerIndex + startMarker.length(),
-                                endMarkerIndex).trim();
-                        String endDate = eventDetails.substring(endMarkerIndex + endMarker.length()).trim();
-                        parser.validateDescription(description);
-                        if (startDate.isEmpty() || endDate.isEmpty()) {
-                            throw new GoobleException("Please specify an event time using /from and /to.");
-                        }
+                    String[] eventParts = parser.parseEvent(command);
+                    {
+                        String description = eventParts[0];
+                        String startDate = eventParts[1];
+                        String endDate = eventParts[2];
                         tasks.add(new Event(description, startDate, endDate));
                         ui.showAdded(tasks.get(tasks.size() - 1));
                         ui.showTaskCount(tasks.size());

@@ -38,4 +38,43 @@ public class Parser {
             throw new GoobleException("You need to add in some description for that lmao");
         }
     }
+
+    /** Parses a deadline command into description and deadline text. */
+    public String[] parseDeadline(String command) throws GoobleException {
+        String details = command.substring("deadline".length()).trim();
+        validateDescription(details);
+        String marker = " /by ";
+        int markerIndex = details.indexOf(marker);
+        if (markerIndex == -1) {
+            throw new GoobleException("Please specify a deadline using /by.");
+        }
+        String description = details.substring(0, markerIndex).trim();
+        String deadline = details.substring(markerIndex + marker.length()).trim();
+        validateDescription(description);
+        if (deadline.isEmpty()) {
+            throw new GoobleException("Please specify a deadline using /by.");
+        }
+        return new String[] { description, deadline };
+    }
+
+    /** Parses an event command into description, start, and end text. */
+    public String[] parseEvent(String command) throws GoobleException {
+        String details = command.substring("event".length()).trim();
+        validateDescription(details);
+        String startMarker = " /from ";
+        String endMarker = " /to ";
+        int startIndex = details.indexOf(startMarker);
+        int endIndex = details.indexOf(endMarker);
+        if (startIndex == -1 || endIndex == -1 || endIndex < startIndex) {
+            throw new GoobleException("Please specify an event time using /from and /to.");
+        }
+        String description = details.substring(0, startIndex).trim();
+        String start = details.substring(startIndex + startMarker.length(), endIndex).trim();
+        String end = details.substring(endIndex + endMarker.length()).trim();
+        validateDescription(description);
+        if (start.isEmpty() || end.isEmpty()) {
+            throw new GoobleException("Please specify an event time using /from and /to.");
+        }
+        return new String[] { description, start, end };
+    }
 }
