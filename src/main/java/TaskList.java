@@ -15,12 +15,22 @@ public class TaskList {
     private final ArrayList<Task> tasks;
     private final Storage storage;
 
-    /*
-    Create an empty TaskList
-     */
+    /** Creates a task list backed by the default Gooble storage file. */
     public TaskList() {
+        this(new Storage(STORAGE_PATH));
+    }
+
+    /**
+     * Creates a task list backed by the supplied storage component.
+     *
+     * @param storage component used to load and save task records
+     */
+    public TaskList(Storage storage) {
+        if (storage == null) {
+            throw new IllegalArgumentException("Storage cannot be null.");
+        }
         this.tasks = new ArrayList<>();
-        this.storage = new Storage(STORAGE_PATH);
+        this.storage = storage;
         load();
     }
 
