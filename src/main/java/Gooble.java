@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 /**
@@ -17,7 +18,8 @@ public class Gooble {
         ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
-        TaskList tasks = new TaskList();
+        Storage storage = new Storage(Path.of("data", "Gooble.txt"));
+        TaskList tasks = new TaskList(storage);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
