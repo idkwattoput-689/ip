@@ -15,7 +15,13 @@ public enum CommandType {
 
     /** Returns the handler for commands migrated to the handler architecture. */
     public CommandHandler handler() {
-        return this == LIST ? new ListCommand() : null;
+        return switch (this) {
+        case LIST -> new ListCommand();
+        case MARK -> new MarkCommand();
+        case UNMARK -> new UnmarkCommand();
+        case DELETE -> new DeleteCommand();
+        default -> null;
+        };
     }
 
     /**
