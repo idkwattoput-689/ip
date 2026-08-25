@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 /**
@@ -36,9 +37,12 @@ public class Gooble {
 
             try {
                 if (type == CommandType.LIST) {
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println((i + 1) + "." + tasks.get(i));
+                    if (command.equals("list")) {
+                        printAllTasks(tasks);
+                    } else if (command.startsWith("list from ")) {
+                        printEventsInRange(command, tasks);
+                    } else {
+                        throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
                     }
                 } else if (type == CommandType.MARK) {
                     String taskNumber = argumentAfter(command, "mark");
@@ -183,5 +187,57 @@ public class Gooble {
             return "";
         }
         return command.substring(commandWord.length()).trim();
+    }
+
+    /** Prints every task, preserving the original list command behavior. */
+    private static void printAllTasks(TaskList tasks) {
+        System.out.println("Here are the tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + "." + tasks.get(i));
+        }
+    }
+
+    /** Prints events fully contained within a validated date-time range. */
+    private static void printEventsInRange(String command, TaskList tasks) throws GoobleException {
+        String range = command.substring("list from ".length()).trim();
+        int separator = range.indexOf(" to ");
+        if (separator <= 0 || separator + 4 >= range.length()) {
+            throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
+        }
+
+        DeadlineDateParser.DeadlineDate from = DeadlineDateParser.parse(range.substring(0, separator).trim());
+        DeadlineDateParser.DeadlineDate to = DeadlineDateParser.parse(range.substring(separator + 4).trim());
+        if (from.time() == null || to.time() == null) {
+            throw new GoobleException("Please include both dates and times, e.g. 2026-02-01 0900");
+        }
+
+        LocalDateTime fromDateTime = LocalDateTime.of(from.date(), from.time());
+        LocalDateTime toDateTime = LocalDateTime.of(to.date(), to.time());
+        if (toDateTime.isBefore(fromDateTime)) {
+            throw new GoobleException("Please ensure the 'to' date and time is not before the 'from' date and time.");
+        }
+
+        System.out.println("Here are the events in your list for that period:");
+        int matchingEventNumber = 1;
+        for (int i = 0; i < tasks.size(); i++) {
+            if (!(tasks.get(i) instanceof Event event)) {
+                continue;
+            }
+            try {
+                DeadlineDateParser.DeadlineDate eventFrom = DeadlineDateParser.parse(event.getStartDate());
+                DeadlineDateParser.DeadlineDate eventTo = DeadlineDateParser.parse(event.getEndDate());
+                if (eventFrom.time() == null || eventTo.time() == null) {
+                    continue;
+                }
+                LocalDateTime eventStart = LocalDateTime.of(eventFrom.date(), eventFrom.time());
+                LocalDateTime eventEnd = LocalDateTime.of(eventTo.date(), eventTo.time());
+                if (!eventStart.isBefore(fromDateTime) && !eventEnd.isAfter(toDateTime)) {
+                    System.out.println(matchingEventNumber + "." + event);
+                    matchingEventNumber++;
+                }
+            } catch (GoobleException e) {
+                // Existing events may use free-form text and cannot be date-filtered.
+            }
+        }
     }
 }

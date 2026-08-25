@@ -73,6 +73,22 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+### Filtering events by date and time
+
+Users can show only events fully contained within a date-time range using
+`list from [start] to [end]`. Both boundaries must use `yyyy-MM-dd HHmm`,
+and the end must not be earlier than the start.
+
+Example:
+
+```
+list from 2026-03-09 0000 to 2026-03-11 2359
+____________________________________________________________
+Here are the events in your list for that period:
+1.[E][ ] in range (from: 2026-03-10 0900 to: 2026-03-10 1000)
+____________________________________________________________
+```
+
 ### Marking objects in the list
 
 Users can enter 'mark [i]' and Gooble will mark the ith task in the list.
