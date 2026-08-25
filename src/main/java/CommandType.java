@@ -20,6 +20,8 @@ public enum CommandType {
         case MARK -> new MarkCommand();
         case UNMARK -> new UnmarkCommand();
         case DELETE -> new DeleteCommand();
+        case TODO -> new TodoCommand();
+        case ADD -> new AddCommand();
         default -> null;
         };
     }
