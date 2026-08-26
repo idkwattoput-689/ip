@@ -28,6 +28,33 @@ ____________________________________________________________
 ```
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
 
+## Building and running the fat JAR
+
+The project uses the Gradle Shadow plugin to package Gooble together with its
+runtime dependencies in one executable JAR file. From the `ip` project
+directory, run:
+
+```powershell
+.\gradlew.bat clean shadowJar
+```
+
+The generated fat JAR is:
+
+```text
+build\libs\Gooble.jar
+```
+
+To distribute the application, copy `build\libs\Gooble.jar` into an empty
+folder. Open a command window in that folder and run:
+
+```powershell
+java -jar "Gooble.jar"
+```
+
+Gooble reads and writes its task data at `data\Gooble.txt` in the folder from
+which the JAR is launched. The `build` directory and generated JAR are ignored
+by Git and should not be committed. Type `bye` to exit.
+
 ## Features
 
 ### Greeting the user

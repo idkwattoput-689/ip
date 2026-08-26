@@ -37,7 +37,7 @@ test {
 }
 
 application {
-    mainClass = 'seedu.duke.Duke'
+    mainClass = 'gooble.Gooble'
 }
 
 jar {
@@ -48,7 +48,10 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = 'duke.jar'
+    archiveFileName = 'Gooble.jar'
+    manifest {
+        attributes 'Main-Class': 'gooble.Gooble'
+    }
 }
 
 run {
