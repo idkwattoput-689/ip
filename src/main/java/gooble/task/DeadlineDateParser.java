@@ -27,6 +27,7 @@ public final class DeadlineDateParser {
     private static final String INVALID_DATE_MESSAGE = "Please use a proper date format. "
             + "Examples: 2019-12-02 or 2/12/2019 1800";
 
+    /** Prevents construction of this static utility class. */
     private DeadlineDateParser() {
     }
 
@@ -93,6 +94,7 @@ public final class DeadlineDateParser {
         };
     }
 
+    /** Parses a date using slash-separated or ISO notation based on its separator. */
     private static LocalDate parseDate(String text) {
         return text.contains("/") ? LocalDate.parse(text, SLASH_DATE) : LocalDate.parse(text, ISO_DATE);
     }

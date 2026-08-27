@@ -8,13 +8,13 @@ import gooble.GoobleException;
 public abstract class Command {
     protected final String input;
 
+    /** Creates a command for the complete user input. */
     protected Command(String input) {
         this.input = input;
     }
     /**
      * Executes this command with the application's shared services.
      *
-     * @param input complete user input
      * @param context shared application services
      * @throws GoobleException when the command is invalid
      */
