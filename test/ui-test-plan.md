@@ -132,6 +132,57 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: Find tasks by description keyword
+
+Aim: Verify that find displays only tasks whose descriptions contain the keyword, preserving match order.
+
+### Inputs
+
+```text
+todo read book
+deadline return book /by 2/12/2019 1800
+todo buy tea
+find book
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+  ____            _     _
+ / ___| ___   ___ | |__ | | ___
+| |  _ / _ \ / _ \| '_ \| |/ _ \
+| |_| | (_) | (_) | |_) | |  __/
+ \____|\___/ \___/|_.__/|_|\___|
+Hello! I'm Gooble.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 02 2019, 6:00 PM)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] buy tea
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list tehee:
+1.[T][ ] read book
+2.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: Unmark a task
 
 Aim: Verify that unmark changes a completed task back to incomplete.

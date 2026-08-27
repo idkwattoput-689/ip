@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.Base64;
 
 /**
@@ -82,6 +83,18 @@ public class TaskList {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /** Returns tasks whose descriptions contain the keyword, ignoring case. */
+    public List<Task> findByDescription(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        List<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
     }
 
     /**

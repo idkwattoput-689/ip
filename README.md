@@ -88,6 +88,22 @@ Here are the tasks in your list:
 ____________________________________________________________
 ```
 
+### Finding tasks by description
+
+Users can enter `find [keyword]` to display tasks whose descriptions contain the keyword.
+The search is case-insensitive and preserves the order of matching tasks.
+
+Example:
+
+```
+find book
+____________________________________________________________
+Here are the matching tasks in your list tehee:
+1.[T][ ] read book
+2.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+____________________________________________________________
+```
+
 ### Automatic task persistence
 
 Gooble automatically saves the task list to `data/Gooble.txt` whenever it changes.
