@@ -5,10 +5,12 @@ import gooble.task.Todo;
 
 /** Handles adding a to-do task. */
 public class TodoCommand extends Command {
-    /** Creates a to-do command for the complete user input. */
-    public TodoCommand(String input) { super(input); }
+    /** Creates a to-do command from complete user input. */
+    public TodoCommand(String input) {
+        super(input);
+    }
 
-    /** Adds a to-do task using the text after the {@code todo} command. */
+    /** Adds a to-do task described by the command input. */
     public void execute(CommandContext context) throws GoobleException {
         String description = input.substring("todo".length()).trim();
         context.parser().validateDescription(description);

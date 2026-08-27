@@ -1,17 +1,19 @@
 package gooble.command;
 
+import java.time.LocalDateTime;
+
 import gooble.GoobleException;
 import gooble.task.DeadlineDateParser;
 import gooble.task.Event;
 
-import java.time.LocalDateTime;
-
 /** Handles filtering events by an inclusive date-time range. */
 public class ListFromCommand extends Command {
-    /** Creates a range-list command for the complete user input. */
-    public ListFromCommand(String input) { super(input); }
+    /** Creates a date-range list command from complete user input. */
+    public ListFromCommand(String input) {
+        super(input);
+    }
 
-    /** Displays events fully contained in the requested date-time range. */
+    /** Displays events contained in the requested inclusive date-time range. */
     public void execute(CommandContext context) throws GoobleException {
         DeadlineDateParser.DeadlineDate[] range = context.parser().parseDateRange(input);
         LocalDateTime from = LocalDateTime.of(range[0].date(), range[0].time());

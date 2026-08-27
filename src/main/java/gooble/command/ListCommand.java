@@ -6,8 +6,10 @@ import gooble.GoobleException;
  * Handles the basic list command.
  */
 public class ListCommand extends Command {
-    /** Creates a list command for the complete user input. */
-    public ListCommand(String input) { super(input); }
+    /** Creates a list command from complete user input. */
+    public ListCommand(String input) {
+        super(input);
+    }
 
     @Override
     public void execute(CommandContext context) throws GoobleException {

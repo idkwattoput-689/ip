@@ -2,15 +2,16 @@ package gooble.command;
 
 /** Handles marking a task complete or incomplete. */
 public class MarkCommand extends Command {
-    /** Creates a mark command for the complete user input. */
-    public MarkCommand(String input) { super(input); }
+    /** Creates a mark command from complete user input. */
+    public MarkCommand(String input) {
+        super(input);
+    }
 
-    /** Marks the task identified by the number after the {@code mark} command. */
+    /** Marks the selected task as complete. */
     public void execute(CommandContext context) {
         execute(input, context, true);
     }
 
-    /** Applies the requested completion state for mark and unmark commands. */
     static void execute(String input, CommandContext context, boolean done) {
         String number = context.parser().argumentAfter(input, done ? "mark" : "unmark");
         try {

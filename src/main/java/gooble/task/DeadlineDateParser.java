@@ -1,7 +1,5 @@
 package gooble.task;
 
-import gooble.GoobleException;
-
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +7,8 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
+
+import gooble.GoobleException;
 
 /**
  * Parses, formats, and stores the date and optional time for deadline tasks.

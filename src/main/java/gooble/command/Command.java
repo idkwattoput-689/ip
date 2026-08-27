@@ -12,6 +12,7 @@ public abstract class Command {
     protected Command(String input) {
         this.input = input;
     }
+
     /**
      * Executes this command with the application's shared services.
      *

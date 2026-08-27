@@ -4,10 +4,12 @@ import gooble.task.Task;
 
 /** Handles deleting a task. */
 public class DeleteCommand extends Command {
-    /** Creates a delete command for the complete user input. */
-    public DeleteCommand(String input) { super(input); }
+    /** Creates a delete command from complete user input. */
+    public DeleteCommand(String input) {
+        super(input);
+    }
 
-    /** Removes the task identified by the number after the {@code delete} command. */
+    /** Deletes the task identified by the command input. */
     public void execute(CommandContext context) {
         String number = context.parser().argumentAfter(input, "delete");
         try {

@@ -5,10 +5,12 @@ import gooble.task.Event;
 
 /** Handles adding an event task. */
 public class EventCommand extends Command {
-    /** Creates an event command for the complete user input. */
-    public EventCommand(String input) { super(input); }
+    /** Creates an event command from complete user input. */
+    public EventCommand(String input) {
+        super(input);
+    }
 
-    /** Parses and adds a task scheduled between two event times. */
+    /** Adds an event task described by the command input. */
     public void execute(CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseEvent(input);
         context.tasks().add(new Event(parts[0], parts[1], parts[2]));

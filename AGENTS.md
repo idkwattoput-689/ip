@@ -1,5 +1,15 @@
 # Project context
 
+## Mandatory Java coding standard
+
+All Java code in this repository MUST follow the project skill
+`.codex/skills/seedu-java-coding-standard` and the SE-EDU Java basic + intermediate
+standard at https://se-education.org/guides/conventions/java/intermediate.html.
+Apply it to new code, modified code, tests, and refactors. In particular, enforce
+the naming, import ordering, four-space/K&R layout, 120-character line limit,
+explicit imports, narrow variable scope, braces on all control flow, encapsulation,
+and required public API Javadocs described by that skill.
+
 This repository is a starter template for a greenfield Java project used in an introductory software engineering course in an undergraduate computer science program. Students use it as the starting point for their own projects.
 
 # Default user context

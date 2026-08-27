@@ -1,8 +1,8 @@
 package gooble.task;
 
-import gooble.GoobleException;
-
 import java.time.format.DateTimeFormatter;
+
+import gooble.GoobleException;
 
 /**
  * Represents a task that must be completed by a specified deadline.
