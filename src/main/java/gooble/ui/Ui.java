@@ -2,6 +2,7 @@ package gooble.ui;
 
 import gooble.task.Task;
 import gooble.task.TaskList;
+import java.util.List;
 
 /**
  * Handles Gooble's console presentation.
@@ -37,6 +38,14 @@ public class Ui {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
+        }
+    }
+
+    /** Prints tasks matching a search keyword in their original task-list order. */
+    public void showMatchingTasks(List<Task> matchingTasks) {
+        System.out.println("Here are the matching tasks in your list tehee:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println((i + 1) + "." + matchingTasks.get(i));
         }
     }
 

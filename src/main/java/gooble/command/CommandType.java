@@ -11,6 +11,7 @@ public enum CommandType {
     TODO,
     DEADLINE,
     EVENT,
+    FIND,
     ADD,
     BYE,
     UNKNOWN;
@@ -26,6 +27,7 @@ public enum CommandType {
         case ADD -> new AddCommand(input);
         case DEADLINE -> new DeadlineCommand(input);
         case EVENT -> new EventCommand(input);
+        case FIND -> new FindCommand(input);
         case BYE -> new ByeCommand(input);
         default -> null;
         };

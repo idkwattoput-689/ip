@@ -2,9 +2,9 @@ package gooble.task;
 
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gooble.storage.Storage;
 import org.junit.jupiter.api.Test;
@@ -46,5 +46,16 @@ class TaskListTest {
 
         tasks.markAsNotDone(0);
         assertEquals(" ", tasks.get(0).getStatusIcon());
+    }
+
+    @Test
+    void findByDescription_matchesKeywordsIgnoringCase(@TempDir Path tempDir) {
+        TaskList tasks = new TaskList(new Storage(tempDir.resolve("tasks.txt")));
+        tasks.add(new Todo("read book"));
+        tasks.add(new Todo("buy tea"));
+        tasks.add(new Todo("return BOOK"));
+
+        assertEquals(2, tasks.findByDescription("book").size());
+        assertEquals("read book", tasks.findByDescription("BOOK").get(0).getDescription());
     }
 }

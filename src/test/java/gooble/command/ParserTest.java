@@ -29,6 +29,7 @@ class ParserTest {
     @Test
     void parse_supportedAndUnknownCommands_returnsExpectedCommand() {
         assertEquals(TodoCommand.class, parser.parse("todo read book").getClass());
+        assertEquals(FindCommand.class, parser.parse("find book").getClass());
         assertEquals(UnknownCommand.class, parser.parse("launch app").getClass());
     }
 
