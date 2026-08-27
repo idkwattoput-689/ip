@@ -63,6 +63,7 @@ public class Storage {
         }
     }
 
+    /** Writes a storage warning without exposing filesystem details to callers. */
     private void reportWarning(String message) {
         System.err.println("Warning: " + message);
     }
