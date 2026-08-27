@@ -21,7 +21,7 @@ public class Parser {
      * Determines the command type from a complete input line.
      *
      * @param command complete user input
-     * @return matching command type, or {@link CommandType#INVALID}
+     * @return matching command type, or {@link CommandType#UNKNOWN}
      */
     public CommandType parseType(String command) {
         String commandWord = command.split("\\s+", 2)[0];

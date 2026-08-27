@@ -4,7 +4,10 @@ import gooble.GoobleException;
 
 /** Handles unrecognized commands. */
 public class UnknownCommand extends Command {
-    public UnknownCommand(String input) { super(input); }
+    /** Creates an unknown command from complete user input. */
+    public UnknownCommand(String input) {
+        super(input);
+    }
 
     @Override
     public void execute(CommandContext context) throws GoobleException {

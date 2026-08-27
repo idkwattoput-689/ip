@@ -6,7 +6,12 @@ import gooble.task.DeadlineDateParser;
 
 /** Handles adding a deadline task. */
 public class DeadlineCommand extends Command {
-    public DeadlineCommand(String input) { super(input); }
+    /** Creates a deadline command from complete user input. */
+    public DeadlineCommand(String input) {
+        super(input);
+    }
+
+    /** Adds a deadline task described by the command input. */
     public void execute(CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseDeadline(input);
         DeadlineDateParser.DeadlineDate date = DeadlineDateParser.parse(parts[1]);

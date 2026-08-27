@@ -1,16 +1,16 @@
 package gooble.task;
 
-import gooble.storage.Storage;
-import gooble.GoobleException;
-
-import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+
+import gooble.GoobleException;
+import gooble.storage.Storage;
 
 /**
- * Manage the list of task in Gooble's task list
+ * Manages the tasks in Gooble's task list.
  */
 public class TaskList {
 
@@ -256,7 +256,8 @@ public class TaskList {
                 String deadline = savedTask.substring(deadlineMarker + 6, savedTask.length() - 1);
                 try {
                     return !description.isBlank() && !deadline.isBlank()
-                            ? restoreStatus(new Deadline(description, DeadlineDateParser.parse(deadline)), savedTask.charAt(4))
+                            ? restoreStatus(new Deadline(description,
+                                    DeadlineDateParser.parse(deadline)), savedTask.charAt(4))
                             : null;
                 } catch (GoobleException e) {
                     return null;
