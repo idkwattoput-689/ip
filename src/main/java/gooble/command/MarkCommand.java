@@ -17,7 +17,7 @@ public class MarkCommand extends Command {
         try {
             int index = Integer.parseInt(number) - 1;
             if (!context.tasks().isValidIndex(index)) {
-                System.out.println("That task number does not exist.");
+                context.ui().showMessage("That task number does not exist.");
             } else if (done) {
                 context.tasks().markAsDone(index);
                 context.ui().showMarkedDone(context.tasks().get(index));
@@ -26,7 +26,7 @@ public class MarkCommand extends Command {
                 context.ui().showMarkedNotDone(context.tasks().get(index));
             }
         } catch (NumberFormatException e) {
-            System.out.println("Please provide a valid task number.");
+            context.ui().showMessage("Please provide a valid task number.");
         }
     }
 }

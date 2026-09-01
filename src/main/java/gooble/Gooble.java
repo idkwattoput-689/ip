@@ -2,6 +2,7 @@ package gooble;
 
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import gooble.command.Command;
 import gooble.command.CommandContext;
@@ -52,6 +53,19 @@ public class Gooble {
                 ui.showDivider();
             }
         }
+    }
+
+    /** Executes one command and sends its output to the supplied consumer. */
+    public boolean executeCommand(String input, Consumer<String> output) {
+        Command command = parser.parse(input.trim());
+        Ui commandUi = new Ui(output);
+        CommandContext context = new CommandContext(tasks, commandUi, parser);
+        try {
+            command.execute(context);
+        } catch (GoobleException e) {
+            commandUi.showMessage(e.getMessage());
+        }
+        return command.isExit();
     }
 
     /** Starts Gooble with its default storage file. */

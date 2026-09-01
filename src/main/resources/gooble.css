@@ -1,0 +1,43 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f4f7fb;
+}
+
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: #f4f7fb;
+}
+
+.vbox {
+    -fx-padding: 14px;
+}
+
+.user-dialog, .gooble-dialog {
+    -fx-padding: 8px;
+    -fx-background-radius: 12px;
+}
+
+.user-dialog {
+    -fx-background-color: #dbeafe;
+}
+
+.gooble-dialog {
+    -fx-background-color: #ffffff;
+}
+
+.user-avatar, .gooble-avatar {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-background-color: #2563eb;
+}
+
+.gooble-avatar {
+    -fx-background-color: #0f766e;
+}
+
+.button {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
