@@ -1,14 +1,15 @@
 package gooble.task;
 
-import java.nio.file.Path;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gooble.storage.Storage;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import gooble.storage.Storage;
 
 /** Tests task-list indexing and task state operations. */
 class TaskListTest {
