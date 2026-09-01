@@ -1,14 +1,15 @@
 package gooble.command;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gooble.GoobleException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.Test;
+
+import gooble.GoobleException;
 
 /** Tests command parsing and validation rules. */
 class ParserTest {
@@ -54,8 +55,7 @@ class ParserTest {
     @Test
     void parseEvent_missingTimeMarker_throwsException() {
         assertThrows(GoobleException.class, () -> parser.parseEvent("event project meeting"));
-        assertThrows(GoobleException.class,
-                () -> parser.parseEvent("event project meeting /from Mon 2pm /to"));
+        assertThrows(GoobleException.class, () -> parser.parseEvent("event project meeting /from Mon 2pm /to"));
     }
 
     @Test
@@ -69,9 +69,8 @@ class ParserTest {
 
     @Test
     void parseDateRange_reversedOrMissingTimes_throwsException() {
-        assertThrows(GoobleException.class,
-                () -> parser.parseDateRange("list from 2026-02-02 0900 to 2026-02-01 1700"));
-        assertThrows(GoobleException.class,
-                () -> parser.parseDateRange("list from 2026-02-01 to 2026-02-02"));
+        assertThrows(GoobleException.class, () -> parser.parseDateRange(
+                "list from 2026-02-02 0900 to 2026-02-01 1700"));
+        assertThrows(GoobleException.class, () -> parser.parseDateRange("list from 2026-02-01 to 2026-02-02"));
     }
 }

@@ -1,8 +1,9 @@
 package gooble.ui;
 
+import java.util.List;
+
 import gooble.task.Task;
 import gooble.task.TaskList;
-import java.util.List;
 
 /**
  * Handles Gooble's console presentation.

@@ -232,22 +232,22 @@ public class TaskList {
         Task task;
         try {
             switch (fields[0]) {
-            case "G":
-                task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
-                break;
-            case "T":
-                task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
-                break;
-            case "D":
-                task = decodedFields.size() == 2
-                        ? new Deadline(decodedFields.get(0), DeadlineDateParser.parse(decodedFields.get(1))) : null;
-                break;
-            case "E":
-                task = decodedFields.size() == 3
-                        ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
-                break;
-            default:
-                task = null;
+                case "G":
+                    task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
+                    break;
+                case "T":
+                    task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
+                    break;
+                case "D":
+                    task = decodedFields.size() == 2
+                            ? new Deadline(decodedFields.get(0), DeadlineDateParser.parse(decodedFields.get(1))) : null;
+                    break;
+                case "E":
+                    task = decodedFields.size() == 3
+                            ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
+                    break;
+                default:
+                    task = null;
             }
         } catch (GoobleException | IllegalArgumentException e) {
             return null;

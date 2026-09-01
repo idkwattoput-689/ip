@@ -4,7 +4,9 @@ import gooble.GoobleException;
 
 /** Handles finding tasks whose descriptions contain a keyword. */
 public class FindCommand extends Command {
-    public FindCommand(String input) { super(input); }
+    public FindCommand(String input) {
+        super(input);
+    }
 
     @Override
     public void execute(CommandContext context) throws GoobleException {
