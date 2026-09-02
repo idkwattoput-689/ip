@@ -46,7 +46,7 @@ public class GoobleGui extends Application {
         AnchorPane.setBottomAnchor(inputBar, 0.0);
         AnchorPane.setLeftAnchor(inputBar, 0.0);
 
-        Scene scene = new Scene(mainLayout, 720, 800);
+        Scene scene = new Scene(mainLayout, 720, 650);
         scene.getStylesheets().add(getClass().getResource("/gooble.css").toExternalForm());
         stage.setTitle("Gooble");
         stage.setMinWidth(520);
