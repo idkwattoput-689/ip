@@ -1,23 +1,48 @@
 package gooble.ui;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.shape.Circle;
 
 /** Displays one message in the Gooble conversation. */
 public class DialogBox extends HBox {
     /** Creates a message styled as either a user or Gooble response. */
     public DialogBox(String message, boolean isUserMessage) {
         Label text = new Label(message);
-        Label avatar = new Label(isUserMessage ? "YOU" : "GOOBLE");
+        Node avatar = createAvatar(isUserMessage);
         text.setWrapText(true);
-        text.setMaxWidth(320);
-        avatar.setMinWidth(55);
-        avatar.setAlignment(Pos.CENTER);
-        avatar.getStyleClass().add(isUserMessage ? "user-avatar" : "gooble-avatar");
-        setSpacing(10);
+        text.setMaxWidth(560);
+        text.getStyleClass().add(isUserMessage ? "user-bubble" : "gooble-bubble");
+        setSpacing(16);
+        setMaxWidth(Double.MAX_VALUE);
         setAlignment(isUserMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-        getChildren().addAll(isUserMessage ? avatar : text, isUserMessage ? text : avatar);
+        getChildren().addAll(isUserMessage ? text : avatar, isUserMessage ? avatar : text);
+        HBox.setHgrow(text, Priority.NEVER);
         getStyleClass().add(isUserMessage ? "user-dialog" : "gooble-dialog");
+    }
+
+    private Node createAvatar(boolean isUserMessage) {
+        if (isUserMessage) {
+            Label avatar = new Label("u");
+            avatar.setMinSize(60, 60);
+            avatar.setMaxSize(60, 60);
+            avatar.setAlignment(Pos.CENTER);
+            avatar.getStyleClass().add("user-avatar");
+            return avatar;
+        }
+
+        ImageView avatar = new ImageView(new Image(
+                getClass().getResourceAsStream("/gooble-avatar.png")));
+        avatar.setFitWidth(60);
+        avatar.setFitHeight(60);
+        avatar.setPreserveRatio(true);
+        avatar.setClip(new Circle(30, 30, 30));
+        avatar.getStyleClass().add("gooble-avatar");
+        return avatar;
     }
 }

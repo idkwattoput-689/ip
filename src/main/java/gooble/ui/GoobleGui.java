@@ -16,37 +16,41 @@ import javafx.stage.Stage;
 /** Provides the JavaFX interface for interacting with Gooble. */
 public class GoobleGui extends Application {
     private final Gooble gooble = new Gooble("data/Gooble.txt");
-    private final VBox dialogContainer = new VBox(10);
+    private final VBox dialogContainer = new VBox(18);
     private ScrollPane scrollPane;
     private TextField userInput;
 
     @Override
     public void start(Stage stage) {
         scrollPane = new ScrollPane(dialogContainer);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         userInput = new TextField();
-        userInput.setPromptText("Enter a command, e.g. list or todo read book");
+        userInput.setPromptText("Type a message...");
         Button sendButton = new Button("Send");
         sendButton.setOnAction(event -> handleInput());
         userInput.setOnAction(event -> handleInput());
 
-        HBox inputBar = new HBox(8, userInput, sendButton);
-        inputBar.setPadding(new Insets(10));
+        HBox inputBar = new HBox(18, userInput, sendButton);
+        inputBar.setPadding(new Insets(18, 20, 18, 20));
+        inputBar.getStyleClass().add("input-bar");
+        sendButton.setPrefWidth(120);
         HBox.setHgrow(userInput, Priority.ALWAYS);
 
         AnchorPane mainLayout = new AnchorPane(scrollPane, inputBar);
         AnchorPane.setTopAnchor(scrollPane, 0.0);
         AnchorPane.setRightAnchor(scrollPane, 0.0);
-        AnchorPane.setBottomAnchor(scrollPane, 58.0);
+        AnchorPane.setBottomAnchor(scrollPane, 88.0);
         AnchorPane.setLeftAnchor(scrollPane, 0.0);
         AnchorPane.setRightAnchor(inputBar, 0.0);
         AnchorPane.setBottomAnchor(inputBar, 0.0);
         AnchorPane.setLeftAnchor(inputBar, 0.0);
 
-        Scene scene = new Scene(mainLayout, 520, 650);
+        Scene scene = new Scene(mainLayout, 720, 800);
         scene.getStylesheets().add(getClass().getResource("/gooble.css").toExternalForm());
         stage.setTitle("Gooble");
-        stage.setMinWidth(420);
-        stage.setMinHeight(500);
+        stage.setMinWidth(520);
+        stage.setMinHeight(560);
         stage.setScene(scene);
         stage.show();
 
@@ -61,7 +65,16 @@ public class GoobleGui extends Application {
         }
         appendMessage(input, true);
         userInput.clear();
-        boolean isExit = gooble.executeCommand(input, response -> appendMessage(response, false));
+        StringBuilder response = new StringBuilder();
+        boolean isExit = gooble.executeCommand(input, message -> {
+            if (!message.isEmpty()) {
+                if (response.length() > 0) {
+                    response.append(System.lineSeparator());
+                }
+                response.append(message.stripTrailing());
+            }
+        });
+        appendMessage(response.toString(), false);
         if (isExit) {
             userInput.setDisable(true);
         }
@@ -71,9 +84,7 @@ public class GoobleGui extends Application {
         if (message.isEmpty()) {
             return;
         }
-        for (String line : message.stripTrailing().split("\\R")) {
-            dialogContainer.getChildren().add(new DialogBox(line, isUserMessage));
-        }
+        dialogContainer.getChildren().add(new DialogBox(message.stripTrailing(), isUserMessage));
         scrollPane.setVvalue(1.0);
     }
 }
