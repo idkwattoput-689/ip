@@ -25,6 +25,9 @@ public class GoobleGui extends Application {
         scrollPane = new ScrollPane(dialogContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        // Scroll to the latest message whenever the conversation grows.
+        dialogContainer.heightProperty().addListener(
+                observable -> scrollPane.setVvalue(1.0));
         userInput = new TextField();
         userInput.setPromptText("Type a message...");
         Button sendButton = new Button("Send");
