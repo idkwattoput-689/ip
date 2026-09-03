@@ -19,7 +19,7 @@ public class ListFromCommand extends Command {
         LocalDateTime from = LocalDateTime.of(range[0].date(), range[0].time());
         LocalDateTime to = LocalDateTime.of(range[1].date(), range[1].time());
 
-        System.out.println("Here are the events in your list for that period:");
+        context.ui().showMessage("Here are the events in your list for that period:");
         int matchingNumber = 1;
         for (int i = 0; i < context.tasks().size(); i++) {
             if (!(context.tasks().get(i) instanceof Event event)) {
@@ -36,7 +36,7 @@ public class ListFromCommand extends Command {
                 LocalDateTime start = LocalDateTime.of(eventFrom.date(), eventFrom.time());
                 LocalDateTime end = LocalDateTime.of(eventTo.date(), eventTo.time());
                 if (!start.isBefore(from) && !end.isAfter(to)) {
-                    System.out.println(matchingNumber + "." + event);
+                    context.ui().showMessage(matchingNumber + "." + event);
                     matchingNumber++;
                 }
             } catch (GoobleException e) {

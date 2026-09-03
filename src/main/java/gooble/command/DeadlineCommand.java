@@ -18,10 +18,10 @@ public class DeadlineCommand extends Command {
         context.tasks().add(new Deadline(parts[0], date));
         context.ui().showAdded(context.tasks().get(context.tasks().size() - 1));
         if (DeadlineDateParser.isValentinesDay(date)) {
-            System.out.println("Love is in the air~");
+            context.ui().showMessage("Love is in the air~");
         }
         if (DeadlineDateParser.isChineseNewYear(date)) {
-            System.out.println("\u606d\u559c\u53d1\u8d22\uff01\uff01");
+            context.ui().showMessage("\u606d\u559c\u53d1\u8d22\uff01\uff01");
         }
         context.ui().showTaskCount(context.tasks().size());
     }
