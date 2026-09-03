@@ -28,10 +28,12 @@ public class DialogBox extends HBox {
 
     private Node createAvatar(boolean isUserMessage) {
         if (isUserMessage) {
-            Label avatar = new Label("u");
-            avatar.setMinSize(60, 60);
-            avatar.setMaxSize(60, 60);
-            avatar.setAlignment(Pos.CENTER);
+            ImageView avatar = new ImageView(new Image(
+                    getClass().getResourceAsStream("/user-avatar.png")));
+            avatar.setFitWidth(60);
+            avatar.setFitHeight(60);
+            avatar.setPreserveRatio(true);
+            avatar.setClip(new Circle(30, 30, 30));
             avatar.getStyleClass().add("user-avatar");
             return avatar;
         }
