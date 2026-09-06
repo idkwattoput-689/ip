@@ -25,23 +25,29 @@ public class ListFromCommand extends Command {
             if (!(context.tasks().get(i) instanceof Event event)) {
                 continue;
             }
-            try {
-                DeadlineDateParser.DeadlineDate eventFrom =
-                        DeadlineDateParser.parse(event.getStartDate());
-                DeadlineDateParser.DeadlineDate eventTo =
-                        DeadlineDateParser.parse(event.getEndDate());
-                if (eventFrom.time() == null || eventTo.time() == null) {
-                    continue;
-                }
-                LocalDateTime start = LocalDateTime.of(eventFrom.date(), eventFrom.time());
-                LocalDateTime end = LocalDateTime.of(eventTo.date(), eventTo.time());
-                if (!start.isBefore(from) && !end.isAfter(to)) {
-                    context.ui().showMessage(matchingNumber + "." + event);
-                    matchingNumber++;
-                }
-            } catch (GoobleException e) {
-                // Free-form event dates cannot be range-filtered.
+            if (isWithinRange(event, from, to)) {
+                context.ui().showMessage(matchingNumber + "." + event);
+                matchingNumber++;
             }
+        }
+    }
+
+    /** Returns whether an event has valid date-times fully inside the requested range. */
+    private boolean isWithinRange(Event event, LocalDateTime from, LocalDateTime to) {
+        try {
+            DeadlineDateParser.DeadlineDate eventFrom =
+                    DeadlineDateParser.parse(event.getStartDate());
+            DeadlineDateParser.DeadlineDate eventTo =
+                    DeadlineDateParser.parse(event.getEndDate());
+            if (eventFrom.time() == null || eventTo.time() == null) {
+                return false;
+            }
+            LocalDateTime start = LocalDateTime.of(eventFrom.date(), eventFrom.time());
+            LocalDateTime end = LocalDateTime.of(eventTo.date(), eventTo.time());
+            return !start.isBefore(from) && !end.isAfter(to);
+        } catch (GoobleException e) {
+            // Free-form event dates cannot be range-filtered.
+            return false;
         }
     }
 }
