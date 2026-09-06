@@ -27,24 +27,14 @@ public class DialogBox extends HBox {
     }
 
     private Node createAvatar(boolean isUserMessage) {
-        if (isUserMessage) {
-            ImageView avatar = new ImageView(new Image(
-                    getClass().getResourceAsStream("/user-avatar.png")));
-            avatar.setFitWidth(60);
-            avatar.setFitHeight(60);
-            avatar.setPreserveRatio(true);
-            avatar.setClip(new Circle(30, 30, 30));
-            avatar.getStyleClass().add("user-avatar");
-            return avatar;
-        }
-
-        ImageView avatar = new ImageView(new Image(
-                getClass().getResourceAsStream("/gooble-avatar.png")));
+        String avatarPath = isUserMessage ? "/user-avatar.png" : "/gooble-avatar.png";
+        String avatarStyle = isUserMessage ? "user-avatar" : "gooble-avatar";
+        ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream(avatarPath)));
         avatar.setFitWidth(60);
         avatar.setFitHeight(60);
         avatar.setPreserveRatio(true);
         avatar.setClip(new Circle(30, 30, 30));
-        avatar.getStyleClass().add("gooble-avatar");
+        avatar.getStyleClass().add(avatarStyle);
         return avatar;
     }
 }
