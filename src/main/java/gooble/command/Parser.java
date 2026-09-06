@@ -9,7 +9,12 @@ import gooble.task.DeadlineDateParser;
  * Interprets the command word and arguments entered by the user.
  */
 public class Parser {
+    private static final String DEADLINE_COMMAND = "deadline";
+    private static final String EVENT_COMMAND = "event";
     private static final String LIST_FROM_PREFIX = "list from ";
+    private static final String DEADLINE_MARKER = " /by ";
+    private static final String EVENT_START_MARKER = " /from ";
+    private static final String EVENT_END_MARKER = " /to ";
     private static final String DATE_RANGE_SEPARATOR = " to ";
 
     /** Creates the command object corresponding to complete user input. */
@@ -61,15 +66,14 @@ public class Parser {
 
     /** Parses a deadline command into description and deadline text. */
     public String[] parseDeadline(String command) throws GoobleException {
-        String details = command.substring("deadline".length()).trim();
+        String details = command.substring(DEADLINE_COMMAND.length()).trim();
         validateDescription(details);
-        String marker = " /by ";
-        int markerIndex = details.indexOf(marker);
+        int markerIndex = details.indexOf(DEADLINE_MARKER);
         if (markerIndex == -1) {
             throw new GoobleException("Please specify a deadline using /by.");
         }
         String description = details.substring(0, markerIndex).trim();
-        String deadline = details.substring(markerIndex + marker.length()).trim();
+        String deadline = details.substring(markerIndex + DEADLINE_MARKER.length()).trim();
         validateDescription(description);
         if (deadline.isEmpty()) {
             throw new GoobleException("Please specify a deadline using /by.");
@@ -79,18 +83,16 @@ public class Parser {
 
     /** Parses an event command into description, start, and end text. */
     public String[] parseEvent(String command) throws GoobleException {
-        String details = command.substring("event".length()).trim();
+        String details = command.substring(EVENT_COMMAND.length()).trim();
         validateDescription(details);
-        String startMarker = " /from ";
-        String endMarker = " /to ";
-        int startIndex = details.indexOf(startMarker);
-        int endIndex = details.indexOf(endMarker);
+        int startIndex = details.indexOf(EVENT_START_MARKER);
+        int endIndex = details.indexOf(EVENT_END_MARKER);
         if (startIndex == -1 || endIndex == -1 || endIndex < startIndex) {
             throw new GoobleException("Please specify an event time using /from and /to.");
         }
         String description = details.substring(0, startIndex).trim();
-        String start = details.substring(startIndex + startMarker.length(), endIndex).trim();
-        String end = details.substring(endIndex + endMarker.length()).trim();
+        String start = details.substring(startIndex + EVENT_START_MARKER.length(), endIndex).trim();
+        String end = details.substring(endIndex + EVENT_END_MARKER.length()).trim();
         validateDescription(description);
         if (start.isEmpty() || end.isEmpty()) {
             throw new GoobleException("Please specify an event time using /from and /to.");
