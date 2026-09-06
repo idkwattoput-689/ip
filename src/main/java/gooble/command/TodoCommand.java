@@ -12,7 +12,7 @@ public class TodoCommand extends Command {
 
     /** Adds a to-do task described by the command input. */
     public void execute(CommandContext context) throws GoobleException {
-        String description = input.substring("todo".length()).trim();
+        String description = context.parser().argumentAfter(input, "todo");
         context.parser().validateDescription(description);
         context.tasks().add(new Todo(description));
         context.ui().showAdded(context.tasks().get(context.tasks().size() - 1));
