@@ -7,6 +7,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
+import java.util.Map;
 
 import gooble.GoobleException;
 
@@ -26,6 +27,25 @@ public final class DeadlineDateParser {
             DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH);
     private static final String INVALID_DATE_MESSAGE = "Please use a proper date format. "
             + "Examples: 2019-12-02 or 2/12/2019 1800";
+    private static final Map<Integer, LocalDate> CHINESE_NEW_YEAR_DATES = Map.ofEntries(
+            Map.entry(2018, LocalDate.of(2018, 2, 16)),
+            Map.entry(2019, LocalDate.of(2019, 2, 5)),
+            Map.entry(2020, LocalDate.of(2020, 1, 25)),
+            Map.entry(2021, LocalDate.of(2021, 2, 12)),
+            Map.entry(2022, LocalDate.of(2022, 2, 1)),
+            Map.entry(2023, LocalDate.of(2023, 1, 22)),
+            Map.entry(2024, LocalDate.of(2024, 2, 10)),
+            Map.entry(2025, LocalDate.of(2025, 1, 29)),
+            Map.entry(2026, LocalDate.of(2026, 2, 17)),
+            Map.entry(2027, LocalDate.of(2027, 2, 6)),
+            Map.entry(2028, LocalDate.of(2028, 1, 26)),
+            Map.entry(2029, LocalDate.of(2029, 2, 13)),
+            Map.entry(2030, LocalDate.of(2030, 2, 3)),
+            Map.entry(2031, LocalDate.of(2031, 1, 23)),
+            Map.entry(2032, LocalDate.of(2032, 2, 11)),
+            Map.entry(2033, LocalDate.of(2033, 1, 31)),
+            Map.entry(2034, LocalDate.of(2034, 2, 19)),
+            Map.entry(2035, LocalDate.of(2035, 2, 8)));
 
     /** Prevents construction of this static utility class. */
     private DeadlineDateParser() {
@@ -71,27 +91,7 @@ public final class DeadlineDateParser {
     /** Returns whether the supplied deadline falls on Chinese New Year. */
     public static boolean isChineseNewYear(DeadlineDate deadline) {
         LocalDate date = deadline.date();
-        return switch (date.getYear()) {
-            case 2018 -> date.equals(LocalDate.of(2018, 2, 16));
-            case 2019 -> date.equals(LocalDate.of(2019, 2, 5));
-            case 2020 -> date.equals(LocalDate.of(2020, 1, 25));
-            case 2021 -> date.equals(LocalDate.of(2021, 2, 12));
-            case 2022 -> date.equals(LocalDate.of(2022, 2, 1));
-            case 2023 -> date.equals(LocalDate.of(2023, 1, 22));
-            case 2024 -> date.equals(LocalDate.of(2024, 2, 10));
-            case 2025 -> date.equals(LocalDate.of(2025, 1, 29));
-            case 2026 -> date.equals(LocalDate.of(2026, 2, 17));
-            case 2027 -> date.equals(LocalDate.of(2027, 2, 6));
-            case 2028 -> date.equals(LocalDate.of(2028, 1, 26));
-            case 2029 -> date.equals(LocalDate.of(2029, 2, 13));
-            case 2030 -> date.equals(LocalDate.of(2030, 2, 3));
-            case 2031 -> date.equals(LocalDate.of(2031, 1, 23));
-            case 2032 -> date.equals(LocalDate.of(2032, 2, 11));
-            case 2033 -> date.equals(LocalDate.of(2033, 1, 31));
-            case 2034 -> date.equals(LocalDate.of(2034, 2, 19));
-            case 2035 -> date.equals(LocalDate.of(2035, 2, 8));
-            default -> false;
-        };
+        return date.equals(CHINESE_NEW_YEAR_DATES.get(date.getYear()));
     }
 
     /** Parses a date using slash-separated or ISO notation based on its separator. */
