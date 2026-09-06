@@ -17,6 +17,12 @@ public class TaskList {
 
     /** Location where the current task list is saved between application runs. */
     private static final Path STORAGE_PATH = Path.of("data", "Gooble.txt");
+    private static final String GENERIC_TYPE = "G";
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final char INCOMPLETE_STATUS = '0';
+    private static final char COMPLETE_STATUS = '1';
 
     private final ArrayList<Task> tasks;
     private final Storage storage;
@@ -146,22 +152,23 @@ public class TaskList {
      * @return one storage record
      */
     private String serialize(Task task) {
-        String type = "G";
+        String type = GENERIC_TYPE;
         List<String> fields = new ArrayList<>();
         fields.add(task.getDescription());
         if (task instanceof Todo) {
-            type = "T";
+            type = TODO_TYPE;
         } else if (task instanceof Deadline deadline) {
-            type = "D";
+            type = DEADLINE_TYPE;
             fields.add(deadline.getStoredDeadline());
         } else if (task instanceof Event event) {
-            type = "E";
+            type = EVENT_TYPE;
             fields.add(event.getStartDate());
             fields.add(event.getEndDate());
         }
 
         StringBuilder record = new StringBuilder(type)
-                .append('|').append("X".equals(task.getStatusIcon()) ? '1' : '0');
+                .append('|').append("X".equals(task.getStatusIcon())
+                        ? COMPLETE_STATUS : INCOMPLETE_STATUS);
         for (String field : fields) {
             record.append('|').append(encode(field));
         }
@@ -213,7 +220,8 @@ public class TaskList {
     private Task parsePersistedTask(String savedTask) {
         String[] fields = savedTask.split("\\|", -1);
         if (fields.length < 3 || fields[0].length() != 1
-                || (fields[1].length() != 1 || (fields[1].charAt(0) != '0' && fields[1].charAt(0) != '1'))) {
+                || (fields[1].length() != 1 || (fields[1].charAt(0) != INCOMPLETE_STATUS
+                && fields[1].charAt(0) != COMPLETE_STATUS))) {
             return null;
         }
 
@@ -232,17 +240,17 @@ public class TaskList {
         Task task;
         try {
             switch (fields[0]) {
-                case "G":
+                case GENERIC_TYPE:
                     task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
                     break;
-                case "T":
+                case TODO_TYPE:
                     task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
                     break;
-                case "D":
+                case DEADLINE_TYPE:
                     task = decodedFields.size() == 2
                             ? new Deadline(decodedFields.get(0), DeadlineDateParser.parse(decodedFields.get(1))) : null;
                     break;
-                case "E":
+                case EVENT_TYPE:
                     task = decodedFields.size() == 3
                             ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
                     break;
@@ -252,7 +260,8 @@ public class TaskList {
         } catch (GoobleException | IllegalArgumentException e) {
             return null;
         }
-        return task == null ? null : restoreStatus(task, fields[1].charAt(0) == '1' ? 'X' : ' ');
+        return task == null ? null
+                : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS ? 'X' : ' ');
     }
 
     /** Parses the display format written by the first persistence version. */
