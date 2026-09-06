@@ -23,6 +23,19 @@ public class TaskList {
     private static final String EVENT_TYPE = "E";
     private static final char INCOMPLETE_STATUS = '0';
     private static final char COMPLETE_STATUS = '1';
+    private static final String LEGACY_TODO_PREFIX = "[T][";
+    private static final String LEGACY_DEADLINE_PREFIX = "[D][";
+    private static final String LEGACY_EVENT_PREFIX = "[E][";
+    private static final String LEGACY_DEADLINE_MARKER = " (by: ";
+    private static final String LEGACY_EVENT_START_MARKER = " (from: ";
+    private static final String LEGACY_EVENT_END_MARKER = " to: ";
+    private static final int LEGACY_STATUS_INDEX = 4;
+    private static final int LEGACY_TYPED_DESCRIPTION_START = 7;
+    private static final int LEGACY_GENERIC_STATUS_INDEX = 1;
+    private static final int LEGACY_GENERIC_DESCRIPTION_START = 4;
+    private static final int LEGACY_TYPED_MIN_LENGTH = 7;
+    private static final int LEGACY_GENERIC_MIN_LENGTH = 5;
+    private static final String LEGACY_RECORD_SUFFIX = ")";
 
     private final ArrayList<Task> tasks;
     private final Storage storage;
@@ -269,13 +282,13 @@ public class TaskList {
 
     /** Parses the display format written by the first persistence version. */
     private Task parseLegacyTask(String savedTask) {
-        if (savedTask.startsWith("[T][")) {
+        if (savedTask.startsWith(LEGACY_TODO_PREFIX)) {
             return parseLegacyTodo(savedTask);
         }
-        if (savedTask.startsWith("[D][")) {
+        if (savedTask.startsWith(LEGACY_DEADLINE_PREFIX)) {
             return parseLegacyDeadline(savedTask);
         }
-        if (savedTask.startsWith("[E][")) {
+        if (savedTask.startsWith(LEGACY_EVENT_PREFIX)) {
             return parseLegacyEvent(savedTask);
         }
         return parseLegacyGeneric(savedTask);
@@ -283,27 +296,29 @@ public class TaskList {
 
     /** Parses a legacy todo record. */
     private Task parseLegacyTodo(String savedTask) {
-        if (savedTask.length() < 7) {
+        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
             return null;
         }
-        char status = savedTask.charAt(4);
-        String description = savedTask.substring(7);
+        char status = savedTask.charAt(LEGACY_STATUS_INDEX);
+        String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START);
         return validStatus(status) && !description.isBlank()
                 ? restoreStatus(new Todo(description), status) : null;
     }
 
     /** Parses a legacy deadline record. */
     private Task parseLegacyDeadline(String savedTask) {
-        if (savedTask.length() < 7) {
+        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
             return null;
         }
-        char status = savedTask.charAt(4);
-        int deadlineMarker = savedTask.lastIndexOf(" (by: ");
-        if (!validStatus(status) || deadlineMarker <= 7 || !savedTask.endsWith(")")) {
+        char status = savedTask.charAt(LEGACY_STATUS_INDEX);
+        int deadlineMarker = savedTask.lastIndexOf(LEGACY_DEADLINE_MARKER);
+        if (!validStatus(status) || deadlineMarker <= LEGACY_TYPED_DESCRIPTION_START
+                || !savedTask.endsWith(LEGACY_RECORD_SUFFIX)) {
             return null;
         }
-        String description = savedTask.substring(7, deadlineMarker);
-        String deadline = savedTask.substring(deadlineMarker + 6, savedTask.length() - 1);
+        String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START, deadlineMarker);
+        String deadline = savedTask.substring(deadlineMarker + LEGACY_DEADLINE_MARKER.length(),
+                savedTask.length() - LEGACY_RECORD_SUFFIX.length());
         if (description.isBlank() || deadline.isBlank()) {
             return null;
         }
@@ -316,33 +331,34 @@ public class TaskList {
 
     /** Parses a legacy event record. */
     private Task parseLegacyEvent(String savedTask) {
-        if (savedTask.length() < 7) {
+        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
             return null;
         }
-        char status = savedTask.charAt(4);
-        int startMarker = savedTask.lastIndexOf(" (from: ");
-        int endMarker = savedTask.lastIndexOf(" to: ");
-        if (!validStatus(status) || startMarker <= 7 || endMarker <= startMarker
-                || !savedTask.endsWith(")")) {
+        char status = savedTask.charAt(LEGACY_STATUS_INDEX);
+        int startMarker = savedTask.lastIndexOf(LEGACY_EVENT_START_MARKER);
+        int endMarker = savedTask.lastIndexOf(LEGACY_EVENT_END_MARKER);
+        if (!validStatus(status) || startMarker <= LEGACY_TYPED_DESCRIPTION_START
+                || endMarker <= startMarker || !savedTask.endsWith(LEGACY_RECORD_SUFFIX)) {
             return null;
         }
-        String description = savedTask.substring(7, startMarker);
-        String startDate = savedTask.substring(startMarker + 8, endMarker);
-        String endDate = savedTask.substring(endMarker + 5, savedTask.length() - 1);
+        String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START, startMarker);
+        String startDate = savedTask.substring(startMarker + LEGACY_EVENT_START_MARKER.length(), endMarker);
+        String endDate = savedTask.substring(endMarker + LEGACY_EVENT_END_MARKER.length(),
+                savedTask.length() - LEGACY_RECORD_SUFFIX.length());
         return description.isBlank() || startDate.isBlank() || endDate.isBlank()
                 ? null : restoreStatus(new Event(description, startDate, endDate), status);
     }
 
     /** Parses a legacy generic task record. */
     private Task parseLegacyGeneric(String savedTask) {
-        if (savedTask.length() < 5 || !savedTask.startsWith("[")
-                || !validStatus(savedTask.charAt(1)) || savedTask.charAt(2) != ']'
-                || savedTask.charAt(3) != ' ') {
+        if (savedTask.length() < LEGACY_GENERIC_MIN_LENGTH || !savedTask.startsWith("[")
+                || !validStatus(savedTask.charAt(LEGACY_GENERIC_STATUS_INDEX))
+                || savedTask.charAt(2) != ']' || savedTask.charAt(3) != ' ') {
             return null;
         }
-        String description = savedTask.substring(4);
+        String description = savedTask.substring(LEGACY_GENERIC_DESCRIPTION_START);
         return description.isBlank() ? null
-                : restoreStatus(new Task(description), savedTask.charAt(1));
+                : restoreStatus(new Task(description), savedTask.charAt(LEGACY_GENERIC_STATUS_INDEX));
     }
 
     /** Returns whether a legacy record contains a supported status marker. */
