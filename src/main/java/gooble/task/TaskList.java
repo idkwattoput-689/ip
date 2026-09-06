@@ -136,6 +136,9 @@ public class TaskList {
             savedTasks.add(serialize(task));
         }
 
+        // Every in-memory task must have exactly one persisted record.
+        assert savedTasks.size() == tasks.size();
+
         storage.save(savedTasks);
     }
 
@@ -229,6 +232,9 @@ public class TaskList {
             return null;
         }
 
+        // The type-specific parser below relies on having valid, non-blank fields.
+        assert !decodedFields.isEmpty() && decodedFields.stream().noneMatch(String::isBlank);
+
         Task task;
         try {
             switch (fields[0]) {
@@ -311,6 +317,9 @@ public class TaskList {
      * @return the task with its saved completion status restored
      */
     private Task restoreStatus(Task task, char status) {
+        // This helper is called only after parsing has created a valid task and status.
+        assert task != null;
+        assert validStatus(status);
         if (status == 'X') {
             task.markAsDone();
         }
