@@ -237,31 +237,31 @@ public class TaskList {
             return null;
         }
 
-        Task task;
         try {
-            switch (fields[0]) {
-                case GENERIC_TYPE:
-                    task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
-                    break;
-                case TODO_TYPE:
-                    task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
-                    break;
-                case DEADLINE_TYPE:
-                    task = decodedFields.size() == 2
-                            ? new Deadline(decodedFields.get(0), DeadlineDateParser.parse(decodedFields.get(1))) : null;
-                    break;
-                case EVENT_TYPE:
-                    task = decodedFields.size() == 3
-                            ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
-                    break;
-                default:
-                    task = null;
-            }
+            Task task = createPersistedTask(fields[0], decodedFields);
+            return task == null ? null
+                    : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS ? 'X' : ' ');
         } catch (GoobleException | IllegalArgumentException e) {
             return null;
         }
-        return task == null ? null
-                : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS ? 'X' : ' ');
+    }
+
+    /** Creates a task from a validated persisted type and its decoded fields. */
+    private Task createPersistedTask(String type, List<String> fields) throws GoobleException {
+        switch (type) {
+            case GENERIC_TYPE:
+                return fields.size() == 1 ? new Task(fields.get(0)) : null;
+            case TODO_TYPE:
+                return fields.size() == 1 ? new Todo(fields.get(0)) : null;
+            case DEADLINE_TYPE:
+                return fields.size() == 2
+                        ? new Deadline(fields.get(0), DeadlineDateParser.parse(fields.get(1))) : null;
+            case EVENT_TYPE:
+                return fields.size() == 3
+                        ? new Event(fields.get(0), fields.get(1), fields.get(2)) : null;
+            default:
+                return null;
+        }
     }
 
     /** Parses the display format written by the first persistence version. */
