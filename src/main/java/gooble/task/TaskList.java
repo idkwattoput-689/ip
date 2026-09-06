@@ -23,6 +23,8 @@ public class TaskList {
     private static final String EVENT_TYPE = "E";
     private static final char INCOMPLETE_STATUS = '0';
     private static final char COMPLETE_STATUS = '1';
+    private static final char LEGACY_INCOMPLETE_STATUS = ' ';
+    private static final char LEGACY_COMPLETE_STATUS = 'X';
     private static final String LEGACY_TODO_PREFIX = "[T][";
     private static final String LEGACY_DEADLINE_PREFIX = "[D][";
     private static final String LEGACY_EVENT_PREFIX = "[E][";
@@ -256,7 +258,8 @@ public class TaskList {
         try {
             Task task = createPersistedTask(fields[0], decodedFields);
             return task == null ? null
-                    : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS ? 'X' : ' ');
+                    : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS
+                    ? LEGACY_COMPLETE_STATUS : LEGACY_INCOMPLETE_STATUS);
         } catch (GoobleException | IllegalArgumentException e) {
             return null;
         }
@@ -363,7 +366,7 @@ public class TaskList {
 
     /** Returns whether a legacy record contains a supported status marker. */
     private boolean validStatus(char status) {
-        return status == ' ' || status == 'X';
+        return status == LEGACY_INCOMPLETE_STATUS || status == LEGACY_COMPLETE_STATUS;
     }
 
     /**
@@ -374,7 +377,7 @@ public class TaskList {
      * @return the task with its saved completion status restored
      */
     private Task restoreStatus(Task task, char status) {
-        if (status == 'X') {
+        if (status == LEGACY_COMPLETE_STATUS) {
             task.markAsDone();
         }
         return task;
