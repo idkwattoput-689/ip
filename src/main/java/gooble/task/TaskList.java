@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import gooble.GoobleException;
 import gooble.storage.Storage;
@@ -109,13 +111,9 @@ public class TaskList {
     /** Returns tasks whose descriptions contain the keyword, ignoring case. */
     public List<Task> findByDescription(String keyword) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        List<Task> matchingTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
-                matchingTasks.add(task);
-            }
-        }
-        return matchingTasks;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -152,14 +150,9 @@ public class TaskList {
      * Rewrites the storage file with a simple representation of every task.
      */
     private void save() {
-        List<String> savedTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            savedTasks.add(serialize(task));
-        }
-
+        List<String> savedTasks = tasks.stream().map(this::serialize).collect(Collectors.toList());
         // Every in-memory task must have exactly one persisted record.
         assert savedTasks.size() == tasks.size();
-
         storage.save(savedTasks);
     }
 
@@ -211,12 +204,10 @@ public class TaskList {
      * Restores tasks from the storage file when it is available.
      */
     private void load() {
-        for (String savedTask : storage.load()) {
-            Task task = parseSavedTask(savedTask);
-            if (task != null) {
-                tasks.add(task);
-            }
-        }
+        storage.load().stream()
+                .map(this::parseSavedTask)
+                .filter(Objects::nonNull)
+                .forEach(tasks::add);
     }
 
     /**
