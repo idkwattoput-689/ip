@@ -69,18 +69,21 @@ public class GoobleGui extends Application {
         appendMessage(input, true);
         userInput.clear();
         StringBuilder response = new StringBuilder();
-        boolean isExit = gooble.executeCommand(input, message -> {
-            if (!message.isEmpty()) {
-                if (response.length() > 0) {
-                    response.append(System.lineSeparator());
-                }
-                response.append(message.stripTrailing());
-            }
-        });
+        boolean isExit = gooble.executeCommand(input, message -> appendResponse(response, message));
         appendMessage(response.toString(), false);
         if (isExit) {
             userInput.setDisable(true);
         }
+    }
+
+    private void appendResponse(StringBuilder response, String message) {
+        if (message.isEmpty()) {
+            return;
+        }
+        if (response.length() > 0) {
+            response.append(System.lineSeparator());
+        }
+        response.append(message.stripTrailing());
     }
 
     private void appendMessage(String message, boolean isUserMessage) {

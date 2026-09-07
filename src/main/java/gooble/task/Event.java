@@ -19,11 +19,16 @@ public class Event extends Task {
      */
     public Event(String description, String startDate, String endDate) {
         super(description);
-        if (startDate == null || startDate.isBlank() || endDate == null || endDate.isBlank()) {
+        if (isBlank(startDate) || isBlank(endDate)) {
             throw new IllegalArgumentException("Event times cannot be empty.");
         }
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    /** Returns whether an event time is absent or contains only whitespace. */
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     /**

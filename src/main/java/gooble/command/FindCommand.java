@@ -10,7 +10,7 @@ public class FindCommand extends Command {
 
     @Override
     public void execute(CommandContext context) throws GoobleException {
-        String keyword = input.substring("find".length()).trim();
+        String keyword = context.parser().argumentAfter(input, "find");
         context.parser().validateDescription(keyword);
         context.ui().showMatchingTasks(context.tasks().findByDescription(keyword));
     }
