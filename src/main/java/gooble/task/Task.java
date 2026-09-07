@@ -1,14 +1,26 @@
 package gooble.task;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+
 /**
  * Represents a task in Gooble's task list.
  */
 public class Task {
+    private static final int MAX_TAGS = 3;
+    private static final Pattern VALID_TAG = Pattern.compile("#[A-Za-z0-9_-]+");
+
     /** The text describing this task. */
     protected String description;
 
     /** Whether this task has been completed. */
     protected boolean isDone;
+
+    /** Tags assigned to this task, in insertion order. */
+    private final List<String> tags;
 
     /**
      * Creates an incomplete task with the given description.
@@ -21,6 +33,7 @@ public class Task {
         }
         this.description = description;
         this.isDone = false;
+        this.tags = new ArrayList<>();
     }
 
     /**
@@ -51,6 +64,52 @@ public class Task {
         return description;
     }
 
+    /** Returns this task's tags in insertion order. */
+    public List<String> getTags() {
+        return Collections.unmodifiableList(tags);
+    }
+
+    /** Returns whether this task has at least one tag. */
+    public boolean hasTags() {
+        return !tags.isEmpty();
+    }
+
+    /** Adds a normalized tag, removing the oldest tag when the limit is reached. */
+    public void addTag(String tag) {
+        String normalizedTag = normalizeTag(tag);
+        if (tags.contains(normalizedTag)) {
+            throw new IllegalArgumentException("This task already has that tag.");
+        }
+        if (tags.size() == MAX_TAGS) {
+            tags.remove(0);
+        }
+        tags.add(normalizedTag);
+    }
+
+    /** Removes all tags from this task. */
+    public void removeTags() {
+        tags.clear();
+    }
+
+    /** Returns this task's tags formatted for display. */
+    protected String formatTags() {
+        return hasTags() ? " [" + String.join(", ", tags) + "]" : "";
+    }
+
+    /** Returns whether the supplied value is a valid tag. */
+    public static boolean isValidTag(String tag) {
+        return tag != null && VALID_TAG.matcher(tag).matches();
+    }
+
+    /** Normalizes and validates a tag. */
+    private String normalizeTag(String tag) {
+        String normalizedTag = tag == null ? "" : tag.toLowerCase(Locale.ROOT);
+        if (!isValidTag(normalizedTag)) {
+            throw new IllegalArgumentException("Invalid tag format.");
+        }
+        return normalizedTag;
+    }
+
     /**
      * Returns the formatted representation used for a general task.
      *
@@ -58,6 +117,6 @@ public class Task {
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + getStatusIcon() + "] " + description + formatTags();
     }
 }

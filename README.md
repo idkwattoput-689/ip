@@ -261,6 +261,35 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ```
 
+### Tagging tasks
+
+Users can add one tag at a time with `tag [i] #[tag]`. Tags are normalized to
+lowercase and may contain letters, numbers, hyphens, and underscores. Each task
+can have at most three tags. Adding a fourth tag removes the oldest tag.
+
+Example:
+
+```
+tag 1 #Fun
+____________________________________________________________
+I've tagged this task:
+  [ ] read book [#fun]
+____________________________________________________________
+```
+
+Users can remove all tags from a task with `untag [i]`:
+
+```
+untag 1
+____________________________________________________________
+I've removed the tags from this task:
+  [ ] read book
+____________________________________________________________
+```
+
+Tags are shown at the end of the description. `find` searches both task
+descriptions and tags, so `find #fun` finds tasks tagged `#fun`.
+
 ## Error Handling
 
 Gooble currently handles the following error:

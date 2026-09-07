@@ -42,4 +42,35 @@ class TaskTest {
         assertEquals(" ", task.getStatusIcon());
         assertEquals("[ ] read book", task.toString());
     }
+
+    @Test
+    void addTag_validTagsAreNormalizedAndDisplayed() {
+        Task task = new Task("read book");
+
+        task.addTag("#Fun");
+
+        assertEquals(java.util.List.of("#fun"), task.getTags());
+        assertEquals("[ ] read book [#fun]", task.toString());
+    }
+
+    @Test
+    void addTag_fourthTagRemovesOldestTag() {
+        Task task = new Task("read book");
+        task.addTag("#one");
+        task.addTag("#two");
+        task.addTag("#three");
+
+        task.addTag("#four");
+
+        assertEquals(java.util.List.of("#two", "#three", "#four"), task.getTags());
+    }
+
+    @Test
+    void addTag_duplicateOrInvalidTag_throwsException() {
+        Task task = new Task("read book");
+        task.addTag("#fun");
+
+        assertThrows(IllegalArgumentException.class, () -> task.addTag("#FUN"));
+        assertThrows(IllegalArgumentException.class, () -> task.addTag("fun!"));
+    }
 }

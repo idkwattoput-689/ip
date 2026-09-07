@@ -4,9 +4,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import gooble.GoobleException;
@@ -112,8 +114,21 @@ public class TaskList {
     public List<Task> findByDescription(String keyword) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
         return tasks.stream()
-                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)
+                        || task.getTags().stream().anyMatch(tag -> tag.contains(normalizedKeyword)))
                 .collect(Collectors.toList());
+    }
+
+    /** Adds a tag to the task at the given index and saves the updated list. */
+    public void addTag(int index, String tag) {
+        tasks.get(index).addTag(tag);
+        save();
+    }
+
+    /** Removes all tags from the task at the given index and saves the updated list. */
+    public void removeTags(int index) {
+        tasks.get(index).removeTags();
+        save();
     }
 
     /**
@@ -183,6 +198,7 @@ public class TaskList {
         for (String field : fields) {
             record.append('|').append(encode(field));
         }
+        record.append('|').append(encode(String.join(",", task.getTags())));
         return record.toString();
     }
 
@@ -245,7 +261,16 @@ public class TaskList {
             }
             decodedFields.add(decoded);
         }
-        if (decodedFields.isEmpty() || decodedFields.stream().anyMatch(String::isBlank)) {
+        int expectedFieldCount = expectedFieldCount(fields[0]);
+        if (expectedFieldCount == 0 || decodedFields.size() < expectedFieldCount
+                || decodedFields.size() > expectedFieldCount + 1) {
+            return null;
+        }
+
+        String storedTags = decodedFields.size() == expectedFieldCount + 1
+                ? decodedFields.remove(decodedFields.size() - 1) : "";
+        if (decodedFields.isEmpty() || decodedFields.stream().anyMatch(String::isBlank)
+                || !restoreTagsIfValid(null, storedTags)) {
             return null;
         }
 
@@ -253,12 +278,42 @@ public class TaskList {
         assert !decodedFields.isEmpty() && decodedFields.stream().noneMatch(String::isBlank);
         try {
             Task task = createPersistedTask(fields[0], decodedFields);
-            return task == null ? null
-                    : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS
+            if (task == null || !restoreTagsIfValid(task, storedTags)) {
+                return null;
+            }
+            return restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS
                     ? LEGACY_COMPLETE_STATUS : LEGACY_INCOMPLETE_STATUS);
         } catch (GoobleException | IllegalArgumentException e) {
             return null;
         }
+    }
+
+    /** Returns the number of non-tag fields required for a persisted type. */
+    private int expectedFieldCount(String type) {
+        return switch (type) {
+            case GENERIC_TYPE, TODO_TYPE -> 1;
+            case DEADLINE_TYPE -> 2;
+            case EVENT_TYPE -> 3;
+            default -> 0;
+        };
+    }
+
+    /** Restores valid persisted tags, or validates tags when no task is supplied. */
+    private boolean restoreTagsIfValid(Task task, String storedTags) {
+        if (storedTags.isEmpty()) {
+            return true;
+        }
+        String[] storedTagValues = storedTags.split(",", -1);
+        Set<String> uniqueTags = new HashSet<>();
+        for (String tag : storedTagValues) {
+            if (!Task.isValidTag(tag) || !uniqueTags.add(tag)) {
+                return false;
+            }
+            if (task != null) {
+                task.addTag(tag);
+            }
+        }
+        return true;
     }
 
     /** Creates a task from a validated persisted type and its decoded fields. */

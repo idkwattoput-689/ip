@@ -31,7 +31,21 @@ class ParserTest {
     void parse_supportedAndUnknownCommands_returnsExpectedCommand() {
         assertEquals(TodoCommand.class, parser.parse("todo read book").getClass());
         assertEquals(FindCommand.class, parser.parse("find book").getClass());
+        assertEquals(TagCommand.class, parser.parse("tag 1 #fun").getClass());
+        assertEquals(UntagCommand.class, parser.parse("untag 1").getClass());
         assertEquals(UnknownCommand.class, parser.parse("launch app").getClass());
+    }
+
+    @Test
+    void parseTag_validTag_returnsTaskNumberAndNormalizedTag() throws GoobleException {
+        assertArrayEquals(new String[] {"1", "#fun"}, parser.parseTag("tag 1 #Fun"));
+    }
+
+    @Test
+    void parseTag_missingOrMalformedTag_throwsException() {
+        assertThrows(GoobleException.class, () -> parser.parseTag("tag 1"));
+        assertThrows(GoobleException.class, () -> parser.parseTag("tag 1 fun!"));
+        assertThrows(GoobleException.class, () -> parser.parseTag("tag 1 #fun #school"));
     }
 
     @Test

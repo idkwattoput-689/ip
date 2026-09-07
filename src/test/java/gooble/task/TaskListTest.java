@@ -59,4 +59,32 @@ class TaskListTest {
         assertEquals(2, tasks.findByDescription("book").size());
         assertEquals("read book", tasks.findByDescription("BOOK").get(0).getDescription());
     }
+
+    @Test
+    void addAndRemoveTags_updatesTaskAndSearchResults(@TempDir Path tempDir) {
+        TaskList tasks = new TaskList(new Storage(tempDir.resolve("tasks.txt")));
+        tasks.add(new Todo("read book"));
+
+        tasks.addTag(0, "#School");
+
+        assertEquals(java.util.List.of("#school"), tasks.get(0).getTags());
+        assertEquals(1, tasks.findByDescription("#SCHOOL").size());
+        tasks.removeTags(0);
+        assertEquals(java.util.List.of(), tasks.get(0).getTags());
+    }
+
+    @Test
+    void addTag_fourthTagRemovesOldestAndPersistsTags(@TempDir Path tempDir) {
+        Path storagePath = tempDir.resolve("tasks.txt");
+        TaskList tasks = new TaskList(new Storage(storagePath));
+        tasks.add(new Todo("read book"));
+        tasks.addTag(0, "#one");
+        tasks.addTag(0, "#two");
+        tasks.addTag(0, "#three");
+        tasks.addTag(0, "#four");
+
+        TaskList restored = new TaskList(new Storage(storagePath));
+
+        assertEquals(java.util.List.of("#two", "#three", "#four"), restored.get(0).getTags());
+    }
 }

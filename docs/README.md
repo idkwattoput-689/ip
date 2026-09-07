@@ -1,30 +1,39 @@
 # Gooble User Guide
 
-// Update the title above to match the actual product name
+## Tags
 
-// Product screenshot goes here
+Add one tag to an existing task with:
 
-// Product intro goes here
-
-## Adding deadlines
-
-// Describe the action and its outcome.
-
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
+```text
+tag TASK_NUMBER #tag
 ```
 
-## Feature ABC
+For example:
 
-// Feature details
+```text
+tag 1 #Fun
+```
 
+The tag is normalized to lowercase and displayed as:
 
-## Feature XYZ
+```text
+[ ] read book [#fun]
+```
 
-// Feature details
+Tags may contain letters, numbers, hyphens, and underscores. A task may have
+up to three tags. If a fourth tag is added, the oldest tag is removed.
+
+Remove all tags from a task with:
+
+```text
+untag TASK_NUMBER
+```
+
+`find` searches both descriptions and tags:
+
+```text
+find #fun
+```
+
+Invalid examples include `tag 1 fun`, `tag 1 #fun!`, and `tag 1 #fun #school`.
+These commands are rejected with a validation message.

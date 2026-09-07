@@ -56,7 +56,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E][" + getStatusIcon() + "] " + description
+        return "[E][" + getStatusIcon() + "] " + description + formatTags()
                 + " (from: " + startDate + " to: " + endDate + ")";
     }
 }

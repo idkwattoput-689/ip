@@ -12,6 +12,8 @@ public enum CommandType {
     DEADLINE,
     EVENT,
     FIND,
+    TAG,
+    UNTAG,
     ADD,
     BYE,
     UNKNOWN;
@@ -28,6 +30,8 @@ public enum CommandType {
             case DEADLINE -> new DeadlineCommand(input);
             case EVENT -> new EventCommand(input);
             case FIND -> new FindCommand(input);
+            case TAG -> new TagCommand(input);
+            case UNTAG -> new UntagCommand(input);
             case BYE -> new ByeCommand(input);
             default -> null;
         };

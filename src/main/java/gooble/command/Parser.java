@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import gooble.GoobleException;
 import gooble.task.DeadlineDateParser;
+import gooble.task.Task;
 
 /**
  * Interprets the command word and arguments entered by the user.
@@ -61,6 +62,30 @@ public class Parser {
     public void validateDescription(String description) throws GoobleException {
         if (description.isEmpty()) {
             throw new GoobleException("You need to add in some description for that lmao");
+        }
+    }
+
+    /** Parses a tag command into a one-based task number and one tag. */
+    public String[] parseTag(String command) throws GoobleException {
+        String details = argumentAfter(command, "tag");
+        String[] parts = details.split("\\s+");
+        if (parts.length < 2) {
+            throw new GoobleException("Please provide a tag in the format #tag.");
+        }
+        if (parts.length > 2) {
+            throw new GoobleException("Please provide exactly one tag.");
+        }
+        validateTag(parts[1]);
+        return new String[] { parts[0], parts[1].toLowerCase(java.util.Locale.ROOT) };
+    }
+
+    /** Validates a user-provided tag. */
+    public void validateTag(String tag) throws GoobleException {
+        if (!tag.startsWith("#")) {
+            throw new GoobleException("Please provide a tag in the format #tag.");
+        }
+        if (!Task.isValidTag(tag)) {
+            throw new GoobleException("Tags may contain only letters, numbers, hyphens, and underscores.");
         }
     }
 

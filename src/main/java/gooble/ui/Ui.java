@@ -111,4 +111,16 @@ public class Ui {
     public void showAddedGeneral(String description) {
         showMessage("added: " + description);
     }
+
+    /** Reports that a tag was added to a task. */
+    public void showTagged(Task task) {
+        showMessage("I've tagged this task:");
+        showMessage("  " + task);
+    }
+
+    /** Reports that all tags were removed from a task. */
+    public void showUntagged(Task task) {
+        showMessage("I've removed the tags from this task:");
+        showMessage("  " + task);
+    }
 }
