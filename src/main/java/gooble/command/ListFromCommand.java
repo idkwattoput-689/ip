@@ -16,6 +16,9 @@ public class ListFromCommand extends Command {
     /** Displays events contained in the requested inclusive date-time range. */
     public void execute(CommandContext context) throws GoobleException {
         DeadlineDateParser.DeadlineDate[] range = context.parser().parseDateRange(input);
+        // Parser guarantees exactly two range endpoints with usable times.
+        assert range.length == 2;
+        assert range[0].time() != null && range[1].time() != null;
         LocalDateTime from = LocalDateTime.of(range[0].date(), range[0].time());
         LocalDateTime to = LocalDateTime.of(range[1].date(), range[1].time());
 
