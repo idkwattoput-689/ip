@@ -50,6 +50,8 @@ public final class DeadlineDateParser {
         try {
             LocalDate date = parseDate(parts[0]);
             LocalTime time = parts.length == 2 ? LocalTime.parse(parts[1], TIME) : null;
+            // Date parsing and the record contract guarantee a non-null date.
+            assert date != null;
             return new DeadlineDate(date, time);
         } catch (DateTimeException e) {
             throw new GoobleException(INVALID_DATE_MESSAGE);
