@@ -12,7 +12,7 @@ public class AddCommand extends Command {
 
     /** Adds a general task described by the command input. */
     public void execute(CommandContext context) throws GoobleException {
-        String description = input.substring("add".length()).trim();
+        String description = context.parser().argumentAfter(input, "add");
         context.parser().validateDescription(description);
         context.tasks().add(new Task(description));
         context.ui().showAddedGeneral(description);

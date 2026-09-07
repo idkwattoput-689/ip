@@ -19,6 +19,27 @@ public class TaskList {
 
     /** Location where the current task list is saved between application runs. */
     private static final Path STORAGE_PATH = Path.of("data", "Gooble.txt");
+    private static final String GENERIC_TYPE = "G";
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final char INCOMPLETE_STATUS = '0';
+    private static final char COMPLETE_STATUS = '1';
+    private static final char LEGACY_INCOMPLETE_STATUS = ' ';
+    private static final char LEGACY_COMPLETE_STATUS = 'X';
+    private static final String LEGACY_TODO_PREFIX = "[T][";
+    private static final String LEGACY_DEADLINE_PREFIX = "[D][";
+    private static final String LEGACY_EVENT_PREFIX = "[E][";
+    private static final String LEGACY_DEADLINE_MARKER = " (by: ";
+    private static final String LEGACY_EVENT_START_MARKER = " (from: ";
+    private static final String LEGACY_EVENT_END_MARKER = " to: ";
+    private static final int LEGACY_STATUS_INDEX = 4;
+    private static final int LEGACY_TYPED_DESCRIPTION_START = 7;
+    private static final int LEGACY_GENERIC_STATUS_INDEX = 1;
+    private static final int LEGACY_GENERIC_DESCRIPTION_START = 4;
+    private static final int LEGACY_TYPED_MIN_LENGTH = 7;
+    private static final int LEGACY_GENERIC_MIN_LENGTH = 5;
+    private static final String LEGACY_RECORD_SUFFIX = ")";
 
     private final ArrayList<Task> tasks;
     private final Storage storage;
@@ -142,22 +163,23 @@ public class TaskList {
      * @return one storage record
      */
     private String serialize(Task task) {
-        String type = "G";
+        String type = GENERIC_TYPE;
         List<String> fields = new ArrayList<>();
         fields.add(task.getDescription());
         if (task instanceof Todo) {
-            type = "T";
+            type = TODO_TYPE;
         } else if (task instanceof Deadline deadline) {
-            type = "D";
+            type = DEADLINE_TYPE;
             fields.add(deadline.getStoredDeadline());
         } else if (task instanceof Event event) {
-            type = "E";
+            type = EVENT_TYPE;
             fields.add(event.getStartDate());
             fields.add(event.getEndDate());
         }
 
         StringBuilder record = new StringBuilder(type)
-                .append('|').append("X".equals(task.getStatusIcon()) ? '1' : '0');
+                .append('|').append("X".equals(task.getStatusIcon())
+                        ? COMPLETE_STATUS : INCOMPLETE_STATUS);
         for (String field : fields) {
             record.append('|').append(encode(field));
         }
@@ -206,8 +228,12 @@ public class TaskList {
     /** Parses the current type|status|encoded-fields format. */
     private Task parsePersistedTask(String savedTask) {
         String[] fields = savedTask.split("\\|", -1);
-        if (fields.length < 3 || fields[0].length() != 1
-                || (fields[1].length() != 1 || (fields[1].charAt(0) != '0' && fields[1].charAt(0) != '1'))) {
+        boolean hasEnoughFields = fields.length >= 3;
+        boolean hasValidType = fields[0].length() == 1;
+        boolean hasValidStatus = fields[1].length() == 1
+                && (fields[1].charAt(0) == INCOMPLETE_STATUS
+                || fields[1].charAt(0) == COMPLETE_STATUS);
+        if (!hasEnoughFields || !hasValidType || !hasValidStatus) {
             return null;
         }
 
@@ -225,79 +251,118 @@ public class TaskList {
 
         // The type-specific parser below relies on having valid, non-blank fields.
         assert !decodedFields.isEmpty() && decodedFields.stream().noneMatch(String::isBlank);
-
-        Task task;
         try {
-            switch (fields[0]) {
-                case "G":
-                    task = decodedFields.size() == 1 ? new Task(decodedFields.get(0)) : null;
-                    break;
-                case "T":
-                    task = decodedFields.size() == 1 ? new Todo(decodedFields.get(0)) : null;
-                    break;
-                case "D":
-                    task = decodedFields.size() == 2
-                            ? new Deadline(decodedFields.get(0), DeadlineDateParser.parse(decodedFields.get(1))) : null;
-                    break;
-                case "E":
-                    task = decodedFields.size() == 3
-                            ? new Event(decodedFields.get(0), decodedFields.get(1), decodedFields.get(2)) : null;
-                    break;
-                default:
-                    task = null;
-            }
+            Task task = createPersistedTask(fields[0], decodedFields);
+            return task == null ? null
+                    : restoreStatus(task, fields[1].charAt(0) == COMPLETE_STATUS
+                    ? LEGACY_COMPLETE_STATUS : LEGACY_INCOMPLETE_STATUS);
         } catch (GoobleException | IllegalArgumentException e) {
             return null;
         }
-        return task == null ? null : restoreStatus(task, fields[1].charAt(0) == '1' ? 'X' : ' ');
+    }
+
+    /** Creates a task from a validated persisted type and its decoded fields. */
+    private Task createPersistedTask(String type, List<String> fields) throws GoobleException {
+        switch (type) {
+            case GENERIC_TYPE:
+                return fields.size() == 1 ? new Task(fields.get(0)) : null;
+            case TODO_TYPE:
+                return fields.size() == 1 ? new Todo(fields.get(0)) : null;
+            case DEADLINE_TYPE:
+                return fields.size() == 2
+                        ? new Deadline(fields.get(0), DeadlineDateParser.parse(fields.get(1))) : null;
+            case EVENT_TYPE:
+                return fields.size() == 3
+                        ? new Event(fields.get(0), fields.get(1), fields.get(2)) : null;
+            default:
+                return null;
+        }
     }
 
     /** Parses the display format written by the first persistence version. */
     private Task parseLegacyTask(String savedTask) {
-        if (savedTask.startsWith("[T][") && savedTask.length() >= 7) {
-            String description = savedTask.substring(7);
-            return validStatus(savedTask.charAt(4)) && !description.isBlank()
-                    ? restoreStatus(new Todo(description), savedTask.charAt(4)) : null;
+        if (savedTask.startsWith(LEGACY_TODO_PREFIX)) {
+            return parseLegacyTodo(savedTask);
         }
-        if (savedTask.startsWith("[D][") && savedTask.length() >= 7) {
-            int deadlineMarker = savedTask.lastIndexOf(" (by: ");
-            if (validStatus(savedTask.charAt(4)) && deadlineMarker > 7 && savedTask.endsWith(")")) {
-                String description = savedTask.substring(7, deadlineMarker);
-                String deadline = savedTask.substring(deadlineMarker + 6, savedTask.length() - 1);
-                try {
-                    return !description.isBlank() && !deadline.isBlank()
-                            ? restoreStatus(new Deadline(description,
-                                    DeadlineDateParser.parse(deadline)), savedTask.charAt(4))
-                            : null;
-                } catch (GoobleException e) {
-                    return null;
-                }
-            }
+        if (savedTask.startsWith(LEGACY_DEADLINE_PREFIX)) {
+            return parseLegacyDeadline(savedTask);
         }
-        if (savedTask.startsWith("[E][") && savedTask.length() >= 7) {
-            int startMarker = savedTask.lastIndexOf(" (from: ");
-            int endMarker = savedTask.lastIndexOf(" to: ");
-            if (validStatus(savedTask.charAt(4)) && startMarker > 7 && endMarker > startMarker
-                    && savedTask.endsWith(")")) {
-                String description = savedTask.substring(7, startMarker);
-                String startDate = savedTask.substring(startMarker + 8, endMarker);
-                String endDate = savedTask.substring(endMarker + 5, savedTask.length() - 1);
-                return !description.isBlank() && !startDate.isBlank() && !endDate.isBlank()
-                        ? restoreStatus(new Event(description, startDate, endDate), savedTask.charAt(4)) : null;
-            }
+        if (savedTask.startsWith(LEGACY_EVENT_PREFIX)) {
+            return parseLegacyEvent(savedTask);
         }
-        if (savedTask.startsWith("[") && savedTask.length() >= 5
-                && (savedTask.charAt(1) == ' ' || savedTask.charAt(1) == 'X')
-                && savedTask.charAt(2) == ']' && savedTask.charAt(3) == ' ') {
-            String description = savedTask.substring(4);
-            return !description.isBlank() ? restoreStatus(new Task(description), savedTask.charAt(1)) : null;
+        return parseLegacyGeneric(savedTask);
+    }
+
+    /** Parses a legacy todo record. */
+    private Task parseLegacyTodo(String savedTask) {
+        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
+            return null;
         }
-        return null;
+        char status = savedTask.charAt(LEGACY_STATUS_INDEX);
+        String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START);
+        return validStatus(status) && !description.isBlank()
+                ? restoreStatus(new Todo(description), status) : null;
+    }
+
+    /** Parses a legacy deadline record. */
+    private Task parseLegacyDeadline(String savedTask) {
+        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
+            return null;
+        }
+        char status = savedTask.charAt(LEGACY_STATUS_INDEX);
+        int deadlineMarker = savedTask.lastIndexOf(LEGACY_DEADLINE_MARKER);
+        if (!validStatus(status) || deadlineMarker <= LEGACY_TYPED_DESCRIPTION_START
+                || !savedTask.endsWith(LEGACY_RECORD_SUFFIX)) {
+            return null;
+        }
+        String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START, deadlineMarker);
+        String deadline = savedTask.substring(deadlineMarker + LEGACY_DEADLINE_MARKER.length(),
+                savedTask.length() - LEGACY_RECORD_SUFFIX.length());
+        if (description.isBlank() || deadline.isBlank()) {
+            return null;
+        }
+        try {
+            return restoreStatus(new Deadline(description, DeadlineDateParser.parse(deadline)), status);
+        } catch (GoobleException e) {
+            return null;
+        }
+    }
+
+    /** Parses a legacy event record. */
+    private Task parseLegacyEvent(String savedTask) {
+        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
+            return null;
+        }
+        char status = savedTask.charAt(LEGACY_STATUS_INDEX);
+        int startMarker = savedTask.lastIndexOf(LEGACY_EVENT_START_MARKER);
+        int endMarker = savedTask.lastIndexOf(LEGACY_EVENT_END_MARKER);
+        if (!validStatus(status) || startMarker <= LEGACY_TYPED_DESCRIPTION_START
+                || endMarker <= startMarker || !savedTask.endsWith(LEGACY_RECORD_SUFFIX)) {
+            return null;
+        }
+        String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START, startMarker);
+        String startDate = savedTask.substring(startMarker + LEGACY_EVENT_START_MARKER.length(), endMarker);
+        String endDate = savedTask.substring(endMarker + LEGACY_EVENT_END_MARKER.length(),
+                savedTask.length() - LEGACY_RECORD_SUFFIX.length());
+        return description.isBlank() || startDate.isBlank() || endDate.isBlank()
+                ? null : restoreStatus(new Event(description, startDate, endDate), status);
+    }
+
+    /** Parses a legacy generic task record. */
+    private Task parseLegacyGeneric(String savedTask) {
+        if (savedTask.length() < LEGACY_GENERIC_MIN_LENGTH || !savedTask.startsWith("[")
+                || !validStatus(savedTask.charAt(LEGACY_GENERIC_STATUS_INDEX))
+                || savedTask.charAt(2) != ']' || savedTask.charAt(3) != ' ') {
+            return null;
+        }
+        String description = savedTask.substring(LEGACY_GENERIC_DESCRIPTION_START);
+        return description.isBlank() ? null
+                : restoreStatus(new Task(description), savedTask.charAt(LEGACY_GENERIC_STATUS_INDEX));
     }
 
     /** Returns whether a legacy record contains a supported status marker. */
     private boolean validStatus(char status) {
-        return status == ' ' || status == 'X';
+        return status == LEGACY_INCOMPLETE_STATUS || status == LEGACY_COMPLETE_STATUS;
     }
 
     /**
@@ -311,7 +376,7 @@ public class TaskList {
         // This helper is called only after parsing has created a valid task and status.
         assert task != null;
         assert validStatus(status);
-        if (status == 'X') {
+        if (status == LEGACY_COMPLETE_STATUS) {
             task.markAsDone();
         }
         return task;

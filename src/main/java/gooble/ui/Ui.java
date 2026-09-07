@@ -55,7 +55,7 @@ public class Ui {
     public void showTasks(TaskList tasks) {
         showMessage("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            showMessage((i + 1) + "." + tasks.get(i));
+            showNumberedTask(i, tasks.get(i));
         }
     }
 
@@ -63,8 +63,13 @@ public class Ui {
     public void showMatchingTasks(List<Task> matchingTasks) {
         showMessage("Here are the matching tasks in your list tehee:");
         for (int i = 0; i < matchingTasks.size(); i++) {
-            showMessage((i + 1) + "." + matchingTasks.get(i));
+            showNumberedTask(i, matchingTasks.get(i));
         }
+    }
+
+    /** Displays a task with its one-based position in a list. */
+    private void showNumberedTask(int zeroBasedIndex, Task task) {
+        showMessage((zeroBasedIndex + 1) + "." + task);
     }
 
     /** Reports that a task was marked complete. */
