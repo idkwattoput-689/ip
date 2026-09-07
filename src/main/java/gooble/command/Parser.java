@@ -109,6 +109,11 @@ public class Parser {
                 .isBefore(java.time.LocalDateTime.of(from.date(), from.time()))) {
             throw new GoobleException("Please ensure the 'to' date and time is not before the 'from' date and time.");
         }
+
+        // A successful range parse always returns two fully specified, ordered times.
+        assert from.time() != null && to.time() != null;
+        assert !java.time.LocalDateTime.of(to.date(), to.time())
+                .isBefore(java.time.LocalDateTime.of(from.date(), from.time()));
         return new DeadlineDateParser.DeadlineDate[] { from, to };
     }
 }
