@@ -11,6 +11,7 @@ public class UnknownCommand extends Command {
 
     @Override
     public void execute(CommandContext context) throws GoobleException {
-        throw new GoobleException("Invalid command smhmh");
+        throw new GoobleException("Invalid command. Gooble is confused, but not offended. "
+                + "Type help to see what I understand.");
     }
 }
