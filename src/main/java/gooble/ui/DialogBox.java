@@ -1,40 +1,30 @@
 package gooble.ui;
 
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.shape.Circle;
 
-/** Displays one message in the Gooble conversation. */
+/** Displays one compact message in the Gooble conversation. */
 public class DialogBox extends HBox {
     /** Creates a message styled as either a user or Gooble response. */
     public DialogBox(String message, boolean isUserMessage) {
-        Label text = new Label(message);
-        Node avatar = createAvatar(isUserMessage);
-        text.setWrapText(true);
-        text.setMaxWidth(560);
-        text.getStyleClass().add(isUserMessage ? "user-bubble" : "gooble-bubble");
-        setSpacing(16);
-        setMaxWidth(Double.MAX_VALUE);
-        setAlignment(isUserMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-        getChildren().addAll(isUserMessage ? text : avatar, isUserMessage ? avatar : text);
-        HBox.setHgrow(text, Priority.NEVER);
-        getStyleClass().add(isUserMessage ? "user-dialog" : "gooble-dialog");
+        this(message, isUserMessage, false);
     }
 
-    private Node createAvatar(boolean isUserMessage) {
-        String avatarPath = isUserMessage ? "/user-avatar.png" : "/gooble-avatar.png";
-        String avatarStyle = isUserMessage ? "user-avatar" : "gooble-avatar";
-        ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream(avatarPath)));
-        avatar.setFitWidth(60);
-        avatar.setFitHeight(60);
-        avatar.setPreserveRatio(true);
-        avatar.setClip(new Circle(30, 30, 30));
-        avatar.getStyleClass().add(avatarStyle);
-        return avatar;
+    /** Creates a message with optional error styling. */
+    public DialogBox(String message, boolean isUserMessage, boolean isError) {
+        Label text = new Label(message);
+        text.setWrapText(true);
+        text.setMaxWidth(680);
+        text.getStyleClass().add(isError ? "error-message"
+                : isUserMessage ? "user-message" : "gooble-message");
+        setSpacing(8);
+        setMaxWidth(Double.MAX_VALUE);
+        setAlignment(isUserMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        getChildren().add(text);
+        HBox.setHgrow(text, Priority.NEVER);
+        getStyleClass().add(isError ? "error-dialog"
+                : isUserMessage ? "user-dialog" : "gooble-dialog");
     }
 }
