@@ -14,7 +14,11 @@ public class AddCommand extends Command {
     public void execute(CommandContext context) throws GoobleException {
         String description = context.parser().argumentAfter(input, "add");
         context.parser().validateDescription(description);
-        context.tasks().add(new Task(description));
-        context.ui().showAddedGeneral(description);
+        try {
+            context.tasks().add(new Task(description));
+            context.ui().showAddedGeneral(description);
+        } catch (IllegalArgumentException e) {
+            throw new GoobleException(e.getMessage());
+        }
     }
 }

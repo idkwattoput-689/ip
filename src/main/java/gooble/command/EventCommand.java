@@ -13,7 +13,11 @@ public class EventCommand extends Command {
     /** Adds an event task described by the command input. */
     public void execute(CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseEvent(input);
-        context.tasks().add(new Event(parts[0], parts[1], parts[2]));
+        try {
+            context.tasks().add(new Event(parts[0], parts[1], parts[2]));
+        } catch (IllegalArgumentException e) {
+            throw new GoobleException(e.getMessage());
+        }
         context.ui().showAdded(context.tasks().get(context.tasks().size() - 1));
         context.ui().showTaskCount(context.tasks().size());
     }

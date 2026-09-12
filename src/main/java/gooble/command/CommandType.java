@@ -46,8 +46,11 @@ public enum CommandType {
      * @return the matching CommandType, or UNKNOWN if unrecognized
      */
     public static CommandType fromString(String commandWord) {
+        if (commandWord == null || commandWord.isBlank()) {
+            return UNKNOWN;
+        }
         try {
-            return CommandType.valueOf(commandWord.toUpperCase());
+            return CommandType.valueOf(commandWord.toUpperCase(java.util.Locale.ROOT));
         } catch (IllegalArgumentException e) {
             return UNKNOWN;
         }

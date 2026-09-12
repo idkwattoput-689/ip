@@ -15,8 +15,8 @@ public class TagCommand extends Command {
         String[] parts = context.parser().parseTag(input);
         int index = parseTaskNumber(parts[0]);
         if (!context.tasks().isValidIndex(index)) {
-                context.ui().showMessage("That task number does not exist. Gooble searched everywhere, "
-                        + "even under the digital couch.");
+            context.ui().showMessage("That task number does not exist. Gooble searched everywhere, "
+                    + "even under the digital couch.");
             return;
         }
         try {

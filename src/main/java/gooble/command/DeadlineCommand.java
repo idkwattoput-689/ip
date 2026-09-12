@@ -15,7 +15,11 @@ public class DeadlineCommand extends Command {
     public void execute(CommandContext context) throws GoobleException {
         String[] parts = context.parser().parseDeadline(input);
         DeadlineDateParser.DeadlineDate date = DeadlineDateParser.parse(parts[1]);
-        context.tasks().add(new Deadline(parts[0], date));
+        try {
+            context.tasks().add(new Deadline(parts[0], date));
+        } catch (IllegalArgumentException e) {
+            throw new GoobleException(e.getMessage());
+        }
         context.ui().showAdded(context.tasks().get(context.tasks().size() - 1));
         if (DeadlineDateParser.isValentinesDay(date)) {
             context.ui().showMessage("Love is in the air~");

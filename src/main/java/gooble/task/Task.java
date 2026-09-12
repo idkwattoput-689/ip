@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -72,6 +73,22 @@ public class Task {
     /** Returns whether this task has at least one tag. */
     public boolean hasTags() {
         return !tags.isEmpty();
+    }
+
+    /** Returns whether two tasks have the same user-visible details. */
+    public boolean hasSameDetails(Task other) {
+        if (other == null || getClass() != other.getClass()
+                || !description.equals(other.description) || !tags.equals(other.tags)) {
+            return false;
+        }
+        if (this instanceof Deadline thisDeadline && other instanceof Deadline otherDeadline) {
+            return thisDeadline.getStoredDeadline().equals(otherDeadline.getStoredDeadline());
+        }
+        if (this instanceof Event thisEvent && other instanceof Event otherEvent) {
+            return Objects.equals(thisEvent.getStartDate(), otherEvent.getStartDate())
+                    && Objects.equals(thisEvent.getEndDate(), otherEvent.getEndDate());
+        }
+        return true;
     }
 
     /** Adds a normalized tag, removing the oldest tag when the limit is reached. */

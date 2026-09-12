@@ -150,30 +150,30 @@ public class Ui {
         }
 
         String details = switch (command) {
-        case "add" -> commandHelp("ADD COMMAND", "add <description>",
+            case "add" -> commandHelp("ADD COMMAND", "add <description>",
                 "Add a simple task.", "add read chapter 3");
-        case "todo" -> commandHelp("TODO COMMAND", "todo <description>",
+            case "todo" -> commandHelp("TODO COMMAND", "todo <description>",
                 "Add a todo task.", "todo buy groceries");
-        case "deadline" -> commandHelp("DEADLINE COMMAND", "deadline <description> /by <date>",
+            case "deadline" -> commandHelp("DEADLINE COMMAND", "deadline <description> /by <date>",
                 "Add a task with a deadline.", "deadline submit report /by 2026-09-20 1800");
-        case "event" -> commandHelp("EVENT COMMAND", "event <description> /from <date> /to <date>",
+            case "event" -> commandHelp("EVENT COMMAND", "event <description> /from <date> /to <date>",
                 "Add an event.", "event project meeting /from 2026-09-15 1400 /to 2026-09-15 1500");
-        case "list" -> commandHelp("LIST COMMAND", "list",
+            case "list" -> commandHelp("LIST COMMAND", "list",
                 "Show all tasks.", "list");
-        case "find" -> commandHelp("FIND COMMAND", "find <keyword>",
+            case "find" -> commandHelp("FIND COMMAND", "find <keyword>",
                 "Search tasks by keyword.", "find report");
-        case "mark" -> commandHelp("MARK COMMAND", "mark <number>",
+            case "mark" -> commandHelp("MARK COMMAND", "mark <number>",
                 "Mark a task as complete.", "mark 2");
-        case "unmark" -> commandHelp("UNMARK COMMAND", "unmark <number>",
+            case "unmark" -> commandHelp("UNMARK COMMAND", "unmark <number>",
                 "Mark a task as incomplete.", "unmark 2");
-        case "delete" -> commandHelp("DELETE COMMAND", "delete <number>",
+            case "delete" -> commandHelp("DELETE COMMAND", "delete <number>",
                 "Delete a task.", "delete 2");
-        case "tag" -> commandHelp("TAG COMMAND", "tag <number> <#tag>",
+            case "tag" -> commandHelp("TAG COMMAND", "tag <number> <#tag>",
                 "Add a tag to a task.", "tag 2 #urgent");
-        case "untag" -> commandHelp("UNTAG COMMAND", "untag <number>",
+            case "untag" -> commandHelp("UNTAG COMMAND", "untag <number>",
                 "Remove all tags from a task.", "untag 2");
-        case "bye" -> commandHelp("BYE COMMAND", "bye", "Exit Gooble.", "bye");
-        default -> "No help is available for `" + topic + "`.\n\n"
+            case "bye" -> commandHelp("BYE COMMAND", "bye", "Exit Gooble.", "bye");
+            default -> "No help is available for `" + topic + "`.\n\n"
                 + "Type help to see all available commands.";
         };
         showMessage(details);

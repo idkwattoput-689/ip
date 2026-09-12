@@ -14,7 +14,11 @@ public class TodoCommand extends Command {
     public void execute(CommandContext context) throws GoobleException {
         String description = context.parser().argumentAfter(input, "todo");
         context.parser().validateDescription(description);
-        context.tasks().add(new Todo(description));
+        try {
+            context.tasks().add(new Todo(description));
+        } catch (IllegalArgumentException e) {
+            throw new GoobleException(e.getMessage());
+        }
         context.ui().showAdded(context.tasks().get(context.tasks().size() - 1));
         context.ui().showTaskCount(context.tasks().size());
     }

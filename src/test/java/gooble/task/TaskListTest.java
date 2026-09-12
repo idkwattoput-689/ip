@@ -2,6 +2,7 @@ package gooble.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
@@ -35,6 +36,15 @@ class TaskListTest {
         assertEquals(task, tasks.get(0));
         assertEquals(task, tasks.remove(0));
         assertEquals(0, tasks.size());
+    }
+
+    @Test
+    void add_duplicateTaskDetails_throwsException(@TempDir Path tempDir) {
+        TaskList tasks = new TaskList(new Storage(tempDir.resolve("tasks.txt")));
+        tasks.add(new Todo("read book"));
+
+        assertThrows(IllegalArgumentException.class, () -> tasks.add(new Todo("read book")));
+        assertEquals(1, tasks.size());
     }
 
     @Test

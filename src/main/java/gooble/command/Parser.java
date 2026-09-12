@@ -1,6 +1,7 @@
 package gooble.command;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 import gooble.GoobleException;
 import gooble.task.DeadlineDateParser;
@@ -20,6 +21,9 @@ public class Parser {
 
     /** Creates the command object corresponding to complete user input. */
     public Command parse(String command) {
+        if (command == null || command.isBlank()) {
+            return new UnknownCommand("");
+        }
         CommandType type = parseType(command);
         if (type == CommandType.LIST && command.startsWith(LIST_FROM_PREFIX)) {
             return new ListFromCommand(command);
@@ -35,8 +39,11 @@ public class Parser {
      * @return matching command type, or {@link CommandType#UNKNOWN}
      */
     public CommandType parseType(String command) {
+        if (command == null || command.isBlank()) {
+            return CommandType.UNKNOWN;
+        }
         String commandWord = command.split("\\s+", 2)[0];
-        return CommandType.fromString(commandWord);
+        return CommandType.fromString(commandWord.toLowerCase(Locale.ROOT));
     }
 
     /**
@@ -92,11 +99,15 @@ public class Parser {
 
     /** Parses a deadline command into description and deadline text. */
     public String[] parseDeadline(String command) throws GoobleException {
+        ensureCommandHasEnoughText(command, DEADLINE_COMMAND);
         String details = command.substring(DEADLINE_COMMAND.length()).trim();
         validateDescription(details);
         int markerIndex = details.indexOf(DEADLINE_MARKER);
         if (markerIndex == -1) {
             throw new GoobleException("Please specify a deadline using /by. Gooble needs a date to do calendar magic.");
+        }
+        if (details.indexOf(DEADLINE_MARKER, markerIndex + DEADLINE_MARKER.length()) >= 0) {
+            throw new GoobleException("Please specify only one deadline using /by.");
         }
         String description = details.substring(0, markerIndex).trim();
         String deadline = details.substring(markerIndex + DEADLINE_MARKER.length()).trim();
@@ -109,6 +120,7 @@ public class Parser {
 
     /** Parses an event command into description, start, and end text. */
     public String[] parseEvent(String command) throws GoobleException {
+        ensureCommandHasEnoughText(command, EVENT_COMMAND);
         String details = command.substring(EVENT_COMMAND.length()).trim();
         validateDescription(details);
         int startIndex = details.indexOf(EVENT_START_MARKER);
@@ -116,6 +128,10 @@ public class Parser {
         if (startIndex == -1 || endIndex == -1 || endIndex < startIndex) {
             throw new GoobleException("Please specify an event time using /from and /to. "
                     + "Gooble needs both ends of the event.");
+        }
+        if (details.indexOf(EVENT_START_MARKER, startIndex + EVENT_START_MARKER.length()) >= 0
+                || details.indexOf(EVENT_END_MARKER, endIndex + EVENT_END_MARKER.length()) >= 0) {
+            throw new GoobleException("Please specify each event time marker only once.");
         }
         String description = details.substring(0, startIndex).trim();
         String start = details.substring(startIndex + EVENT_START_MARKER.length(), endIndex).trim();
@@ -125,11 +141,46 @@ public class Parser {
             throw new GoobleException("Please specify an event time using /from and /to. "
                     + "Gooble needs both ends of the event.");
         }
+        validateEventOrder(start, end);
         return new String[] { description, start, end };
+    }
+
+    /** Rejects an event whose two supported date-time values are not chronological. */
+    private void validateEventOrder(String start, String end) throws GoobleException {
+        try {
+            DeadlineDateParser.DeadlineDate startDate = DeadlineDateParser.parse(start);
+            DeadlineDateParser.DeadlineDate endDate = DeadlineDateParser.parse(end);
+            if ((startDate.time() == null) != (endDate.time() == null)) {
+                return;
+            }
+            LocalDateTime startDateTime = LocalDateTime.of(startDate.date(),
+                    startDate.time() == null ? java.time.LocalTime.MIDNIGHT : startDate.time());
+            LocalDateTime endDateTime = LocalDateTime.of(endDate.date(),
+                    endDate.time() == null ? java.time.LocalTime.MIDNIGHT : endDate.time());
+            if (!endDateTime.isAfter(startDateTime)) {
+                throw new GoobleException("Please ensure the event ends after it starts.");
+            }
+        } catch (GoobleException e) {
+            // Events support free-form values such as "Mon 2pm". Those are
+            // validated by presence only because they cannot be ordered here.
+            if (e.getMessage().equals("Please ensure the event ends after it starts.")) {
+                throw e;
+            }
+        }
+    }
+
+    /** Ensures a command parser is not called with a truncated command. */
+    private void ensureCommandHasEnoughText(String command, String commandWord) throws GoobleException {
+        if (command == null || command.length() < commandWord.length()) {
+            throw new GoobleException("Invalid command format. Please provide the required command details.");
+        }
     }
 
     /** Parses and validates a list command's inclusive date-time range. */
     public DeadlineDateParser.DeadlineDate[] parseDateRange(String command) throws GoobleException {
+        if (command == null || !command.startsWith(LIST_FROM_PREFIX)) {
+            throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
+        }
         String range = command.substring(LIST_FROM_PREFIX.length()).trim();
         int separator = range.indexOf(DATE_RANGE_SEPARATOR);
         if (separator <= 0 || separator + DATE_RANGE_SEPARATOR.length() >= range.length()) {

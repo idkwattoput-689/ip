@@ -42,7 +42,10 @@ public class Storage {
     public void save(List<String> records) {
         Path temporaryPath = null;
         try {
-            Files.createDirectories(storagePath.getParent());
+            Path parent = storagePath.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             temporaryPath = storagePath.resolveSibling(storagePath.getFileName() + ".tmp");
             Files.write(temporaryPath, new ArrayList<>(records), StandardCharsets.UTF_8);
             try {
