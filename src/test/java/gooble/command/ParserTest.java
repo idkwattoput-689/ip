@@ -73,6 +73,18 @@ class ParserTest {
     }
 
     @Test
+    void parseEvent_reversedDateTimes_throwsException() {
+        assertThrows(GoobleException.class, () -> parser.parseEvent(
+                "event project meeting /from 2026-03-12 1000 /to 2026-03-12 0900"));
+    }
+
+    @Test
+    void parseDeadline_repeatedMarker_throwsException() {
+        assertThrows(GoobleException.class, () -> parser.parseDeadline(
+                "deadline submit report /by 2026-02-01 /by 2026-02-02"));
+    }
+
+    @Test
     void parseDateRange_validOrderedRange_returnsBothDeadlines() throws GoobleException {
         var range = parser.parseDateRange("list from 2026-02-01 0900 to 2026-02-01 1700");
 

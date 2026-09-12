@@ -74,6 +74,9 @@ public class TaskList {
         if (task == null) {
             throw new IllegalArgumentException("A task cannot be null.");
         }
+        if (tasks.stream().anyMatch(existing -> existing.hasSameDetails(task))) {
+            throw new IllegalArgumentException("A task with the same details already exists.");
+        }
         tasks.add(task);
         save();
     }
