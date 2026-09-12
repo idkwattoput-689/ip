@@ -61,7 +61,7 @@ public class Parser {
      */
     public void validateDescription(String description) throws GoobleException {
         if (description.isEmpty()) {
-            throw new GoobleException("You need to add in some description for that lmao");
+            throw new GoobleException("Missing a description. Gooble needs something to put on the task list.");
         }
     }
 
@@ -70,10 +70,10 @@ public class Parser {
         String details = argumentAfter(command, "tag");
         String[] parts = details.split("\\s+");
         if (parts.length < 2) {
-            throw new GoobleException("Please provide a tag in the format #tag.");
+            throw new GoobleException("Please provide a tag in the format #tag. Gooble cannot tag vibes alone.");
         }
         if (parts.length > 2) {
-            throw new GoobleException("Please provide exactly one tag.");
+            throw new GoobleException("Please provide exactly one tag. Gooble's tag drawer is already wobbly.");
         }
         validateTag(parts[1]);
         return new String[] { parts[0], parts[1].toLowerCase(java.util.Locale.ROOT) };
@@ -82,10 +82,11 @@ public class Parser {
     /** Validates a user-provided tag. */
     public void validateTag(String tag) throws GoobleException {
         if (!tag.startsWith("#")) {
-            throw new GoobleException("Please provide a tag in the format #tag.");
+            throw new GoobleException("Please provide a tag in the format #tag. Gooble cannot tag vibes alone.");
         }
         if (!Task.isValidTag(tag)) {
-            throw new GoobleException("Tags may contain only letters, numbers, hyphens, and underscores.");
+            throw new GoobleException("Tags may contain only letters, numbers, hyphens, and underscores. "
+                    + "Gooble rejects tag confetti.");
         }
     }
 
@@ -95,13 +96,13 @@ public class Parser {
         validateDescription(details);
         int markerIndex = details.indexOf(DEADLINE_MARKER);
         if (markerIndex == -1) {
-            throw new GoobleException("Please specify a deadline using /by.");
+            throw new GoobleException("Please specify a deadline using /by. Gooble needs a date to do calendar magic.");
         }
         String description = details.substring(0, markerIndex).trim();
         String deadline = details.substring(markerIndex + DEADLINE_MARKER.length()).trim();
         validateDescription(description);
         if (deadline.isEmpty()) {
-            throw new GoobleException("Please specify a deadline using /by.");
+            throw new GoobleException("Please specify a deadline using /by. Gooble needs a date to do calendar magic.");
         }
         return new String[] { description, deadline };
     }
@@ -113,14 +114,16 @@ public class Parser {
         int startIndex = details.indexOf(EVENT_START_MARKER);
         int endIndex = details.indexOf(EVENT_END_MARKER);
         if (startIndex == -1 || endIndex == -1 || endIndex < startIndex) {
-            throw new GoobleException("Please specify an event time using /from and /to.");
+            throw new GoobleException("Please specify an event time using /from and /to. "
+                    + "Gooble needs both ends of the event.");
         }
         String description = details.substring(0, startIndex).trim();
         String start = details.substring(startIndex + EVENT_START_MARKER.length(), endIndex).trim();
         String end = details.substring(endIndex + EVENT_END_MARKER.length()).trim();
         validateDescription(description);
         if (start.isEmpty() || end.isEmpty()) {
-            throw new GoobleException("Please specify an event time using /from and /to.");
+            throw new GoobleException("Please specify an event time using /from and /to. "
+                    + "Gooble needs both ends of the event.");
         }
         return new String[] { description, start, end };
     }

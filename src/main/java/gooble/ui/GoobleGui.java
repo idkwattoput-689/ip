@@ -107,6 +107,9 @@ public class GoobleGui extends Application {
     private boolean isErrorResponse(String message) {
         return message.startsWith("Invalid command")
                 || message.startsWith("Please ")
+                || message.startsWith("That task")
+                || message.startsWith("This task")
+                || message.startsWith("Missing ")
                 || message.endsWith("does not exist.");
     }
 

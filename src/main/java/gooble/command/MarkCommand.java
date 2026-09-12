@@ -17,7 +17,8 @@ public class MarkCommand extends Command {
         try {
             int index = Integer.parseInt(number) - 1;
             if (!context.tasks().isValidIndex(index)) {
-                context.ui().showMessage("That task number does not exist.");
+                context.ui().showMessage("That task number does not exist. Gooble searched everywhere, "
+                        + "even under the digital couch.");
             } else if (done) {
                 context.tasks().markAsDone(index);
                 context.ui().showMarkedDone(context.tasks().get(index));
@@ -26,7 +27,7 @@ public class MarkCommand extends Command {
                 context.ui().showMarkedNotDone(context.tasks().get(index));
             }
         } catch (NumberFormatException e) {
-            context.ui().showMessage("Please provide a valid task number.");
+            context.ui().showMessage("Please provide a valid task number. Gooble cannot mark task-shaped air.");
         }
     }
 }

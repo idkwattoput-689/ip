@@ -15,11 +15,12 @@ public class UntagCommand extends Command {
         String number = context.parser().argumentAfter(input, "untag");
         int index = parseTaskNumber(number);
         if (!context.tasks().isValidIndex(index)) {
-            context.ui().showMessage("That task number does not exist.");
+            context.ui().showMessage("That task number does not exist. Gooble searched everywhere, "
+                    + "even under the digital couch.");
             return;
         }
         if (!context.tasks().get(index).hasTags()) {
-            context.ui().showMessage("This task has no tags to remove.");
+            context.ui().showMessage("This task has no tags to remove. Gooble found only tag-shaped air.");
             return;
         }
         context.tasks().removeTags(index);
@@ -31,7 +32,7 @@ public class UntagCommand extends Command {
         try {
             return Integer.parseInt(number) - 1;
         } catch (NumberFormatException e) {
-            throw new GoobleException("Please provide a valid task number.");
+            throw new GoobleException("Please provide a valid task number. Gooble cannot untag task-shaped air.");
         }
     }
 }
