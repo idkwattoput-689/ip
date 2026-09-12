@@ -21,31 +21,54 @@
 }
 
 .vbox { -fx-padding: 16px; }
-.user-dialog, .gooble-dialog, .error-dialog { -fx-background-color: transparent; }
-.user-dialog { -fx-padding: 0 0 0 52px; }
-.gooble-dialog, .error-dialog { -fx-padding: 0 52px 0 0; }
+.user-dialog, .gooble-dialog, .error-dialog, .help-dialog { -fx-background-color: transparent; }
+.user-dialog, .gooble-dialog, .error-dialog, .help-dialog { -fx-padding: 0; }
 
-.user-message, .gooble-message, .error-message {
+.command-line, .response-line, .error-message, .help-message {
     -fx-padding: 10px 14px;
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-font-size: 14px;
+    -fx-font-family: "Cascadia Mono", "Consolas", monospace;
+    -fx-font-size: 13px;
     -fx-line-spacing: 2px;
 }
 
-.user-message { -fx-background-color: #ddebff; -fx-text-fill: #173b6c; }
-.gooble-message {
+.command-line {
+    -fx-background-color: #ddebff;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #173b6c;
+}
+.response-line {
     -fx-background-color: #f0ecff;
+    -fx-background-radius: 8px;
     -fx-border-color: #7654e8;
     -fx-border-width: 0 0 0 4px;
+    -fx-border-radius: 4px;
     -fx-text-fill: #30243a;
 }
 .error-message {
     -fx-background-color: #fff0f2;
     -fx-border-color: #e85d75;
     -fx-border-width: 0 0 0 4px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 8px;
     -fx-text-fill: #8c263a;
     -fx-font-weight: bold;
+}
+
+.help-message {
+    -fx-background-color: #e7f8f1;
+    -fx-border-color: #27a98a;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #174f45;
+    -fx-font-weight: normal;
+}
+
+.command-hints {
+    -fx-padding: 0 16px;
+    -fx-text-fill: #766d80;
+    -fx-font-family: "Cascadia Mono", "Consolas", monospace;
+    -fx-font-size: 11px;
 }
 
 .input-bar {

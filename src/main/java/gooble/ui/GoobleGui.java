@@ -42,6 +42,10 @@ public class GoobleGui extends Application {
         sendButton.setPrefWidth(82);
         HBox.setHgrow(userInput, Priority.ALWAYS);
 
+        Label commandHints = new Label("Need a little commandment? Type help and Gooble will guide the way.");
+        commandHints.getStyleClass().add("command-hints");
+        VBox inputArea = new VBox(5, commandHints, inputBar);
+
         Label title = new Label("Gooble");
         title.getStyleClass().add("app-title");
         Label subtitle = new Label("Your task assistant");
@@ -58,7 +62,7 @@ public class GoobleGui extends Application {
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(header);
         mainLayout.setCenter(scrollPane);
-        mainLayout.setBottom(inputBar);
+        mainLayout.setBottom(inputArea);
 
         Scene scene = new Scene(mainLayout, 720, 650);
         scene.getStylesheets().add(getClass().getResource("/gooble.css").toExternalForm());
@@ -82,7 +86,9 @@ public class GoobleGui extends Application {
         StringBuilder response = new StringBuilder();
         boolean isExit = gooble.executeCommand(input, message -> appendResponse(response, message));
         String responseText = response.toString();
-        appendMessage(responseText, false, isErrorResponse(responseText));
+        appendMessage(responseText, false, isErrorResponse(responseText),
+                responseText.startsWith("GOOBLE COMMANDS")
+                        || responseText.contains(" COMMAND\n────────────────────────────────────────"));
         if (isExit) {
             userInput.setDisable(true);
         }
@@ -105,10 +111,14 @@ public class GoobleGui extends Application {
     }
 
     private void appendMessage(String message, boolean isUserMessage, boolean isError) {
+        appendMessage(message, isUserMessage, isError, false);
+    }
+
+    private void appendMessage(String message, boolean isUserMessage, boolean isError, boolean isHelp) {
         if (message.isEmpty()) {
             return;
         }
-        dialogContainer.getChildren().add(new DialogBox(message.stripTrailing(), isUserMessage, isError));
+        dialogContainer.getChildren().add(new DialogBox(message.stripTrailing(), isUserMessage, isError, isHelp));
         scrollPane.setVvalue(1.0);
     }
 }

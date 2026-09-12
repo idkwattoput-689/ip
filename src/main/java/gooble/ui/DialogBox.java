@@ -14,17 +14,24 @@ public class DialogBox extends HBox {
 
     /** Creates a message with optional error styling. */
     public DialogBox(String message, boolean isUserMessage, boolean isError) {
-        Label text = new Label(message);
+        this(message, isUserMessage, isError, false);
+    }
+
+    /** Creates a message with optional error or help styling. */
+    public DialogBox(String message, boolean isUserMessage, boolean isError, boolean isHelp) {
+        String displayMessage = isUserMessage ? message
+                : isError ? "⚠ " + message : isHelp ? message : "Gooble: " + message;
+        Label text = new Label(displayMessage);
         text.setWrapText(true);
         text.setMaxWidth(680);
-        text.getStyleClass().add(isError ? "error-message"
-                : isUserMessage ? "user-message" : "gooble-message");
+        text.getStyleClass().add(isError ? "error-message" : isHelp ? "help-message"
+                : isUserMessage ? "command-line" : "response-line");
         setSpacing(8);
         setMaxWidth(Double.MAX_VALUE);
         setAlignment(isUserMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         getChildren().add(text);
         HBox.setHgrow(text, Priority.NEVER);
-        getStyleClass().add(isError ? "error-dialog"
+        getStyleClass().add(isError ? "error-dialog" : isHelp ? "help-dialog"
                 : isUserMessage ? "user-dialog" : "gooble-dialog");
     }
 }
