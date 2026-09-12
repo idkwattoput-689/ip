@@ -249,7 +249,7 @@ public class TaskList {
         String[] fields = savedTask.split("\\|", -1);
         boolean hasEnoughFields = fields.length >= 3;
         boolean hasValidType = fields[0].length() == 1;
-        boolean hasValidStatus = fields[1].length() == 1
+        boolean hasValidStatus = hasEnoughFields && fields[1].length() == 1
                 && (fields[1].charAt(0) == INCOMPLETE_STATUS
                 || fields[1].charAt(0) == COMPLETE_STATUS);
         if (!hasEnoughFields || !hasValidType || !hasValidStatus) {

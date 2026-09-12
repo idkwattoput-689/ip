@@ -2,6 +2,7 @@ package gooble.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,5 +30,23 @@ class StorageTest {
 
         assertEquals(records, storage.load());
         assertFalse(Files.exists(storagePath.resolveSibling("tasks.txt.tmp")));
+    }
+
+    @Test
+    void load_malformedRecordsAreStillReturnedForHigherLevelValidation(@TempDir Path tempDir) {
+        Storage storage = new Storage(tempDir.resolve("tasks.txt"));
+        storage.save(List.of("not a task record", "T|0|!!!", "T|0|cmVhZCBib29r|"));
+
+        assertEquals(3, storage.load().size());
+        assertTrue(storage.load().contains("not a task record"));
+    }
+
+    @Test
+    void save_emptyRecords_createsAnEmptyFile(@TempDir Path tempDir) {
+        Path storagePath = tempDir.resolve("tasks.txt");
+        new Storage(storagePath).save(List.of());
+
+        assertTrue(Files.exists(storagePath));
+        assertEquals(List.of(), new Storage(storagePath).load());
     }
 }

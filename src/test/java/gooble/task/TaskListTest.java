@@ -48,6 +48,17 @@ class TaskListTest {
     }
 
     @Test
+    void constructor_skipsMalformedPersistedRecords(@TempDir Path tempDir) {
+        Path storagePath = tempDir.resolve("tasks.txt");
+        new Storage(storagePath).save(java.util.List.of("not valid", "T|0|!!!", "T|0|cmVhZCBib29r|"));
+
+        TaskList tasks = new TaskList(new Storage(storagePath));
+
+        assertEquals(1, tasks.size());
+        assertEquals("read book", tasks.get(0).getDescription());
+    }
+
+    @Test
     void markAsDoneAndNotDone_updatesTaskState(@TempDir Path tempDir) {
         TaskList tasks = new TaskList(new Storage(tempDir.resolve("tasks.txt")));
         tasks.add(new Todo("read book"));
