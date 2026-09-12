@@ -15,6 +15,7 @@ public enum CommandType {
     TAG,
     UNTAG,
     ADD,
+    HELP,
     BYE,
     UNKNOWN;
 
@@ -27,6 +28,7 @@ public enum CommandType {
             case DELETE -> new DeleteCommand(input);
             case TODO -> new TodoCommand(input);
             case ADD -> new AddCommand(input);
+            case HELP -> new HelpCommand(input);
             case DEADLINE -> new DeadlineCommand(input);
             case EVENT -> new EventCommand(input);
             case FIND -> new FindCommand(input);

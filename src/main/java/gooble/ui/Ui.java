@@ -54,6 +54,7 @@ public class Ui {
      */
     public void showTasks(TaskList tasks) {
         showMessage("Here are the tasks in your list:");
+        showMessage("────────────────────────────────────────");
         for (int i = 0; i < tasks.size(); i++) {
             showNumberedTask(i, tasks.get(i));
         }
@@ -62,6 +63,7 @@ public class Ui {
     /** Prints tasks matching a search keyword in their original task-list order. */
     public void showMatchingTasks(List<Task> matchingTasks) {
         showMessage("Here are the matching tasks in your list tehee:");
+        showMessage("────────────────────────────────────────");
         for (int i = 0; i < matchingTasks.size(); i++) {
             showNumberedTask(i, matchingTasks.get(i));
         }
@@ -69,7 +71,9 @@ public class Ui {
 
     /** Displays a task with its one-based position in a list. */
     private void showNumberedTask(int zeroBasedIndex, Task task) {
-        showMessage((zeroBasedIndex + 1) + "." + task);
+        String formattedTask = task.toString().replaceFirst("\\]\\[", "] [");
+        showMessage((zeroBasedIndex + 1) + ". " + formattedTask);
+        showMessage(System.lineSeparator());
     }
 
     /** Reports that a task was marked complete. */
@@ -105,6 +109,82 @@ public class Ui {
     /** Prints the application's exit message. */
     public void showBye() {
         showMessage("Bye. Hope to see you again soon!");
+    }
+
+    /** Displays the available commands and their expected formats. */
+    public void showHelp() {
+        showHelp("");
+    }
+
+    /** Displays general help or detailed help for one command. */
+    public void showHelp(String topic) {
+        String command = topic.toLowerCase(java.util.Locale.ROOT);
+        if (command.isEmpty()) {
+            showMessage("GOOBLE COMMANDS\n"
+                    + "────────────────────────────────────────────────────────────────────────\n\n"
+                    + "TASK MANAGEMENT\n\n"
+                    + "COMMAND                                      DESCRIPTION\n"
+                    + "add <description>                            Add a simple task\n"
+                    + "todo <description>                           Add a todo task\n"
+                    + "deadline <description> /by <date>            Add a task with a deadline\n"
+                    + "event <description> /from <date> /to <date>  Add an event\n\n"
+                    + "VIEWING TASKS\n\n"
+                    + "COMMAND                                      DESCRIPTION\n"
+                    + "list                                         Show all tasks\n"
+                    + "find <keyword>                               Search tasks\n"
+                    + "list from <date> to <date>                   Filter events by date\n\n"
+                    + "UPDATING TASKS\n\n"
+                    + "COMMAND                                      DESCRIPTION\n"
+                    + "mark <number>                                Mark a task as complete\n"
+                    + "unmark <number>                              Mark a task as incomplete\n"
+                    + "delete <number>                              Delete a task\n"
+                    + "tag <number> <#tag>                          Add a tag\n"
+                    + "untag <number>                               Remove all tags\n\n"
+                    + "OTHER\n\n"
+                    + "COMMAND                                      DESCRIPTION\n"
+                    + "help                                         Show this guide\n"
+                    + "bye                                          Exit Gooble\n\n"
+                    + "TIP\n"
+                    + "Type help <command> for a detailed example.");
+            return;
+        }
+
+        String details = switch (command) {
+        case "add" -> commandHelp("ADD COMMAND", "add <description>",
+                "Add a simple task.", "add read chapter 3");
+        case "todo" -> commandHelp("TODO COMMAND", "todo <description>",
+                "Add a todo task.", "todo buy groceries");
+        case "deadline" -> commandHelp("DEADLINE COMMAND", "deadline <description> /by <date>",
+                "Add a task with a deadline.", "deadline submit report /by 2026-09-20 1800");
+        case "event" -> commandHelp("EVENT COMMAND", "event <description> /from <date> /to <date>",
+                "Add an event.", "event project meeting /from 2026-09-15 1400 /to 2026-09-15 1500");
+        case "list" -> commandHelp("LIST COMMAND", "list",
+                "Show all tasks.", "list");
+        case "find" -> commandHelp("FIND COMMAND", "find <keyword>",
+                "Search tasks by keyword.", "find report");
+        case "mark" -> commandHelp("MARK COMMAND", "mark <number>",
+                "Mark a task as complete.", "mark 2");
+        case "unmark" -> commandHelp("UNMARK COMMAND", "unmark <number>",
+                "Mark a task as incomplete.", "unmark 2");
+        case "delete" -> commandHelp("DELETE COMMAND", "delete <number>",
+                "Delete a task.", "delete 2");
+        case "tag" -> commandHelp("TAG COMMAND", "tag <number> <#tag>",
+                "Add a tag to a task.", "tag 2 #urgent");
+        case "untag" -> commandHelp("UNTAG COMMAND", "untag <number>",
+                "Remove all tags from a task.", "untag 2");
+        case "bye" -> commandHelp("BYE COMMAND", "bye", "Exit Gooble.", "bye");
+        default -> "No help is available for `" + topic + "`.\n\n"
+                + "Type help to see all available commands.";
+        };
+        showMessage(details);
+    }
+
+    private String commandHelp(String title, String format, String description, String example) {
+        return title + "\n"
+                + "────────────────────────────────────────\n\n"
+                + "FORMAT\n  " + format + "\n\n"
+                + description + "\n\n"
+                + "EXAMPLE\n  " + example;
     }
 
     /** Reports the legacy add command's confirmation. */
