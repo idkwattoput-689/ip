@@ -23,6 +23,19 @@ public class GoobleGui extends Application {
 
     @Override
     public void start(Stage stage) {
+        createScrollPane();
+        VBox inputArea = createInputArea();
+        HBox header = createHeader();
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.setTop(header);
+        mainLayout.setCenter(scrollPane);
+        mainLayout.setBottom(inputArea);
+        configureStage(stage, mainLayout);
+        appendMessage("Hello! I'm Gooble. What can I do for you?", false, false);
+        userInput.requestFocus();
+    }
+
+    private void createScrollPane() {
         scrollPane = new ScrollPane(dialogContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -30,6 +43,9 @@ public class GoobleGui extends Application {
         // Scroll to the latest message whenever the conversation grows.
         dialogContainer.heightProperty().addListener(
                 observable -> scrollPane.setVvalue(1.0));
+    }
+
+    private VBox createInputArea() {
         userInput = new TextField();
         userInput.setPromptText("Type a command...");
         Button sendButton = new Button("Send");
@@ -44,8 +60,10 @@ public class GoobleGui extends Application {
 
         Label commandHints = new Label("Need a little commandment? Type help and Gooble will guide the way.");
         commandHints.getStyleClass().add("command-hints");
-        VBox inputArea = new VBox(5, commandHints, inputBar);
+        return new VBox(5, commandHints, inputBar);
+    }
 
+    private HBox createHeader() {
         Label title = new Label("Gooble");
         title.getStyleClass().add("app-title");
         Label subtitle = new Label("Your task assistant");
@@ -58,12 +76,10 @@ public class GoobleGui extends Application {
         header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         HBox.setHgrow(titleBlock, Priority.ALWAYS);
         header.getStyleClass().add("app-header");
+        return header;
+    }
 
-        BorderPane mainLayout = new BorderPane();
-        mainLayout.setTop(header);
-        mainLayout.setCenter(scrollPane);
-        mainLayout.setBottom(inputArea);
-
+    private void configureStage(Stage stage, BorderPane mainLayout) {
         Scene scene = new Scene(mainLayout, 720, 650);
         scene.getStylesheets().add(getClass().getResource("/gooble.css").toExternalForm());
         stage.setTitle("Gooble");
@@ -71,9 +87,6 @@ public class GoobleGui extends Application {
         stage.setMinHeight(480);
         stage.setScene(scene);
         stage.show();
-
-        appendMessage("Hello! I'm Gooble. What can I do for you?", false, false);
-        userInput.requestFocus();
     }
 
     private void handleInput() {

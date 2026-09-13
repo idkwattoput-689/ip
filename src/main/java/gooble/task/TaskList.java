@@ -247,15 +247,35 @@ public class TaskList {
     /** Parses the current type|status|encoded-fields format. */
     private Task parsePersistedTask(String savedTask) {
         String[] fields = savedTask.split("\\|", -1);
-        boolean hasEnoughFields = fields.length >= 3;
-        boolean hasValidType = fields[0].length() == 1;
-        boolean hasValidStatus = hasEnoughFields && fields[1].length() == 1
-                && (fields[1].charAt(0) == INCOMPLETE_STATUS
-                || fields[1].charAt(0) == COMPLETE_STATUS);
-        if (!hasEnoughFields || !hasValidType || !hasValidStatus) {
+        if (!hasValidPersistedRecord(fields)) {
             return null;
         }
 
+        List<String> decodedFields = decodePersistedFields(fields);
+        if (decodedFields == null) {
+            return null;
+        }
+        int expectedFieldCount = expectedFieldCount(fields[0]);
+        if (!hasValidFieldCount(decodedFields, expectedFieldCount)) {
+            return null;
+        }
+
+        String storedTags = decodedFields.size() == expectedFieldCount + 1
+                ? decodedFields.remove(decodedFields.size() - 1) : "";
+        if (!hasValidDecodedFields(decodedFields) || !restoreTagsIfValid(null, storedTags)) {
+            return null;
+        }
+
+        return restorePersistedTask(fields, decodedFields, storedTags);
+    }
+
+    private boolean hasValidPersistedRecord(String[] fields) {
+        return fields.length >= 3 && fields[0].length() == 1 && fields[1].length() == 1
+                && (fields[1].charAt(0) == INCOMPLETE_STATUS
+                || fields[1].charAt(0) == COMPLETE_STATUS);
+    }
+
+    private List<String> decodePersistedFields(String[] fields) {
         List<String> decodedFields = new ArrayList<>();
         for (int i = 2; i < fields.length; i++) {
             String decoded = decode(fields[i]);
@@ -264,21 +284,21 @@ public class TaskList {
             }
             decodedFields.add(decoded);
         }
-        int expectedFieldCount = expectedFieldCount(fields[0]);
-        if (expectedFieldCount == 0 || decodedFields.size() < expectedFieldCount
-                || decodedFields.size() > expectedFieldCount + 1) {
-            return null;
-        }
+        return decodedFields;
+    }
 
-        String storedTags = decodedFields.size() == expectedFieldCount + 1
-                ? decodedFields.remove(decodedFields.size() - 1) : "";
-        if (decodedFields.isEmpty() || decodedFields.stream().anyMatch(String::isBlank)
-                || !restoreTagsIfValid(null, storedTags)) {
-            return null;
-        }
+    private boolean hasValidFieldCount(List<String> fields, int expectedFieldCount) {
+        return expectedFieldCount > 0 && fields.size() >= expectedFieldCount
+                && fields.size() <= expectedFieldCount + 1;
+    }
 
-        // The type-specific parser below relies on having valid, non-blank fields.
-        assert !decodedFields.isEmpty() && decodedFields.stream().noneMatch(String::isBlank);
+    private boolean hasValidDecodedFields(List<String> fields) {
+        return !fields.isEmpty() && fields.stream().noneMatch(String::isBlank);
+    }
+
+    private Task restorePersistedTask(String[] fields, List<String> decodedFields, String storedTags) {
+        // The type-specific parser relies on having valid, non-blank fields.
+        assert hasValidDecodedFields(decodedFields);
         try {
             Task task = createPersistedTask(fields[0], decodedFields);
             if (task == null || !restoreTagsIfValid(task, storedTags)) {
