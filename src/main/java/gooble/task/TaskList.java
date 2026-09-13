@@ -181,19 +181,8 @@ public class TaskList {
      * @return one storage record
      */
     private String serialize(Task task) {
-        String type = GENERIC_TYPE;
-        List<String> fields = new ArrayList<>();
-        fields.add(task.getDescription());
-        if (task instanceof Todo) {
-            type = TODO_TYPE;
-        } else if (task instanceof Deadline deadline) {
-            type = DEADLINE_TYPE;
-            fields.add(deadline.getStoredDeadline());
-        } else if (task instanceof Event event) {
-            type = EVENT_TYPE;
-            fields.add(event.getStartDate());
-            fields.add(event.getEndDate());
-        }
+        String type = serializedType(task);
+        List<String> fields = serializedFields(task);
 
         StringBuilder record = new StringBuilder(type)
                 .append('|').append("X".equals(task.getStatusIcon())
@@ -203,6 +192,31 @@ public class TaskList {
         }
         record.append('|').append(encode(String.join(",", task.getTags())));
         return record.toString();
+    }
+
+    private String serializedType(Task task) {
+        if (task instanceof Todo) {
+            return TODO_TYPE;
+        } else if (task instanceof Deadline) {
+            return DEADLINE_TYPE;
+        } else if (task instanceof Event) {
+            return EVENT_TYPE;
+        }
+        return GENERIC_TYPE;
+    }
+
+    private List<String> serializedFields(Task task) {
+        List<String> fields = new ArrayList<>();
+        fields.add(task.getDescription());
+        if (task instanceof Todo) {
+            return fields;
+        } else if (task instanceof Deadline deadline) {
+            fields.add(deadline.getStoredDeadline());
+        } else if (task instanceof Event event) {
+            fields.add(event.getStartDate());
+            fields.add(event.getEndDate());
+        }
+        return fields;
     }
 
     /** Encodes one user-provided field for storage. */
@@ -384,13 +398,12 @@ public class TaskList {
 
     /** Parses a legacy deadline record. */
     private Task parseLegacyDeadline(String savedTask) {
-        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
+        if (!hasMinimumLegacyLength(savedTask)) {
             return null;
         }
         char status = savedTask.charAt(LEGACY_STATUS_INDEX);
         int deadlineMarker = savedTask.lastIndexOf(LEGACY_DEADLINE_MARKER);
-        if (!validStatus(status) || deadlineMarker <= LEGACY_TYPED_DESCRIPTION_START
-                || !savedTask.endsWith(LEGACY_RECORD_SUFFIX)) {
+        if (!hasValidLegacyDeadlineStructure(savedTask, status, deadlineMarker)) {
             return null;
         }
         String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START, deadlineMarker);
@@ -399,6 +412,19 @@ public class TaskList {
         if (description.isBlank() || deadline.isBlank()) {
             return null;
         }
+        return parseLegacyDeadlineValue(description, deadline, status);
+    }
+
+    private boolean hasMinimumLegacyLength(String savedTask) {
+        return savedTask.length() >= LEGACY_TYPED_MIN_LENGTH;
+    }
+
+    private boolean hasValidLegacyDeadlineStructure(String savedTask, char status, int deadlineMarker) {
+        return validStatus(status) && deadlineMarker > LEGACY_TYPED_DESCRIPTION_START
+                && savedTask.endsWith(LEGACY_RECORD_SUFFIX);
+    }
+
+    private Task parseLegacyDeadlineValue(String description, String deadline, char status) {
         try {
             return restoreStatus(new Deadline(description, DeadlineDateParser.parse(deadline)), status);
         } catch (GoobleException e) {
@@ -408,14 +434,13 @@ public class TaskList {
 
     /** Parses a legacy event record. */
     private Task parseLegacyEvent(String savedTask) {
-        if (savedTask.length() < LEGACY_TYPED_MIN_LENGTH) {
+        if (!hasMinimumLegacyLength(savedTask)) {
             return null;
         }
         char status = savedTask.charAt(LEGACY_STATUS_INDEX);
         int startMarker = savedTask.lastIndexOf(LEGACY_EVENT_START_MARKER);
         int endMarker = savedTask.lastIndexOf(LEGACY_EVENT_END_MARKER);
-        if (!validStatus(status) || startMarker <= LEGACY_TYPED_DESCRIPTION_START
-                || endMarker <= startMarker || !savedTask.endsWith(LEGACY_RECORD_SUFFIX)) {
+        if (!hasValidLegacyEventStructure(savedTask, status, startMarker, endMarker)) {
             return null;
         }
         String description = savedTask.substring(LEGACY_TYPED_DESCRIPTION_START, startMarker);
@@ -424,6 +449,12 @@ public class TaskList {
                 savedTask.length() - LEGACY_RECORD_SUFFIX.length());
         return description.isBlank() || startDate.isBlank() || endDate.isBlank()
                 ? null : restoreStatus(new Event(description, startDate, endDate), status);
+    }
+
+    private boolean hasValidLegacyEventStructure(String savedTask, char status,
+                                                 int startMarker, int endMarker) {
+        return validStatus(status) && startMarker > LEGACY_TYPED_DESCRIPTION_START
+                && endMarker > startMarker && savedTask.endsWith(LEGACY_RECORD_SUFFIX);
     }
 
     /** Parses a legacy generic task record. */

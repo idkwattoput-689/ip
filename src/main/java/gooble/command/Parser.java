@@ -123,6 +123,14 @@ public class Parser {
         ensureCommandHasEnoughText(command, EVENT_COMMAND);
         String details = command.substring(EVENT_COMMAND.length()).trim();
         validateDescription(details);
+        validateEventMarkers(details);
+        String[] eventDetails = extractEventDetails(details);
+        validateEventDetails(eventDetails);
+        validateEventOrder(eventDetails[1], eventDetails[2]);
+        return eventDetails;
+    }
+
+    private void validateEventMarkers(String details) throws GoobleException {
         int startIndex = details.indexOf(EVENT_START_MARKER);
         int endIndex = details.indexOf(EVENT_END_MARKER);
         if (startIndex == -1 || endIndex == -1 || endIndex < startIndex) {
@@ -133,16 +141,26 @@ public class Parser {
                 || details.indexOf(EVENT_END_MARKER, endIndex + EVENT_END_MARKER.length()) >= 0) {
             throw new GoobleException("Please specify each event time marker only once.");
         }
+    }
+
+    private String[] extractEventDetails(String details) {
+        int startIndex = details.indexOf(EVENT_START_MARKER);
+        int endIndex = details.indexOf(EVENT_END_MARKER);
         String description = details.substring(0, startIndex).trim();
         String start = details.substring(startIndex + EVENT_START_MARKER.length(), endIndex).trim();
         String end = details.substring(endIndex + EVENT_END_MARKER.length()).trim();
+        return new String[] { description, start, end };
+    }
+
+    private void validateEventDetails(String[] eventDetails) throws GoobleException {
+        String description = eventDetails[0];
+        String start = eventDetails[1];
+        String end = eventDetails[2];
         validateDescription(description);
         if (start.isEmpty() || end.isEmpty()) {
             throw new GoobleException("Please specify an event time using /from and /to. "
                     + "Gooble needs both ends of the event.");
         }
-        validateEventOrder(start, end);
-        return new String[] { description, start, end };
     }
 
     /** Rejects an event whose two supported date-time values are not chronological. */
@@ -178,6 +196,16 @@ public class Parser {
 
     /** Parses and validates a list command's inclusive date-time range. */
     public DeadlineDateParser.DeadlineDate[] parseDateRange(String command) throws GoobleException {
+        String range = extractDateRange(command);
+        int separator = range.indexOf(DATE_RANGE_SEPARATOR);
+        DeadlineDateParser.DeadlineDate from = DeadlineDateParser.parse(range.substring(0, separator).trim());
+        DeadlineDateParser.DeadlineDate to = DeadlineDateParser.parse(
+                range.substring(separator + DATE_RANGE_SEPARATOR.length()).trim());
+        validateDateRange(from, to);
+        return new DeadlineDateParser.DeadlineDate[] { from, to };
+    }
+
+    private String extractDateRange(String command) throws GoobleException {
         if (command == null || !command.startsWith(LIST_FROM_PREFIX)) {
             throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
         }
@@ -186,9 +214,11 @@ public class Parser {
         if (separator <= 0 || separator + DATE_RANGE_SEPARATOR.length() >= range.length()) {
             throw new GoobleException("Please use: list from yyyy-MM-dd HHmm to yyyy-MM-dd HHmm");
         }
-        DeadlineDateParser.DeadlineDate from = DeadlineDateParser.parse(range.substring(0, separator).trim());
-        DeadlineDateParser.DeadlineDate to = DeadlineDateParser.parse(
-                range.substring(separator + DATE_RANGE_SEPARATOR.length()).trim());
+        return range;
+    }
+
+    private void validateDateRange(DeadlineDateParser.DeadlineDate from,
+                                   DeadlineDateParser.DeadlineDate to) throws GoobleException {
         if (from.time() == null || to.time() == null) {
             throw new GoobleException("Please include both dates and times, e.g. 2026-02-01 0900");
         }
@@ -197,11 +227,6 @@ public class Parser {
         if (toDateTime.isBefore(fromDateTime)) {
             throw new GoobleException("Please ensure the 'to' date and time is not before the 'from' date and time.");
         }
-
-        // A successful range parse always returns two fully specified, ordered times.
-        assert from.time() != null && to.time() != null;
-        assert !java.time.LocalDateTime.of(to.date(), to.time())
-                .isBefore(java.time.LocalDateTime.of(from.date(), from.time()));
-        return new DeadlineDateParser.DeadlineDate[] { from, to };
+        assert !toDateTime.isBefore(fromDateTime);
     }
 }

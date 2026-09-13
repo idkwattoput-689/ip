@@ -120,7 +120,14 @@ public class Ui {
     public void showHelp(String topic) {
         String command = topic.toLowerCase(java.util.Locale.ROOT);
         if (command.isEmpty()) {
-            showMessage("GOOBLE COMMANDS\n"
+            showGeneralHelp();
+            return;
+        }
+        showMessage(commandHelpFor(command, topic));
+    }
+
+    private void showGeneralHelp() {
+        showMessage("GOOBLE COMMANDS\n"
                     + "────────────────────────────────────────────────────────────────────────\n\n"
                     + "TASK MANAGEMENT\n\n"
                     + "COMMAND                                      DESCRIPTION\n"
@@ -146,10 +153,10 @@ public class Ui {
                     + "bye                                          Exit Gooble\n\n"
                     + "TIP\n"
                     + "Type help <command> for a detailed example.");
-            return;
-        }
+    }
 
-        String details = switch (command) {
+    private String commandHelpFor(String command, String topic) {
+        return switch (command) {
             case "add" -> commandHelp("ADD COMMAND", "add <description>",
                 "Add a simple task.", "add read chapter 3");
             case "todo" -> commandHelp("TODO COMMAND", "todo <description>",
@@ -176,7 +183,6 @@ public class Ui {
             default -> "No help is available for `" + topic + "`.\n\n"
                 + "Type help to see all available commands.";
         };
-        showMessage(details);
     }
 
     private String commandHelp(String title, String format, String description, String example) {

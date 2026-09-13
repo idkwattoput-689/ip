@@ -40,29 +40,38 @@ public class Storage {
 
     /** Atomically replaces the storage file with the supplied records. */
     public void save(List<String> records) {
-        Path temporaryPath = null;
+        Path temporaryPath = storagePath.resolveSibling(storagePath.getFileName() + ".tmp");
         try {
-            Path parent = storagePath.getParent();
-            if (parent != null) {
-                Files.createDirectories(parent);
-            }
-            temporaryPath = storagePath.resolveSibling(storagePath.getFileName() + ".tmp");
+            createParentDirectories();
             Files.write(temporaryPath, new ArrayList<>(records), StandardCharsets.UTF_8);
-            try {
-                Files.move(temporaryPath, storagePath, StandardCopyOption.ATOMIC_MOVE,
-                        StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporaryPath, storagePath, StandardCopyOption.REPLACE_EXISTING);
-            }
+            moveIntoPlace(temporaryPath);
         } catch (IOException | SecurityException e) {
-            if (temporaryPath != null) {
-                try {
-                    Files.deleteIfExists(temporaryPath);
-                } catch (IOException | SecurityException ignored) {
-                    // The original save error is more useful to the caller.
-                }
-            }
+            deleteTemporaryFile(temporaryPath);
             reportWarning("Unable to save tasks to disk.");
+        }
+    }
+
+    private void createParentDirectories() throws IOException {
+        Path parent = storagePath.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+    }
+
+    private void moveIntoPlace(Path temporaryPath) throws IOException {
+        try {
+            Files.move(temporaryPath, storagePath, StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(temporaryPath, storagePath, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private void deleteTemporaryFile(Path temporaryPath) {
+        try {
+            Files.deleteIfExists(temporaryPath);
+        } catch (IOException | SecurityException ignored) {
+            // The original save error is more useful to the caller.
         }
     }
 
