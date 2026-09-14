@@ -13,7 +13,7 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Gooble.java` file, right-click it, and choose `Run Gooble.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
+1. After that, locate the `src/main/java/gooble/Gooble.java` file, right-click it, and choose `Run 'Gooble.main()'` to start the command-line version. To launch the JavaFX GUI, run `gooble.ui.Launcher` instead. If the code editor is showing compile errors, try restarting the IDE. If the setup is correct, you should see something like the below as the output:
 
 ```
 ____________________________________________________________
@@ -31,8 +31,8 @@ ____________________________________________________________
 ## Building and running the fat JAR
 
 The project uses the Gradle Shadow plugin to package Gooble together with its
-runtime dependencies in one executable JAR file. From the `ip` project
-directory, run:
+runtime dependencies in one executable JAR file. From the project directory,
+run:
 
 ```powershell
 .\gradlew.bat clean shadowJar
@@ -80,14 +80,22 @@ After a test run, Gradle places the HTML report at
 `build\reports\tests\test\index.html`.
 
 The command-line scenarios for the different features are documented in
-`test\ui-test-plan.md`. To try the application interactively, run:
+`test\ui-test-plan.md`. To try the JavaFX GUI interactively, run:
 
 ```powershell
 .\gradlew.bat run
 ```
 
-Enter commands such as `todo read book`, `tag 1 #school`, `find #school`, and
-`bye` to exit.
+For the command-line version, run the `gooble.Gooble` main class from IntelliJ,
+or run:
+
+```powershell
+.\gradlew.bat classes
+java -cp build\classes\java\main gooble.Gooble
+```
+
+Then enter commands such as `todo read book`, `tag 1 #school`, `find #school`,
+and `bye` to exit.
 
 ## Features
 
@@ -133,8 +141,8 @@ Example:
 find book
 ____________________________________________________________
 Here are the matching tasks in your list tehee:
-1.[T][ ] read book
-2.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+1.[T] [ ] read book
+2.[D] [ ] return book (by: Dec 02 2019, 6:00 PM)
 ____________________________________________________________
 ```
 
@@ -337,7 +345,7 @@ Example:
 ```
 add
 ____________________________________________________________
-You need to add in some description for that lmao
+Missing a description. Gooble needs something to put on the task list.
 ____________________________________________________________
 ```
 
@@ -350,7 +358,7 @@ Example:
 ```
 dfs
 ____________________________________________________________
-Invalid command smhmh
+Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
 ____________________________________________________________
 
 ```

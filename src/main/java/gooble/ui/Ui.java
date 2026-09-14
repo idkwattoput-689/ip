@@ -54,7 +54,6 @@ public class Ui {
      */
     public void showTasks(TaskList tasks) {
         showMessage("Here are the tasks in your list:");
-        showMessage("────────────────────────────────────────");
         for (int i = 0; i < tasks.size(); i++) {
             showNumberedTask(i, tasks.get(i));
         }
@@ -63,7 +62,6 @@ public class Ui {
     /** Prints tasks matching a search keyword in their original task-list order. */
     public void showMatchingTasks(List<Task> matchingTasks) {
         showMessage("Here are the matching tasks in your list tehee:");
-        showMessage("────────────────────────────────────────");
         for (int i = 0; i < matchingTasks.size(); i++) {
             showNumberedTask(i, matchingTasks.get(i));
         }
@@ -72,8 +70,7 @@ public class Ui {
     /** Displays a task with its one-based position in a list. */
     private void showNumberedTask(int zeroBasedIndex, Task task) {
         String formattedTask = task.toString().replaceFirst("\\]\\[", "] [");
-        showMessage((zeroBasedIndex + 1) + ". " + formattedTask);
-        showMessage(System.lineSeparator());
+        showMessage((zeroBasedIndex + 1) + "." + formattedTask);
     }
 
     /** Reports that a task was marked complete. */

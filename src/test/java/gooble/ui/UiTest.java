@@ -47,7 +47,7 @@ class UiTest {
         ui.showTagged(task);
         ui.showUntagged(task);
 
-        assertTrue(output.toString().contains("1. [T] [ ] read book [#school]"));
+        assertTrue(output.toString().contains("1.[T] [ ] read book [#school]"));
         assertTrue(output.toString().contains("Bye. Hope to see you again soon!"));
         assertTrue(output.toString().contains("Now you have 1 tasks in the list."));
     }

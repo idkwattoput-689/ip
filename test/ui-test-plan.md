@@ -175,8 +175,8 @@ Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching tasks in your list tehee:
-1.[T][ ] read book
-2.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+1.[T] [ ] read book
+2.[D] [ ] return book (by: Dec 02 2019, 6:00 PM)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -525,16 +525,16 @@ Hello! I'm Gooble.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-You need to add in some description for that lmao
+Missing a description. Gooble needs something to put on the task list.
 ____________________________________________________________
 ____________________________________________________________
-You need to add in some description for that lmao
+Missing a description. Gooble needs something to put on the task list.
 ____________________________________________________________
 ____________________________________________________________
-You need to add in some description for that lmao
+Missing a description. Gooble needs something to put on the task list.
 ____________________________________________________________
 ____________________________________________________________
-You need to add in some description for that lmao
+Missing a description. Gooble needs something to put on the task list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -570,13 +570,13 @@ Hello! I'm Gooble.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-Invalid command smhmh
+Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
 ____________________________________________________________
 ____________________________________________________________
-Invalid command smhmh
+Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
 ____________________________________________________________
 ____________________________________________________________
-Invalid command smhmh
+Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -613,16 +613,16 @@ Hello! I'm Gooble.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-Please provide a valid task number.
+Please provide a valid task number. Gooble cannot mark task-shaped air.
 ____________________________________________________________
 ____________________________________________________________
-Please provide a valid task number.
+Please provide a valid task number. Gooble cannot mark task-shaped air.
 ____________________________________________________________
 ____________________________________________________________
-Please provide a valid task number.
+Please provide a valid task number. Gooble cannot delete task-shaped air.
 ____________________________________________________________
 ____________________________________________________________
-Invalid command smhmh
+Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -768,7 +768,7 @@ I've tagged this task:
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching tasks in your list tehee:
-1.[T][ ] read book [#school]
+1.[T] [ ] read book [#school]
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -831,14 +831,14 @@ ____________________________________________________________
 This task already has that tag.
 ____________________________________________________________
 ____________________________________________________________
-Tags may contain only letters, numbers, hyphens, and underscores.
+Tags may contain only letters, numbers, hyphens, and underscores. Gooble rejects tag confetti.
 ____________________________________________________________
 ____________________________________________________________
 I've removed the tags from this task:
   [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
-This task has no tags to remove.
+This task has no tags to remove. Gooble found only tag-shaped air.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

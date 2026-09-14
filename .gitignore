@@ -16,6 +16,8 @@ bin/
 # Temp files
 _temp/
 .package-classes/
+.gooble-verify/
+*.class
 /data/
 
 /text-ui-test/ACTUAL.TXT
