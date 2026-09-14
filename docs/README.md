@@ -55,6 +55,40 @@ Gooble reads and writes its task data at `data\Gooble.txt` in the folder from
 which the JAR is launched. The `build` directory and generated JAR are ignored
 by Git and should not be committed. Type `bye` to exit.
 
+## Testing
+
+Run all automated unit and integration tests from the project directory:
+
+```powershell
+.\gradlew.bat test
+```
+
+Run the full verification suite, including tests and Checkstyle:
+
+```powershell
+.\gradlew.bat check
+```
+
+To run one test class or one test method:
+
+```powershell
+.\gradlew.bat test --tests "gooble.task.TaskListTest"
+.\gradlew.bat test --tests "gooble.task.TaskListTest.addTag_fourthTagRemovesOldestAndPersistsTags"
+```
+
+After a test run, Gradle places the HTML report at
+`build\reports\tests\test\index.html`.
+
+The command-line scenarios for the different features are documented in
+`test\ui-test-plan.md`. To try the application interactively, run:
+
+```powershell
+.\gradlew.bat run
+```
+
+Enter commands such as `todo read book`, `tag 1 #school`, `find #school`, and
+`bye` to exit.
+
 ## Features
 
 ### Greeting the user
