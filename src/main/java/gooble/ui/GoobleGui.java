@@ -2,6 +2,7 @@ package gooble.ui;
 
 import gooble.Gooble;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -101,9 +102,10 @@ public class GoobleGui extends Application {
         String responseText = response.toString();
         appendMessage(responseText, false, isErrorResponse(responseText),
                 responseText.startsWith("GOOBLE COMMANDS")
-                        || responseText.contains(" COMMAND\n────────────────────────────────────────"));
+                        || responseText.contains(" COMMAND\n────────────────────────────────────────"),
+                responseText.startsWith("Invalid command"));
         if (isExit) {
-            userInput.setDisable(true);
+            Platform.exit();
         }
     }
 
@@ -127,14 +129,20 @@ public class GoobleGui extends Application {
     }
 
     private void appendMessage(String message, boolean isUserMessage, boolean isError) {
-        appendMessage(message, isUserMessage, isError, false);
+        appendMessage(message, isUserMessage, isError, false, false);
     }
 
     private void appendMessage(String message, boolean isUserMessage, boolean isError, boolean isHelp) {
+        appendMessage(message, isUserMessage, isError, isHelp, false);
+    }
+
+    private void appendMessage(String message, boolean isUserMessage, boolean isError, boolean isHelp,
+            boolean showInvalidCommandImage) {
         if (message.isEmpty()) {
             return;
         }
-        dialogContainer.getChildren().add(new DialogBox(message.stripTrailing(), isUserMessage, isError, isHelp));
+        dialogContainer.getChildren().add(new DialogBox(message.stripTrailing(), isUserMessage, isError, isHelp,
+                showInvalidCommandImage));
         scrollPane.setVvalue(1.0);
     }
 }

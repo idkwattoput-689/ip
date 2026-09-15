@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    String javaFxVersion = '17.0.7'
+    String javaFxVersion = '25.0.1'
 
     implementation("org.openjfx:javafx-base:${javaFxVersion}:win")
     implementation("org.openjfx:javafx-base:${javaFxVersion}:mac")
@@ -58,6 +58,7 @@ test {
 
 application {
     mainClass = 'gooble.ui.Launcher'
+    applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED']
 }
 
 jar {

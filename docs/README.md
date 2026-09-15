@@ -94,8 +94,8 @@ or run:
 java -cp build\classes\java\main gooble.Gooble
 ```
 
-Then enter commands such as `todo read book`, `tag 1 #school`, `find #school`,
-and `bye` to exit.
+Then enter commands such as `todo read book`, `tag 1 #school`, and
+`find #school`. Enter `bye` to display the goodbye message and close the GUI.
 
 ## Features
 
