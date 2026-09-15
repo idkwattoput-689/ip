@@ -24,7 +24,7 @@
 .user-dialog, .gooble-dialog, .error-dialog, .help-dialog { -fx-background-color: transparent; }
 .user-dialog, .gooble-dialog, .error-dialog, .help-dialog { -fx-padding: 0; }
 
-.command-line, .response-line, .error-message, .help-message {
+.command-line, .response-line, .error-message, .error-message-text, .help-message {
     -fx-padding: 10px 14px;
     -fx-font-family: "Cascadia Mono", "Consolas", monospace;
     -fx-font-size: 13px;
@@ -50,6 +50,12 @@
     -fx-border-width: 0 0 0 4px;
     -fx-border-radius: 4px;
     -fx-background-radius: 8px;
+    -fx-text-fill: #8c263a;
+    -fx-font-weight: bold;
+}
+.error-message-text {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
     -fx-text-fill: #8c263a;
     -fx-font-weight: bold;
 }

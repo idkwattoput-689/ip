@@ -38,6 +38,11 @@ public class DialogBox extends HBox {
         text.getStyleClass().add(isError ? "error-message" : isHelp ? "help-message"
                 : isUserMessage ? "command-line" : "response-line");
         VBox content = createContent(text, showInvalidCommandImage);
+        if (showInvalidCommandImage) {
+            text.getStyleClass().remove("error-message");
+            text.getStyleClass().add("error-message-text");
+            content.getStyleClass().add("error-message");
+        }
         setSpacing(8);
         setMaxWidth(Double.MAX_VALUE);
         setAlignment(isUserMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
