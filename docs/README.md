@@ -12,6 +12,7 @@ or typing.
 - [Quick start](#quick-start)
 - [Features](#features)
   - [Command format](#command-format)
+  - [Command summary](#command-summary)
   - [Viewing help: `help`](#viewing-help-help)
   - [Adding a task: `add` and `todo`](#adding-a-task-add-and-todo)
   - [Adding a deadline: `deadline`](#adding-a-deadline-deadline)
@@ -82,6 +83,28 @@ list
   `find`.
 - **Date and time:** Dates use `yyyy-MM-dd`. Times use the 24-hour format
   `HHmm`.
+
+### Command summary
+
+| Command | Purpose | Example |
+| --- | --- | --- |
+| `add <description>` | Add a simple task | `add read chapter 3` |
+| `todo <description>` | Add a to-do task | `todo prepare presentation` |
+| `deadline <description> /by <date>` | Add a deadline | `deadline submit report /by 2026-09-20 1800` |
+| `event <description> /from <start> /to <end>` | Add an event | `event team meeting /from 2026-09-18 1400 /to 2026-09-18 1530` |
+| `list` | Show all tasks | `list` |
+| `list from <start> to <end>` | Show events in a period | `list from 2026-09-18 0000 to 2026-09-19 2359` |
+| `find <keyword>` | Find tasks by description or tag | `find report` |
+| `mark <number>` | Mark a task as complete | `mark 2` |
+| `unmark <number>` | Mark a task as incomplete | `unmark 2` |
+| `delete <number>` | Delete a task | `delete 2` |
+| `tag <number> #<tag>` | Add a tag | `tag 1 #school` |
+| `untag <number>` | Remove all tags | `untag 1` |
+| `help [command]` | Show help | `help deadline` |
+| `bye` | Exit Gooble | `bye` |
+
+> **Tip:** Task numbers refer to the positions shown by the latest `list` or
+> `find` result.
 
 ### Viewing help: `help`
 
