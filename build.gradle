@@ -71,7 +71,7 @@ jar {
 shadowJar {
     archiveFileName = 'Gooble.jar'
     manifest {
-        attributes 'Main-Class': 'gooble.Gooble'
+        attributes 'Main-Class': 'gooble.ui.Launcher'
     }
 }
 

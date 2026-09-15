@@ -356,10 +356,19 @@ Enter `bye`. Gooble displays the goodbye message and closes the window.
 .\gradlew.bat clean shadowJar
 ```
 
-The output is `build\libs\Gooble.jar`. Run it with:
+The output is `build\libs\Gooble.jar`. It launches the JavaFX GUI when run
+with:
 
 ```powershell
 java -jar Gooble.jar
+```
+
+To run the CLI directly during development, use the `gooble.Gooble` main class
+from IntelliJ or run:
+
+```powershell
+.\gradlew.bat classes
+java -cp build\classes\java\main gooble.Gooble
 ```
 
 **Run the automated tests and Checkstyle checks:**
