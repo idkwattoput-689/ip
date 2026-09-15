@@ -1,402 +1,206 @@
-# Gooble project template
+# Gooble User Guide
 
-This is a project template for a greenfield Java project. The application is named Gooble. Given below are instructions on how to use it.
+Gooble is a friendly task assistant for managing to-dos, deadlines, events, and
+tags. It is available as both a JavaFX graphical interface and a command-line
+interface (CLI).
 
-## Setting up in Intellij
+![Gooble graphical user interface](Ui.png)
 
-Prerequisites: JDK 25, update Intellij to the most recent version.
+## Quick start
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/gooble/Gooble.java` file, right-click it, and choose `Run 'Gooble.main()'` to start the command-line version. To launch the JavaFX GUI, run `gooble.ui.Launcher` instead. If the code editor is showing compile errors, try restarting the IDE. If the setup is correct, you should see something like the below as the output:
+### Prerequisites
 
-```
-____________________________________________________________
-  ____            _     _
- / ___| ___   ___ | |__ | | ___
-| |  _ / _ \ / _ \| '_ \| |/ _ \
-| |_| | (_) | (_) | |_) | |  __/
-\____|\___/ \___/|_.__/|_|\___|
-Hello! I'm Gooble.
-What can I do for you?
-____________________________________________________________
-```
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+- JDK 25
+- IntelliJ IDEA (recommended for development)
 
-## Building and running the fat JAR
+### Run the graphical interface
 
-The project uses the Gradle Shadow plugin to package Gooble together with its
-runtime dependencies in one executable JAR file. From the project directory,
-run:
-
-```powershell
-.\gradlew.bat clean shadowJar
-```
-
-The generated fat JAR is:
-
-```text
-build\libs\Gooble.jar
-```
-
-To distribute the application, copy `build\libs\Gooble.jar` into an empty
-folder. Open a command window in that folder and run:
-
-```powershell
-java -jar "Gooble.jar"
-```
-
-Gooble reads and writes its task data at `data\Gooble.txt` in the folder from
-which the JAR is launched. The `build` directory and generated JAR are ignored
-by Git and should not be committed. Type `bye` to exit.
-
-## Testing
-
-Run all automated unit and integration tests from the project directory:
-
-```powershell
-.\gradlew.bat test
-```
-
-Run the full verification suite, including tests and Checkstyle:
-
-```powershell
-.\gradlew.bat check
-```
-
-To run one test class or one test method:
-
-```powershell
-.\gradlew.bat test --tests "gooble.task.TaskListTest"
-.\gradlew.bat test --tests "gooble.task.TaskListTest.addTag_fourthTagRemovesOldestAndPersistsTags"
-```
-
-After a test run, Gradle places the HTML report at
-`build\reports\tests\test\index.html`.
-
-The command-line scenarios for the different features are documented in
-`test\ui-test-plan.md`. To try the JavaFX GUI interactively, run:
+From the project directory, run:
 
 ```powershell
 .\gradlew.bat run
 ```
 
-For the command-line version, run the `gooble.Gooble` main class from IntelliJ,
-or run:
+Type a command in the input box and click **Send** or press **Enter**. Enter
+`bye` to display the goodbye message and close the GUI window.
+
+### Run the command-line interface
+
+Run the `gooble.Gooble` main class from IntelliJ, or use:
 
 ```powershell
 .\gradlew.bat classes
 java -cp build\classes\java\main gooble.Gooble
 ```
 
-Then enter commands such as `todo read book`, `tag 1 #school`, and
-`find #school`. Enter `bye` to display the goodbye message and close the GUI.
+The CLI displays a prompt after each command. Enter `bye` to end the session.
+
+## Commands at a glance
+
+| Command | Purpose | Example |
+| --- | --- | --- |
+| `add <description>` | Add a simple task | `add read chapter 3` |
+| `todo <description>` | Add a to-do task | `todo prepare presentation` |
+| `deadline <description> /by <date>` | Add a task with a deadline | `deadline submit report /by 2026-09-20 1800` |
+| `event <description> /from <start> /to <end>` | Add an event | `event team meeting /from 2026-09-18 1400 /to 2026-09-18 1530` |
+| `list` | Show all tasks | `list` |
+| `list from <start> to <end>` | Show events in a period | `list from 2026-09-18 0000 to 2026-09-19 2359` |
+| `find <keyword>` | Find tasks by description or tag | `find report` |
+| `mark <number>` | Mark a task as complete | `mark 2` |
+| `unmark <number>` | Mark a task as incomplete | `unmark 2` |
+| `delete <number>` | Delete a task | `delete 2` |
+| `tag <number> #<tag>` | Add a tag | `tag 1 #school` |
+| `untag <number>` | Remove all tags | `untag 1` |
+| `help [command]` | Show general or command-specific help | `help deadline` |
+| `bye` | Exit Gooble | `bye` |
+
+Task numbers refer to the positions shown by `list` and `find`.
 
 ## Features
 
-### Greeting the user
+### Adding tasks
 
-When Gooble starts, it welcomes the user and lets them know that it is ready to receive commands or task descriptions.
+Use `add` for a simple task or `todo` for an explicitly marked to-do task:
 
-### Adding tasks to a list
-
-Users can enter a task description, and Gooble stores it in the task list for later reference.
-
-Example:
-
-```
-Textbook
-____________________________________________________________
-added: Textbook
-____________________________________________________________
+```text
+todo Prepare presentation slides
+Got it. I've added this task:
+  [T][ ] Prepare presentation slides
+Now you have 1 tasks in the list.
 ```
 
-### Viewing the task list
+### Deadlines
 
-Users can enter `list` to view all tasks currently stored in Gooble.
+Create a deadline with `deadline <description> /by <date>`. Gooble accepts
+`yyyy-MM-dd`, optionally followed by a 24-hour time such as `1800`, or
+`d/M/yyyy HHmm`.
 
-Example:
-
+```text
+deadline Submit project report /by 2026-09-20 1800
+Got it. I've added this task:
+  [D][ ] Submit project report (by: Sep 20 2026, 6:00 PM)
 ```
+
+Gooble also displays seasonal greetings for supported dates such as Valentine's
+Day and recognized Chinese New Year dates.
+
+### Events
+
+Create an event with a start and end time:
+
+```text
+event Team planning meeting /from 2026-09-18 1400 /to 2026-09-18 1530
+Got it. I've added this task:
+  [E][ ] Team planning meeting (from: 2026-09-18 1400 to: 2026-09-18 1530)
+```
+
+Use `list from <start> to <end>` to display only events fully contained within
+the requested period. The end of the range must not be earlier than its start.
+
+### Viewing and finding tasks
+
+Use `list` to display every task:
+
+```text
 list
-____________________________________________________________
 Here are the tasks in your list:
-1.[ ] Textbook
-____________________________________________________________
+1.[T] [ ] Prepare presentation slides
+2.[D] [ ] Submit project report (by: Sep 20 2026, 6:00 PM)
 ```
 
-### Finding tasks by description
+Use `find <keyword>` to search task descriptions. Searches are case-insensitive
+and preserve the order of matching tasks. Searches also include tags, so
+`find #school` finds tasks tagged `#school`.
 
-Users can enter `find [keyword]` to display tasks whose descriptions contain the keyword.
-The search is case-insensitive and preserves the order of matching tasks.
+### Completing and deleting tasks
 
-Example:
+Use `mark <number>` and `unmark <number>` to change a task's completion status:
 
-```
-find book
-____________________________________________________________
-Here are the matching tasks in your list tehee:
-1.[T] [ ] read book
-2.[D] [ ] return book (by: Dec 02 2019, 6:00 PM)
-____________________________________________________________
-```
-
-### Automatic task persistence
-
-Gooble automatically saves the task list to `data/Gooble.txt` whenever it changes.
-This includes adding, deleting, marking, and unmarking tasks. When Gooble starts,
-it loads the saved tasks from the same file, so tasks remain available between
-sessions.
-
-If the storage file does not exist, Gooble starts with an empty task list and
-creates the storage folder when the first task is saved.
-
-### Exiting the chatbot
-
-Users can enter 'bye' and Gooble will say bye to the users and end.
-
-Example:
-
-```
-bye
-____________________________________________________________
-Bye. Hope to see you again soon!
-____________________________________________________________
-```
-
-### Filtering events by date and time
-
-Users can show only events fully contained within a date-time range using
-`list from [start] to [end]`. Both boundaries must use `yyyy-MM-dd HHmm`,
-and the end must not be earlier than the start.
-
-Example:
-
-```
-list from 2026-03-09 0000 to 2026-03-11 2359
-____________________________________________________________
-Here are the events in your list for that period:
-1.[E][ ] in range (from: 2026-03-10 0900 to: 2026-03-10 1000)
-____________________________________________________________
-```
-
-### Marking objects in the list
-
-Users can enter 'mark [i]' and Gooble will mark the ith task in the list.
-
-Example:
-
-```
-mark 2
-____________________________________________________________
+```text
+mark 1
 Nice! I've marked this task as done:
-  [X] tea
-____________________________________________________________
-list
-____________________________________________________________
-Here are the tasks in your list:
-1.[ ] books
-2.[X] tea
-____________________________________________________________
-```
+  [X] Prepare presentation slides
 
-### Unmark object in the list
-
-Users can enter 'unmark [i]' and Gooble will unmark the ith task in the list.
-
-Example:
-
-```
-unmark 2
-____________________________________________________________
+unmark 1
 OK, I've marked this task as not done yet:
-  [ ] tea
-____________________________________________________________
-list
-____________________________________________________________
-Here are the tasks in your list:
-1.[ ] books
-2.[ ] tea
-____________________________________________________________
-```
-### Adding to-do tasks
-
-Users can add a to-do task without a date or deadline using `todo [description]`.
-
-Example:
-
-```
-todo borrow book
-____________________________________________________________
-Got it. I've added this task:
-  [T][ ] borrow book
-Now you have 1 tasks in the list.
-____________________________________________________________
+  [ ] Prepare presentation slides
 ```
 
-### Adding deadline tasks
+Use `delete <number>` to remove a task:
 
-Users can add a task with a deadline using `deadline [description] /by [deadline]`. Deadline dates
-must use `yyyy-MM-dd` (optionally followed by a 24-hour time such as `1800`) or `d/M/yyyy HHmm`.
-
-Example:
-
-```
-deadline return book /by 2/12/2019 1800
-____________________________________________________________
-Got it. I've added this task:
-  [D][ ] return book (by: Dec 02 2019, 6:00 PM)
-Now you have 1 tasks in the list.
-____________________________________________________________
-```
-
-### Special deadline dates
-
-When a deadline falls on Valentine's Day (February 14), Gooble adds:
-
-```
-Love is in the air~
-```
-
-When a deadline falls on a recognized Chinese New Year date, Gooble adds:
-
-```
-恭喜发财！！
-```
-
-These comments are shown when the deadline is added and are not included in
-the task text when using `list`.
-
-### Adding events
-
-Users can add an event with a start and end date or time using
-`event [description] /from [start] /to [end]`.
-
-Example:
-
-```
-event project meeting /from Mon 2pm /to 4pm
-____________________________________________________________
-Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
-Now you have 1 tasks in the list.
-____________________________________________________________
-```
-
-### Deleting tasks
-
-Users can delete a task from the list using 'delete i', and Gooble will remove the ith task in the list
-
-Example:
-
-```
-delete 2
-____________________________________________________________
+```text
+delete 1
 Noted. I've removed this task:
-  [ ] chuyue
-Now you have 1 tasks in the list.
-____________________________________________________________
+  [T][ ] Prepare presentation slides
 ```
 
-### Tagging tasks
+### Tags
 
-Users can add one tag at a time with `tag [i] #[tag]`. Tags are normalized to
-lowercase and may contain letters, numbers, hyphens, and underscores. Each task
-can have at most three tags. Adding a fourth tag removes the oldest tag.
+Add a tag with `tag <number> #<tag>`:
 
-Example:
-
-```
-tag 1 #Fun
-____________________________________________________________
+```text
+tag 1 #School
 I've tagged this task:
-  [ ] read book [#fun]
-____________________________________________________________
+  [T][ ] Prepare presentation slides [#school]
 ```
 
-Users can remove all tags from a task with `untag [i]`:
+Tags are normalized to lowercase and may contain letters, numbers, hyphens,
+and underscores. Each task can have at most three tags; adding a fourth tag
+removes the oldest tag. Use `untag <number>` to remove all tags from a task.
 
-```
-untag 1
-____________________________________________________________
-I've removed the tags from this task:
-  [ ] read book
-____________________________________________________________
-```
+### Help
 
-Tags are shown at the end of the description. `find` searches both task
-descriptions and tags, so `find #fun` finds tasks tagged `#fun`.
+Use `help` to display the complete command guide. Use `help <command>` for a
+focused explanation and example, such as `help deadline`.
 
-## Error Handling
+## Saving your tasks
 
-Gooble currently handles the following error:
+Gooble automatically saves changes to `data/Gooble.txt`. Tasks are restored
+from this file when Gooble starts, so they remain available between sessions.
+The storage folder and file are created automatically when the first task is
+saved.
 
-### Empty description
+## Error handling
 
-When there is no description after keying in a command, Gooble will deem it as invalid and reject it.
+Gooble rejects invalid input with a helpful message instead of adding an
+incorrect task or crashing. Common examples include:
 
-Example:
+- Missing descriptions, such as `todo` or `add` without text.
+- Unknown commands, such as `dance`.
+- Missing or invalid task numbers for `mark`, `unmark`, `delete`, `tag`, and
+  `untag`.
+- Invalid deadline or event date-time formats.
+- Event ranges where the end is earlier than the start.
+- Invalid tags such as `#school!`, or tag commands containing multiple tags.
+- Duplicate tasks with the same details.
 
-```
-add
-____________________________________________________________
-Missing a description. Gooble needs something to put on the task list.
-____________________________________________________________
-```
+For invalid commands, Gooble responds:
 
-### Invalid command
-
-When the user keys in any invalid command(Any words that are not add, todo, deadline or event), Gooble will deem it as invalid and reject it
-
-Example:
-
-```
-dfs
-____________________________________________________________
+```text
 Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
-____________________________________________________________
-
 ```
 
-### Invalid date and time input
+## Building and testing
 
-When a deadline uses an unsupported date format, or a filtered event list uses
-an invalid date-time range, Gooble rejects the command and provides guidance.
-For event filtering, the `to` date and time must not be earlier than the `from`
-date and time.
+To build the distributable fat JAR:
 
-Example:
-
-```
-event burger
-____________________________________________________________
-Please specify an event time using /from and /to.
-____________________________________________________________
-deadline burger
-____________________________________________________________
-Please specify a deadline using /by.
-____________________________________________________________
-list from 2026-03-12 1000 to 2026-03-10 0900
-____________________________________________________________
-Please ensure the 'to' date and time is not before the 'from' date and time.
-____________________________________________________________
+```powershell
+.\gradlew.bat clean shadowJar
 ```
 
-### Tag validation
+The output is `build\libs\Gooble.jar`. Run it from a folder containing the
+desired `data` directory with:
 
-Gooble validates tag commands before applying them. A tag command must use the
-format `tag [i] #[tag]`, and a task number must refer to an existing task.
+```powershell
+java -jar Gooble.jar
+```
 
-Invalid examples include `tag 1 fun`, `tag 1 #fun!`, and
-`tag 1 #fun #school`. These commands are rejected with a validation message.
+Run the automated tests and Checkstyle checks with:
 
-## AI declaration
+```powershell
+.\gradlew.bat check
+```
 
-Level: AI-5.
-
-AI codes, you review: Get AI to do the task. Review it yourself fully, including the code, tests, behavior etc.
+The detailed test report is generated at
+`build\reports\tests\test\index.html`. The full command-line test scenarios
+are documented in `test\ui-test-plan.md`.
