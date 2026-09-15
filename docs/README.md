@@ -1,19 +1,40 @@
 # Gooble User Guide
 
-Gooble is a friendly task assistant for managing to-dos, deadlines, events, and
-tags. It is available as both a JavaFX graphical interface and a command-line
-interface (CLI).
+Gooble is a task assistant for managing **to-dos, deadlines, events, and tags**.
+It provides a **JavaFX graphical user interface (GUI)** and a
+**command-line interface (CLI)**, so you can manage tasks either by clicking
+or typing.
 
 ![Gooble graphical user interface](Ui.png)
 
+## Contents
+
+- [Quick start](#quick-start)
+- [Features](#features)
+  - [Command format](#command-format)
+  - [Viewing help: `help`](#viewing-help-help)
+  - [Adding a task: `add` and `todo`](#adding-a-task-add-and-todo)
+  - [Adding a deadline: `deadline`](#adding-a-deadline-deadline)
+  - [Adding an event: `event`](#adding-an-event-event)
+  - [Viewing tasks: `list`](#viewing-tasks-list)
+  - [Finding tasks: `find`](#finding-tasks-find)
+  - [Completing tasks: `mark` and `unmark`](#completing-tasks-mark-and-unmark)
+  - [Deleting a task: `delete`](#deleting-a-task-delete)
+  - [Managing tags: `tag` and `untag`](#managing-tags-tag-and-untag)
+  - [Exiting Gooble: `bye`](#exiting-gooble-bye)
+- [Saving your tasks](#saving-your-tasks)
+- [Error handling](#error-handling)
+- [FAQ](#faq)
+- [Building and testing](#building-and-testing)
+
 ## Quick start
 
-### Prerequisites
+### **Prerequisites**
 
 - JDK 25
-- IntelliJ IDEA (recommended for development)
+- IntelliJ IDEA, if you are running the project from the IDE
 
-### Run the graphical interface
+### **Run the GUI**
 
 From the project directory, run:
 
@@ -21,10 +42,11 @@ From the project directory, run:
 .\gradlew.bat run
 ```
 
-Type a command in the input box and click **Send** or press **Enter**. Enter
-`bye` to display the goodbye message and close the GUI window.
+The Gooble window opens with a command box at the bottom. Type a command and
+press **Enter** or click **Send**. Type `bye` to display the goodbye message
+and close the GUI window.
 
-### Run the command-line interface
+### **Run the CLI**
 
 Run the `gooble.Gooble` main class from IntelliJ, or use:
 
@@ -33,174 +55,296 @@ Run the `gooble.Gooble` main class from IntelliJ, or use:
 java -cp build\classes\java\main gooble.Gooble
 ```
 
-The CLI displays a prompt after each command. Enter `bye` to end the session.
+Type a command when prompted. Type `bye` to end the CLI session.
 
-## Commands at a glance
+### **Try these commands**
 
-| Command | Purpose | Example |
-| --- | --- | --- |
-| `add <description>` | Add a simple task | `add read chapter 3` |
-| `todo <description>` | Add a to-do task | `todo prepare presentation` |
-| `deadline <description> /by <date>` | Add a task with a deadline | `deadline submit report /by 2026-09-20 1800` |
-| `event <description> /from <start> /to <end>` | Add an event | `event team meeting /from 2026-09-18 1400 /to 2026-09-18 1530` |
-| `list` | Show all tasks | `list` |
-| `list from <start> to <end>` | Show events in a period | `list from 2026-09-18 0000 to 2026-09-19 2359` |
-| `find <keyword>` | Find tasks by description or tag | `find report` |
-| `mark <number>` | Mark a task as complete | `mark 2` |
-| `unmark <number>` | Mark a task as incomplete | `unmark 2` |
-| `delete <number>` | Delete a task | `delete 2` |
-| `tag <number> #<tag>` | Add a tag | `tag 1 #school` |
-| `untag <number>` | Remove all tags | `untag 1` |
-| `help [command]` | Show general or command-specific help | `help deadline` |
-| `bye` | Exit Gooble | `bye` |
-
-Task numbers refer to the positions shown by `list` and `find`.
-
-## Features
-
-### Adding tasks
-
-Use `add` for a simple task or `todo` for an explicitly marked to-do task:
+The following sequence demonstrates the main task types:
 
 ```text
 todo Prepare presentation slides
-Got it. I've added this task:
-  [T][ ] Prepare presentation slides
-Now you have 1 tasks in the list.
+deadline Submit project report /by 2026-09-20 1800
+event Team planning meeting /from 2026-09-18 1400 /to 2026-09-18 1530
+tag 1 #school
+list
 ```
 
-### Deadlines
+## Features
 
-Create a deadline with `deadline <description> /by <date>`. Gooble accepts
-`yyyy-MM-dd`, optionally followed by a 24-hour time such as `1800`, or
-`d/M/yyyy HHmm`.
+### **Command format**
+
+- **Required values:** Text in `<angle brackets>` is a value that you replace.
+  For example, replace `<description>` with `prepare presentation`.
+- **Optional values:** Text in `[square brackets]` may be omitted.
+  For example, `help [command]` can be written as either `help` or
+  `help deadline`.
+- **Task numbers:** `<number>` refers to the task number shown by `list` or
+  `find`.
+- **Date and time:** Dates use `yyyy-MM-dd`. Times use the 24-hour format
+  `HHmm`.
+
+### Viewing help: `help`
+
+Shows the available commands and their formats.
+
+**Format:**
+
+```text
+help [command]
+```
+
+**Examples:**
+
+- `help` shows the complete command guide.
+- `help deadline` shows a detailed deadline example.
+
+### Adding a task: `add` and `todo`
+
+`add` creates a simple task. `todo` creates a to-do task with a `T` type
+marker.
+
+**Format:**
+
+```text
+add <description>
+todo <description>
+```
+
+**Examples:**
+
+```text
+add Read chapter 3
+todo Prepare presentation slides
+```
+
+### Adding a deadline: `deadline`
+
+Creates a task with a **due date** and optional time.
+
+**Format:**
+
+```text
+deadline <description> /by <date> [time]
+```
+
+**Examples:**
 
 ```text
 deadline Submit project report /by 2026-09-20 1800
-Got it. I've added this task:
-  [D][ ] Submit project report (by: Sep 20 2026, 6:00 PM)
+deadline Return library books /by 2/12/2019 1800
 ```
 
-Gooble also displays seasonal greetings for supported dates such as Valentine's
+> **Date formats:** Gooble accepts `yyyy-MM-dd`, optionally followed by a
+> time, or `d/M/yyyy HHmm`.
+
+It also displays seasonal greetings for supported dates such as Valentine's
 Day and recognized Chinese New Year dates.
 
-### Events
+### Adding an event: `event`
 
-Create an event with a start and end time:
+Creates an event with a start and end date or time.
+
+**Format:**
+
+```text
+event <description> /from <start> /to <end>
+```
+
+**Example:**
 
 ```text
 event Team planning meeting /from 2026-09-18 1400 /to 2026-09-18 1530
-Got it. I've added this task:
-  [E][ ] Team planning meeting (from: 2026-09-18 1400 to: 2026-09-18 1530)
 ```
 
-Use `list from <start> to <end>` to display only events fully contained within
-the requested period. The end of the range must not be earlier than its start.
+> **Important:** The event end must be later than its start.
 
-### Viewing and finding tasks
+### Viewing tasks: `list`
 
-Use `list` to display every task:
+Displays every task in the current task list. Task numbers in this output are
+used by commands such as `mark 2` and `delete 2`.
+
+**Format:**
 
 ```text
 list
-Here are the tasks in your list:
-1.[T] [ ] Prepare presentation slides
-2.[D] [ ] Submit project report (by: Sep 20 2026, 6:00 PM)
 ```
 
-Use `find <keyword>` to search task descriptions. Searches are case-insensitive
-and preserve the order of matching tasks. Searches also include tags, so
-`find #school` finds tasks tagged `#school`.
-
-### Completing and deleting tasks
-
-Use `mark <number>` and `unmark <number>` to change a task's completion status:
+To show only events within a **date-time range**, use:
 
 ```text
-mark 1
-Nice! I've marked this task as done:
-  [X] Prepare presentation slides
-
-unmark 1
-OK, I've marked this task as not done yet:
-  [ ] Prepare presentation slides
+list from <start> to <end>
 ```
 
-Use `delete <number>` to remove a task:
+For example:
 
 ```text
-delete 1
-Noted. I've removed this task:
-  [T][ ] Prepare presentation slides
+list from 2026-09-18 0000 to 2026-09-19 2359
 ```
 
-### Tags
+> **Important:** The event must be fully contained within the requested range.
 
-Add a tag with `tag <number> #<tag>`:
+### Finding tasks: `find`
+
+Searches task descriptions and tags. The search is case-insensitive and keeps
+matching tasks in their original order.
+
+**Format:**
+
+```text
+find <keyword>
+```
+
+**Examples:**
+
+- `find report` finds tasks whose descriptions contain `report`.
+- `find #school` finds tasks with the `school` tag.
+
+### Completing tasks: `mark` and `unmark`
+
+Changes the completion status of a task.
+
+**Format:**
+
+```text
+mark <number>
+unmark <number>
+```
+
+`mark 1` marks the first task as complete. `unmark 1` changes it back to
+incomplete.
+
+> **Tip:** Run `list` first if you are unsure which number to use.
+
+### Deleting a task: `delete`
+
+Removes a task from the list.
+
+**Format:**
+
+```text
+delete <number>
+```
+
+**Example:**
+
+```text
+delete 2
+```
+
+### Managing tags: `tag` and `untag`
+
+Adds or removes tags from a task.
+
+**Format:**
+
+```text
+tag <number> #<tag>
+untag <number>
+```
+
+**Examples:**
 
 ```text
 tag 1 #School
-I've tagged this task:
-  [T][ ] Prepare presentation slides [#school]
+untag 1
 ```
 
-Tags are normalized to lowercase and may contain letters, numbers, hyphens,
-and underscores. Each task can have at most three tags; adding a fourth tag
-removes the oldest tag. Use `untag <number>` to remove all tags from a task.
+> **Tag rules:** Tags are normalized to lowercase and may contain letters,
+> numbers, hyphens, and underscores. Each task can have at most three tags.
+> Adding a fourth tag removes the oldest tag.
 
-### Help
+`find` can search for tags as well as descriptions.
 
-Use `help` to display the complete command guide. Use `help <command>` for a
-focused explanation and example, such as `help deadline`.
+### Exiting Gooble: `bye`
+
+Ends the current session.
+
+**Format:**
+
+```text
+bye
+```
+
+> **GUI:** The goodbye message is displayed before the window closes.
+>
+> **CLI:** The command loop ends after the goodbye message.
 
 ## Saving your tasks
 
 Gooble automatically saves changes to `data/Gooble.txt`. Tasks are restored
 from this file when Gooble starts, so they remain available between sessions.
+
+> **Storage location:** The file is relative to the folder from which Gooble
+> is launched.
+
 The storage folder and file are created automatically when the first task is
 saved.
 
 ## Error handling
 
 Gooble rejects invalid input with a helpful message instead of adding an
-incorrect task or crashing. Common examples include:
+incorrect task or crashing.
+
+**Common errors include:**
 
 - Missing descriptions, such as `todo` or `add` without text.
 - Unknown commands, such as `dance`.
-- Missing or invalid task numbers for `mark`, `unmark`, `delete`, `tag`, and
-  `untag`.
+- Missing or invalid task numbers.
 - Invalid deadline or event date-time formats.
 - Event ranges where the end is earlier than the start.
-- Invalid tags such as `#school!`, or tag commands containing multiple tags.
+- Invalid tags such as `#school!` or commands containing multiple tags.
 - Duplicate tasks with the same details.
 
-For invalid commands, Gooble responds:
+When an error occurs, read the displayed message and use `help <command>` for
+the correct format.
+
+**Example: unknown command**
 
 ```text
 Invalid command. Gooble is confused, but not offended. Type help to see what I understand.
 ```
 
+## FAQ
+
+### **Where are my tasks stored?**
+
+Tasks are stored in `data/Gooble.txt` relative to the folder from which Gooble
+is launched.
+
+### **Why does a task number not work?**
+
+Task numbers refer to the most recently displayed list. Run `list` or `find`
+again and use a number from that output.
+
+### **How do I learn a command's exact format?**
+
+Run `help` for all commands or `help <command>` for one command, such as
+`help event`.
+
+### **How do I close the GUI?**
+
+Enter `bye`. Gooble displays the goodbye message and closes the window.
+
 ## Building and testing
 
-To build the distributable fat JAR:
+**Build the distributable fat JAR:**
 
 ```powershell
 .\gradlew.bat clean shadowJar
 ```
 
-The output is `build\libs\Gooble.jar`. Run it from a folder containing the
-desired `data` directory with:
+The output is `build\libs\Gooble.jar`. Run it with:
 
 ```powershell
 java -jar Gooble.jar
 ```
 
-Run the automated tests and Checkstyle checks with:
+**Run the automated tests and Checkstyle checks:**
 
 ```powershell
 .\gradlew.bat check
 ```
 
 The detailed test report is generated at
-`build\reports\tests\test\index.html`. The full command-line test scenarios
-are documented in `test\ui-test-plan.md`.
+`build\reports\tests\test\index.html`. The complete command-line test
+scenarios are documented in `test\ui-test-plan.md`.
