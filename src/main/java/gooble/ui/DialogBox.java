@@ -35,6 +35,7 @@ public class DialogBox extends HBox {
         Label text = new Label(displayMessage);
         text.setWrapText(true);
         text.setMaxWidth(680);
+        text.getStyleClass().add("chat-message");
         text.getStyleClass().add(isError ? "error-message" : isHelp ? "help-message"
                 : isUserMessage ? "command-line" : "response-line");
         VBox content = createContent(text, showInvalidCommandImage);

@@ -165,25 +165,14 @@ public class Parser {
 
     /** Rejects an event whose two supported date-time values are not chronological. */
     private void validateEventOrder(String start, String end) throws GoobleException {
-        try {
-            DeadlineDateParser.DeadlineDate startDate = DeadlineDateParser.parse(start);
-            DeadlineDateParser.DeadlineDate endDate = DeadlineDateParser.parse(end);
-            if ((startDate.time() == null) != (endDate.time() == null)) {
-                return;
-            }
-            LocalDateTime startDateTime = LocalDateTime.of(startDate.date(),
-                    startDate.time() == null ? java.time.LocalTime.MIDNIGHT : startDate.time());
-            LocalDateTime endDateTime = LocalDateTime.of(endDate.date(),
-                    endDate.time() == null ? java.time.LocalTime.MIDNIGHT : endDate.time());
-            if (!endDateTime.isAfter(startDateTime)) {
-                throw new GoobleException("Please ensure the event ends after it starts.");
-            }
-        } catch (GoobleException e) {
-            // Events support free-form values such as "Mon 2pm". Those are
-            // validated by presence only because they cannot be ordered here.
-            if (e.getMessage().equals("Please ensure the event ends after it starts.")) {
-                throw e;
-            }
+        DeadlineDateParser.DeadlineDate startDate = DeadlineDateParser.parse(start);
+        DeadlineDateParser.DeadlineDate endDate = DeadlineDateParser.parse(end);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate.date(),
+                startDate.time() == null ? java.time.LocalTime.MIDNIGHT : startDate.time());
+        LocalDateTime endDateTime = LocalDateTime.of(endDate.date(),
+                endDate.time() == null ? java.time.LocalTime.MIDNIGHT : endDate.time());
+        if (!endDateTime.isAfter(startDateTime)) {
+            throw new GoobleException("Please ensure the event ends after it starts.");
         }
     }
 

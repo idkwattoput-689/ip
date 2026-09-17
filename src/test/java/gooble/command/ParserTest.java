@@ -62,8 +62,8 @@ class ParserTest {
 
     @Test
     void parseEvent_validCommand_returnsDescriptionAndTimes() throws GoobleException {
-        assertArrayEquals(new String[] {"project meeting", "Mon 2pm", "4pm"},
-                parser.parseEvent("event project meeting /from Mon 2pm /to 4pm"));
+        assertArrayEquals(new String[] {"project meeting", "2026-03-12 1400", "2026-03-12 1600"},
+                parser.parseEvent("event project meeting /from 2026-03-12 1400 /to 2026-03-12 1600"));
     }
 
     @Test
@@ -76,6 +76,14 @@ class ParserTest {
     void parseEvent_reversedDateTimes_throwsException() {
         assertThrows(GoobleException.class, () -> parser.parseEvent(
                 "event project meeting /from 2026-03-12 1000 /to 2026-03-12 0900"));
+    }
+
+    @Test
+    void parseEvent_invalidDateOrTime_throwsException() {
+        assertThrows(GoobleException.class, () -> parser.parseEvent(
+                "event project meeting /from 2026-02-30 0800 /to 2026-03-01 1800"));
+        assertThrows(GoobleException.class, () -> parser.parseEvent(
+                "event project meeting /from 2026-03-01 0800 /to 2026-03-01 6am"));
     }
 
     @Test

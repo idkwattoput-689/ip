@@ -165,7 +165,7 @@ Day and recognized Chinese New Year dates.
 
 ### Adding an event: `event`
 
-Creates an event with a start and end date or time.
+Creates an event with a start and end date or date-time.
 
 **Format:**
 
@@ -179,7 +179,10 @@ event <description> /from <start> /to <end>
 event Team planning meeting /from 2026-09-18 1400 /to 2026-09-18 1530
 ```
 
-> **Important:** The event end must be later than its start.
+Use `yyyy-MM-dd` or `yyyy-MM-dd HHmm` for each endpoint. Slash dates such as
+`18/9/2026` are also supported. When times are provided, use the 24-hour
+`HHmm` format, for example `0800` and `1800`. The event end must be later than
+its start; invalid dates and times are rejected.
 
 ### Viewing tasks: `list`
 

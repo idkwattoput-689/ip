@@ -24,10 +24,11 @@
 .user-dialog, .gooble-dialog, .error-dialog, .help-dialog { -fx-background-color: transparent; }
 .user-dialog, .gooble-dialog, .error-dialog, .help-dialog { -fx-padding: 0; }
 
-.command-line, .response-line, .error-message, .error-message-text, .help-message {
+.chat-message {
     -fx-padding: 10px 14px;
     -fx-font-family: monospace;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
     -fx-line-spacing: 2px;
 }
 
@@ -51,13 +52,11 @@
     -fx-border-radius: 4px;
     -fx-background-radius: 8px;
     -fx-text-fill: #8c263a;
-    -fx-font-weight: bold;
 }
 .error-message-text {
     -fx-padding: 0;
     -fx-background-color: transparent;
     -fx-text-fill: #8c263a;
-    -fx-font-weight: bold;
 }
 
 .help-message {
@@ -67,7 +66,6 @@
     -fx-border-radius: 4px;
     -fx-background-radius: 8px;
     -fx-text-fill: #174f45;
-    -fx-font-weight: normal;
 }
 
 .command-hints {

@@ -396,7 +396,7 @@ Aim: Verify that an event includes its start and end dates in the display.
 ### Inputs
 
 ```text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2026-03-12 1400 /to 2026-03-12 1600
 bye
 ```
 
@@ -414,7 +414,7 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: 2026-03-12 1400 to: 2026-03-12 1600)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
