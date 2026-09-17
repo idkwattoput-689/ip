@@ -1,5 +1,5 @@
 .root {
-    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-family: system;
     -fx-font-size: 14px;
     -fx-background-color: #fff9f0;
 }
@@ -26,7 +26,7 @@
 
 .command-line, .response-line, .error-message, .error-message-text, .help-message {
     -fx-padding: 10px 14px;
-    -fx-font-family: "Cascadia Mono", "Consolas", monospace;
+    -fx-font-family: monospace;
     -fx-font-size: 13px;
     -fx-line-spacing: 2px;
 }
@@ -73,7 +73,7 @@
 .command-hints {
     -fx-padding: 0 16px;
     -fx-text-fill: #766d80;
-    -fx-font-family: "Cascadia Mono", "Consolas", monospace;
+    -fx-font-family: monospace;
     -fx-font-size: 11px;
 }
 

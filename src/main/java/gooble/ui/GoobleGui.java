@@ -4,6 +4,7 @@ import gooble.Gooble;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /** Provides the JavaFX interface for interacting with Gooble. */
@@ -81,11 +83,17 @@ public class GoobleGui extends Application {
     }
 
     private void configureStage(Stage stage, BorderPane mainLayout) {
-        Scene scene = new Scene(mainLayout, 720, 650);
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        double minimumWidth = Math.min(420, screenBounds.getWidth());
+        double minimumHeight = Math.min(480, screenBounds.getHeight());
+        double windowWidth = Math.min(720, Math.max(minimumWidth, screenBounds.getWidth() * 0.75));
+        double windowHeight = Math.min(650, Math.max(minimumHeight, screenBounds.getHeight() * 0.75));
+
+        Scene scene = new Scene(mainLayout, windowWidth, windowHeight);
         scene.getStylesheets().add(getClass().getResource("/gooble.css").toExternalForm());
         stage.setTitle("Gooble");
-        stage.setMinWidth(420);
-        stage.setMinHeight(480);
+        stage.setMinWidth(minimumWidth);
+        stage.setMinHeight(minimumHeight);
         stage.setScene(scene);
         stage.show();
     }
